@@ -86,7 +86,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         
-        <!-- Book Title / Header & Menu Toggle Button (Menu Icon strictly on top left) -->
+        <!-- Book Title / Header & Menu Toggle Button -->
         <div class="flex items-center space-x-3">
           <button onclick="toggleMenuDrawer()" class="w-10 h-10 rounded-xl bg-white border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark flex items-center justify-center transition shadow-2xs" aria-label="Open menu navigation">
             <i class="fa-solid fa-bars text-sm"></i>
@@ -102,6 +102,12 @@
 
         <!-- Saved / Actions -->
         <div class="flex items-center space-x-3">
+          <!-- Add Recipe Button -->
+          <button onclick="openAddRecipeModal()" class="bg-pdfAccent hover:bg-pdfTextDark text-white px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition shadow-2xs font-medium">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span class="hidden sm:inline">Add Recipe</span>
+          </button>
+
           <div id="recipe-count-badge" class="bg-pdfAccentLight text-pdfAccent text-xs px-3.5 py-1.5 rounded-full border border-pdfBorder hidden sm:flex items-center gap-1.5 font-medium">
             <i class="fa-solid fa-utensils text-xs"></i> <span id="visible-count">0</span> Recipes
           </div>
@@ -128,7 +134,6 @@
         <!-- Dynamically populated menu hierarchy -->
       </div>
     </div>
-    <!-- Click outside to close -->
     <div class="absolute inset-0 -z-10" onclick="toggleMenuDrawer()"></div>
   </div>
 
@@ -316,9 +321,83 @@
     </div>
   </div>
 
+  <!-- ADD RECIPE MODAL FORM -->
+  <div id="add-recipe-modal" class="fixed inset-0 z-50 overflow-y-auto bg-pdfTextDark/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 hidden">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-pdfBorder relative">
+      
+      <!-- Header -->
+      <div class="bg-pdfBg border-b border-pdfBorder p-6 relative">
+        <button onclick="closeAddRecipeModal()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-white border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+        <h2 class="text-2xl font-serif font-bold text-pdfTextDark">Add New Recipe</h2>
+        <p class="text-xs text-pdfTextBody">Fill in the details below to instantly add a new recipe to your book.</p>
+      </div>
+
+      <!-- Form Body -->
+      <div class="p-6 overflow-y-auto space-y-4 flex-grow text-xs">
+        <form id="add-recipe-form" onsubmit="handleNewRecipeSubmit(event)" class="space-y-4">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-pdfTextDark mb-1">Recipe Title *</label>
+              <input type="text" id="new-title" required placeholder="e.g., Lemon Rice" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent" />
+            </div>
+            <div>
+              <label class="block font-bold text-pdfTextDark mb-1">Category *</label>
+              <select id="new-category" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent">
+                <option value="Beverages">Beverages</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Side Dishes">Side Dishes</option>
+                <option value="Main Course">Main Course</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block font-bold text-pdfTextDark mb-1">Prep Time *</label>
+              <input type="text" id="new-preptime" required placeholder="e.g., 20 mins" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent" />
+            </div>
+            <div>
+              <label class="block font-bold text-pdfTextDark mb-1">Base Servings *</label>
+              <input type="number" id="new-servings" required value="2" min="1" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent" />
+            </div>
+            <div>
+              <label class="block font-bold text-pdfTextDark mb-1">Servings Unit *</label>
+              <input type="text" id="new-unit" required placeholder="e.g., people" value="people" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-pdfTextDark mb-1">Description *</label>
+            <textarea id="new-desc" required rows="2" placeholder="Brief summary of the dish..." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent"></textarea>
+          </div>
+
+          <div>
+            <label class="block font-bold text-pdfTextDark mb-1">Ingredients (one per line: Name | Amount | Unit)</label>
+            <textarea id="new-ingredients" required rows="4" placeholder="Cooked Rice | 2 | cups&#10;Lemon Juice | 2 | tablespoons&#10;Salt | 1 | to taste" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
+            <p class="text-[10px] text-pdfTextBody/70 mt-1">Format: Name | Amount | Unit</p>
+          </div>
+
+          <div>
+            <label class="block font-bold text-pdfTextDark mb-1">Instructions (one per line)</label>
+            <textarea id="new-steps" required rows="6" placeholder="PREPARE TEMPERING&#10;1. In a pan,&#10;• Heat **oil** over medium flame.&#10;• Add **mustard seeds** and let them crackle.&#10;MIX RICE&#10;2. Add cooked **rice** and lemon juice." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
+            <p class="text-[10px] text-pdfTextBody/70 mt-1">Use ALL CAPS for section headings, numbers for steps (e.g. `1. ...`), and bullet points starting with `• ` for sub-steps (wrap ingredients in `**` like `**oil**`).</p>
+          </div>
+
+          <div class="pt-4 flex justify-end gap-3 border-t border-pdfBorder">
+            <button type="button" onclick="closeAddRecipeModal()" class="px-4 py-2 rounded-xl border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark transition">Cancel</button>
+            <button type="submit" class="px-6 py-2 rounded-xl bg-pdfAccent text-white font-bold hover:bg-pdfTextDark transition">Save Recipe</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
   <!-- JAVASCRIPT APP LOGIC & ILLUSTRATIONS -->
   <script>
-    // STYLIZED SVG ILLUSTRATIONS FOR DISHES
     const svgIllustrations = {
       coffee: `<svg viewBox="0 0 100 100" class="w-full h-full text-pdfAccent fill-current"><path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><path d="M22 38 h51 v6 h-51 z" fill="#8C522A"/><path d="M70 45 h8 a8 8 0 0 1 8 8 v4 a8 8 0 0 1 -8 8 h-8" fill="none" stroke="#8C522A" stroke-width="3.5"/><path d="M20 83 h56 v4 h-56 z" fill="#8C522A"/><path d="M38 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/><path d="M50 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/></svg>`,
       tea: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M30 35 L35 75 A10 10 0 0 0 45 83 L55 83 A10 10 0 0 0 65 75 L70 35 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/><path d="M28 32 h44 v5 h-44 z" fill="#8C522A"/><path d="M40 22 Q45 15 42 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/><path d="M52 22 Q57 15 54 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="55" r="8" fill="#D97724" opacity="0.4"/></svg>`,
@@ -334,8 +413,8 @@
       'pasi-payir-kuzhambu': `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="52" r="28" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><circle cx="50" cy="52" r="22" fill="#EFE2C2"/><circle cx="42" cy="50" r="3" fill="#8C522A"/><circle cx="50" cy="46" r="3" fill="#8C522A"/><circle cx="55" cy="55" r="3" fill="#8C522A"/></svg>`
     };
 
-    // COMPLETE RECIPES DATASET with Nested Main Numbers & Indented Sub-bullets
-    const recipesData = [
+    // BASE RECIPES DATASET
+    const defaultRecipes = [
       {
         id: 'coffee',
         title: 'Coffee',
@@ -719,7 +798,7 @@
           { name: 'Milk', amount: 100, unit: 'ml' },
           { name: 'Cashew nut', amount: 10, unit: 'pieces' },
           { name: 'Red Chilly Powder', amount: 1, unit: 'teaspoon' },
-          { name: 'Garam Masala', amount: 1/4, unit: 'teaspoon' },
+          { name: 'Garam Masala', amount: 0.25, unit: 'teaspoon' },
           { name: 'Salt', amount: 1, unit: 'to taste' },
           { name: 'Honey', amount: 1, unit: 'tablespoon' },
           { name: 'Dry Kasturi Methi', amount: 1, unit: 'teaspoon' }
@@ -727,36 +806,45 @@
         steps: [
           'BEFORE HAND PREP',
           '1. Keep the **paneer** and **butter** outside atleast ½ an hour before, so that it becomes soft to cut.',
-          '2.	Soak **cashewnuts** in water for ½ an hour.',
-          '3.	In a vessel, heat tap **water** and when its rolling boil, add **tomatoes** and let it be for 2 to 3 minutes before you switch off. Take off the vessel from stove, and keep aside.',
-          '4.	Don’t drain the water, instead take out the tomatoes and peel off the skin, and keep aside tomatoes to cool.',
-          '5.	Immediately after taking out tomatoes from the hot water, in that hot water add the chopped **onions** and let it be there for 5 to 10 minutes. After that drain the water, and keep aside onions to cool.',
-          '6.	Once onions and tomatoes are cool, grind them separately and keep aside.',
+          '2. Soak **cashewnuts** in water for ½ an hour.',
+          '3. In a vessel, heat tap **water** and when its rolling boil, add **tomatoes** and let it be for 2 to 3 minutes before you switch off. Take off the vessel from stove, and keep aside.',
+          '4. Don’t drain the water, instead take out the tomatoes and peel off the skin, and keep aside tomatoes to cool.',
+          '5. Immediately after taking out tomatoes from the hot water, in that hot water add the chopped **onions** and let it be there for 5 to 10 minutes. After that drain the water, and keep aside onions to cool.',
+          '6. Once onions and tomatoes are cool, grind them separately and keep aside.',
           'COOKING',
-          '7.	In a small vessel boil 1 glass of drinking **water** to luke warm, and add a tsp of **salt** in it.',
-          '8.	At the same time, whichever pan you are going to use for cooking gravy, in that add 1 tbsp of **butter** and add in batches the **paneer** and toss them to get golden, once they turn golden drop them in luke warm water (it keeps the paneer soft and not turn rubbery) and be there until you add finally.',
-          '9.	Now in the same pan in which you tossed the paneer, ',
+          '7. In a small vessel boil 1 glass of drinking **water** to luke warm, and add a tsp of **salt** in it.',
+          '8. At the same time, whichever pan you are going to use for cooking gravy, in that add 1 tbsp of **butter** and add in batches the **paneer** and toss them to get golden, once they turn golden drop them in luke warm water (it keeps the paneer soft and not turn rubbery) and be there until you add finally.',
+          '9. Now in the same pan in which you tossed the paneer,',
           '• add again a tbsp of **butter** or more as per your need',
           '• once it melts add the ground **onion paste** until the raw smell goes and colour changes',
-          '• add in the **ginger garlic paste** until the raw smell goes, ',
+          '• add in the **ginger garlic paste** until the raw smell goes',
           '• then add **tomato paste** and blend it well',
-          '• add little **red chilly powder** and **garam masala**. e.	Mix them all well and close the lid and let it cook for some time.',
-          '• then add in the **milk** and **salt**. Cook for 2 minutes',
-          '• add ground **cashew nuts** and mix well.',
-          '• add in soaked **paneer** and mix it in the curry. Cook for 1-2 mins. You can use the soaked water as per your desire of gravy consistency.',
-          '• finally add the honey and mix it',
-          '6. Add Kasturi Methi on top to garnish, and cream to garnish are all optional'
+          '• add little **red chilly powder** and **garam masala** and mix well',
+          '• add in the **milk** and **salt** and cook for 2 minutes',
+          '• add ground **cashew nuts** and mix well',
+          '• add in soaked **paneer** and mix it in the curry',
+          '• finally add the **honey** and mix it',
+          '10. Add **Kasturi Methi** on top to garnish.'
         ]
       }
     ];
 
-    // APPLICATION STATE
+    // APPLICATION STATE (Load from localStorage if available, merged with defaults)
+    let recipesData = loadRecipes();
     let activeCategory = 'All';
     let searchQuery = '';
     let favorites = JSON.parse(localStorage.getItem('preetha_pdf_favs') || '[]');
     let currentRecipe = null;
     let currentServings = 1;
     let showingFavsOnly = false;
+
+    function loadRecipes() {
+      const saved = localStorage.getItem('preetha_custom_recipes');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) { return defaultRecipes; }
+      }
+      return defaultRecipes;
+    }
 
     // INITIALIZATION
     window.onload = function() {
@@ -916,11 +1004,10 @@
 
       grid.innerHTML = filtered.map(recipe => {
         const isFav = favorites.includes(recipe.id);
-        const illustration = svgIllustrations[recipe.id] || '';
+        const illustration = svgIllustrations[recipe.id] || svgIllustrations['coffee'];
 
         return `
           <div class="recipe-doc-page rounded-2xl p-6 flex flex-col justify-between cursor-pointer group" onclick="openModal('${recipe.id}')">
-            
             <div>
               <div class="flex items-start justify-between border-b border-pdfBorder pb-4 mb-5">
                 <div class="space-y-1 pr-4">
@@ -967,7 +1054,6 @@
                 Open Recipe Document <i class="fa-solid fa-arrow-right text-[10px]"></i>
               </span>
             </div>
-
           </div>
         `;
       }).join('');
@@ -1020,7 +1106,7 @@
       document.getElementById('modal-prep-time').innerText = currentRecipe.prepTime;
 
       const illustrationContainer = document.getElementById('modal-illustration-container');
-      illustrationContainer.innerHTML = svgIllustrations[currentRecipe.id] || '';
+      illustrationContainer.innerHTML = svgIllustrations[currentRecipe.id] || svgIllustrations['coffee'];
 
       updateModalFavState();
       updateModalServingsUI();
@@ -1031,6 +1117,16 @@
 
     function closeModal() {
       document.getElementById('recipe-modal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function openAddRecipeModal() {
+      document.getElementById('add-recipe-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddRecipeModal() {
+      document.getElementById('add-recipe-modal').classList.add('hidden');
       document.body.style.overflow = 'auto';
     }
 
@@ -1090,7 +1186,6 @@
       }).join('');
     }
 
-    // ADVANCED RENDERER FOR NESTED NUMBERED STEPS & INDENTED SUB-BULLETS WITH BOLD INGREDIENTS
     function renderModalSteps() {
       const container = document.getElementById('modal-steps-list');
 
@@ -1098,7 +1193,6 @@
         const isHeader = !step.trim().match(/^[0-9•]/);
         const isSubBullet = step.trim().startsWith('•');
 
-        // Helper function to format **bold** ingredient markers inside step text
         const formatText = (txt) => {
           return txt.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-pdfTextDark">$1</strong>');
         };
@@ -1114,7 +1208,6 @@
         }
 
         if (isSubBullet) {
-          // Indented bullet point under main numbered step
           return `
             <div class="flex items-start gap-2.5 pl-10 pr-3 py-1.5 text-xs text-pdfTextBody">
               <span class="text-pdfAccent font-bold text-sm leading-none mt-0.5">•</span>
@@ -1125,7 +1218,6 @@
           `;
         }
 
-        // Main numbered step with checkable box
         const checkboxId = `step-${currentRecipe.id}-${idx}`;
         return `
           <label for="${checkboxId}" class="flex items-start gap-3 p-3 rounded-xl bg-pdfBg/40 border border-pdfBorder hover:border-pdfAccent/50 cursor-pointer transition text-xs text-pdfTextDark group mt-2">
@@ -1150,12 +1242,66 @@
       });
     }
 
+    // HANDLE NEW RECIPE FORM SUBMISSION
+    function handleNewRecipeSubmit(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('new-title').value.trim();
+      const category = document.getElementById('new-category').value;
+      const prepTime = document.getElementById('new-preptime').value.trim();
+      const baseServings = parseFloat(document.getElementById('new-servings').value) || 2;
+      const servingsUnit = document.getElementById('new-unit').value.trim();
+      const description = document.getElementById('new-desc').value.trim();
+      
+      const rawIngredients = document.getElementById('new-ingredients').value.trim().split('\n');
+      const ingredients = rawIngredients.map(line => {
+        const parts = line.split('|').map(p => p.trim());
+        return {
+          name: parts[0] || 'Ingredient',
+          amount: parseFloat(parts[1]) || 1,
+          unit: parts[2] || ''
+        };
+      });
+
+      const rawSteps = document.getElementById('new-steps').value.trim().split('\n').filter(l => l.trim().length > 0);
+
+      const newId = title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+      const newRecipe = {
+        id: newId,
+        title,
+        category,
+        description,
+        prepTime,
+        baseServings,
+        servingsUnit,
+        ingredients,
+        steps: rawSteps
+      };
+
+      recipesData.push(newRecipe);
+      localStorage.setItem('preetha_custom_recipes', JSON.stringify(recipesData));
+
+      closeAddRecipeModal();
+      document.getElementById('add-recipe-form').reset();
+      renderRecipes();
+      renderDrawerMenu();
+      openModal(newId);
+    }
+
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Escape') {
+        closeModal();
+        closeAddRecipeModal();
+      }
     });
 
     document.getElementById('recipe-modal').addEventListener('click', (e) => {
       if (e.target.id === 'recipe-modal') closeModal();
+    });
+
+    document.getElementById('add-recipe-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'add-recipe-modal') closeAddRecipeModal();
     });
   </script>
 </body>
