@@ -506,8 +506,6 @@
 
   <!-- JAVASCRIPT APP LOGIC & FIREBASE REAL-TIME SYNC -->
   <script>
-    const ADMIN_PASSCODE = "preetha123"; 
-
     let pendingAdminAction = null;
     let recipesData = [];
     let activeCategory = 'All';
@@ -982,7 +980,7 @@
       });
     };
 
-    function verifyAdminBeforeAction(actionType) {
+    async function verifyAdminBeforeAction(actionType) {
       pendingAdminAction = actionType;
       if (sessionStorage.getItem('preetha_admin_auth') === 'true') {
         executeAdminAction(pendingAdminAction);
@@ -994,15 +992,30 @@
       }
     }
 
-    function handleAdminAuth(event) {
+    async function handleAdminAuth(event) {
       event.preventDefault();
       const enteredPass = document.getElementById('admin-passcode-input').value;
-      if (enteredPass === ADMIN_PASSCODE) {
-        sessionStorage.setItem('preetha_admin_auth', 'true');
-        closeAdminAuthModal();
-        executeAdminAction(pendingAdminAction);
-      } else {
-        document.getElementById('auth-error-msg').classList.remove('hidden');
+      
+      try {
+        const adminDoc = await db.collection("settings").doc("admin").get();
+        
+        if (!adminDoc.exists) {
+          alert("Admin settings not configured in database.");
+          return;
+        }
+
+        const correctPasscode = adminDoc.data().passcode;
+
+        if (enteredPass === correctPasscode) {
+          sessionStorage.setItem('preetha_admin_auth', 'true');
+          closeAdminAuthModal();
+          executeAdminAction(pendingAdminAction);
+        } else {
+          document.getElementById('auth-error-msg').classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error("Error verifying admin passcode:", error);
+        alert("Verification failed. Please try again.");
       }
     }
 
@@ -1528,8 +1541,8 @@
       }
     }
 
-    // Save recipe to Cloud Firestore with your secure adminKey
-    function handleRecipeFormSubmit(event) {
+    // Save recipe to Cloud Firestore
+    async function handleRecipeFormSubmit(event) {
       event.preventDefault();
 
       const editId = document.getElementById('edit-recipe-id').value;
@@ -1553,27 +1566,32 @@
       const rawSteps = document.getElementById('new-steps').value.trim().split('\n').filter(l => l.trim().length > 0);
       const recipeId = editId ? editId : title.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
-      const updatedRecipe = {
-        id: recipeId,
-        title,
-        category,
-        description,
-        prepTime,
-        baseServings,
-        servingsUnit,
-        ingredients,
-        steps: rawSteps,
-        adminKey: ADMIN_PASSCODE // Included to satisfy your locked Firebase security rules
-      };
+      try {
+        // Fetch passcode securely from Firestore to attach to recipe doc
+        const adminDoc = await db.collection("settings").doc("admin").get();
+        const passcode = adminDoc.exists ? adminDoc.data().passcode : "preetha123";
 
-      // Save directly to Firestore (updates globally for everyone instantly)
-      db.collection("recipes").doc(recipeId).set(updatedRecipe).then(() => {
-        closeAddRecipeModal();
-        document.getElementById('add-recipe-form').reset();
-        openModal(recipeId);
-      }).catch(err => {
-        alert("Error saving recipe. Check your admin key or permissions.");
-      });
+        const updatedRecipe = {
+          id: recipeId,
+          title,
+          category,
+          description,
+          prepTime,
+          baseServings,
+          servingsUnit,
+          ingredients,
+          steps: rawSteps,
+          adminKey: passcode 
+        };
+
+        db.collection("recipes").doc(recipeId).set(updatedRecipe).then(() => {
+          closeAddRecipeModal();
+          document.getElementById('add-recipe-form').reset();
+          openModal(recipeId);
+        });
+      } catch (err) {
+        alert("Error saving recipe. Check your permissions.");
+      }
     }
 
     window.addEventListener('keydown', (e) => {
