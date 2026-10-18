@@ -82,7 +82,7 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200 selection:text-amber-900">
 
   <!-- TOP NAVIGATION HEADER -->
-  <header class="bg-pdfBg border-b border-pdfBorder sticky top-0 z-35">
+  <header class="bg-pdfBg border-b border-pdfBorder sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         
@@ -121,7 +121,7 @@
   </header>
 
   <!-- HIDDEN NAVIGATION MENU DRAWER -->
-  <div id="menu-drawer" class="fixed inset-0 z-50 bg-pdfTextDark/40 backdrop-blur-xs hidden">
+  <div id="menu-drawer" class="fixed inset-0 z-40 bg-pdfTextDark/40 backdrop-blur-xs hidden">
     <div class="absolute top-0 left-0 bottom-0 w-80 bg-white border-r border-pdfBorder shadow-2xl flex flex-col p-6 overflow-y-auto">
       <div class="flex items-center justify-between pb-6 border-b border-pdfBorder mb-6">
         <h2 class="font-title font-bold text-xl text-pdfTextDark">Recipe Index Menu</h2>
@@ -212,7 +212,7 @@
   </footer>
 
   <!-- RECIPE DETAIL MODAL -->
-  <div id="recipe-modal" class="fixed inset-0 z-50 overflow-y-auto bg-pdfTextDark/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 hidden">
+  <div id="recipe-modal" class="fixed inset-0 z-40 overflow-y-auto bg-pdfTextDark/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 hidden">
     <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-pdfBorder relative transform transition-all">
       
       <!-- Modal Header -->
@@ -310,13 +310,19 @@
 
       <!-- Modal Footer -->
       <div class="bg-pdfBg px-6 py-4 border-t border-pdfBorder flex items-center justify-between">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 flex-wrap">
           <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-medium px-4 py-2 rounded-xl border border-pdfBorder bg-white hover:bg-pdfAccentLight flex items-center gap-2 text-pdfTextDark transition shadow-2xs">
             <i class="fa-regular fa-bookmark text-pdfAccent" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
           </button>
+          
+          <!-- Edit Recipe Button (Protected) -->
+          <button onclick="verifyAdminBeforeAction('edit')" class="text-sm font-medium px-4 py-2 rounded-xl border border-pdfBorder bg-white hover:bg-pdfAccentLight flex items-center gap-2 text-pdfAccent transition shadow-2xs">
+            <i class="fa-solid fa-pen-to-square text-xs"></i> <span>Edit Recipe</span>
+          </button>
+
           <!-- Delete Recipe Button (Protected) -->
           <button onclick="verifyAdminBeforeAction('delete')" class="text-sm font-medium px-4 py-2 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 flex items-center gap-2 text-red-700 transition shadow-2xs">
-            <i class="fa-solid fa-trash-can text-xs"></i> <span>Delete Recipe</span>
+            <i class="fa-solid fa-trash-can text-xs"></i> <span>Delete</span>
           </button>
         </div>
 
@@ -328,14 +334,16 @@
     </div>
   </div>
 
+  <!-- GLOBAL TOP-LAYER MODALS -->
+  
   <!-- ADMIN PASSCODE VERIFICATION MODAL -->
-  <div id="admin-auth-modal" class="fixed inset-0 z-60 bg-pdfTextDark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="admin-auth-modal" class="fixed inset-0 z-[9999] bg-pdfTextDark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 border border-pdfBorder space-y-4 text-center">
       <div class="w-12 h-12 bg-pdfAccentLight text-pdfAccent rounded-full flex items-center justify-center mx-auto text-lg border border-pdfBorder">
         <i class="fa-solid fa-lock"></i>
       </div>
       <h3 class="text-xl font-serif font-bold text-pdfTextDark">Admin Authorization Required</h3>
-      <p class="text-xs text-pdfTextBody">Please enter your secret admin passcode to add or delete recipes.</p>
+      <p class="text-xs text-pdfTextBody">Please enter your secret admin passcode to add, edit, or delete recipes.</p>
       
       <form onsubmit="handleAdminAuth(event)" class="space-y-3 pt-2">
         <input 
@@ -355,8 +363,8 @@
     </div>
   </div>
 
-  <!-- ADD RECIPE MODAL FORM -->
-  <div id="add-recipe-modal" class="fixed inset-0 z-50 overflow-y-auto bg-pdfTextDark/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 hidden">
+  <!-- ADD / EDIT RECIPE MODAL FORM -->
+  <div id="add-recipe-modal" class="fixed inset-0 z-[9998] overflow-y-auto bg-pdfTextDark/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 hidden">
     <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-pdfBorder relative">
       
       <!-- Header -->
@@ -364,13 +372,14 @@
         <button onclick="closeAddRecipeModal()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-white border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark flex items-center justify-center transition">
           <i class="fa-solid fa-xmark text-sm"></i>
         </button>
-        <h2 class="text-2xl font-serif font-bold text-pdfTextDark">Add New Recipe</h2>
+        <h2 id="form-modal-title" class="text-2xl font-serif font-bold text-pdfTextDark">Add New Recipe</h2>
         <p class="text-xs text-pdfTextBody">Use the instruction formatting toolbar buttons below to structure your steps easily.</p>
       </div>
 
       <!-- Form Body -->
       <div class="p-6 overflow-y-auto space-y-4 flex-grow text-xs">
-        <form id="add-recipe-form" onsubmit="handleNewRecipeSubmit(event)" class="space-y-4">
+        <form id="add-recipe-form" onsubmit="handleRecipeFormSubmit(event)" class="space-y-4">
+          <input type="hidden" id="edit-recipe-id" value="" />
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -413,7 +422,7 @@
             <textarea id="new-ingredients" required rows="3" placeholder="Cooked Rice | 2 | cups&#10;Lemon Juice | 2 | tablespoons" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
           </div>
 
-          <!-- Instructions Field with Improved Formatting Toolbar -->
+          <!-- Instructions Field with Formatting Toolbar -->
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block font-bold text-pdfTextDark">Instructions *</label>
@@ -455,14 +464,15 @@
     // ==========================================
     const ADMIN_PASSCODE = "preetha123"; 
 
-    let pendingAdminAction = null; // 'add' or 'delete'
+    let pendingAdminAction = null; // 'add', 'edit', or 'delete'
 
     function verifyAdminBeforeAction(actionType) {
       pendingAdminAction = actionType;
-      // Check if session is already authenticated recently
       if (sessionStorage.getItem('preetha_admin_auth') === 'true') {
         executeAdminAction(pendingAdminAction);
       } else {
+        // Close recipe detail modal first so auth modal pops up cleanly without overlapping
+        closeModal();
         document.getElementById('admin-passcode-input').value = '';
         document.getElementById('auth-error-msg').classList.add('hidden');
         document.getElementById('admin-auth-modal').classList.remove('hidden');
@@ -489,6 +499,10 @@
     function executeAdminAction(actionType) {
       if (actionType === 'add') {
         openAddRecipeModal();
+      } else if (actionType === 'edit') {
+        if (currentRecipe) {
+          openEditRecipeModal(currentRecipe);
+        }
       } else if (actionType === 'delete') {
         if (currentRecipe) {
           if (confirm(`Are you sure you want to delete "${currentRecipe.title}" from your recipe book?`)) {
@@ -502,7 +516,6 @@
       recipesData = recipesData.filter(r => r.id !== id);
       localStorage.setItem('preetha_custom_recipes', JSON.stringify(recipesData));
       
-      // Also remove from favorites if saved
       favorites = favorites.filter(fId => fId !== id);
       localStorage.setItem('preetha_pdf_favs', JSON.stringify(favorites));
 
@@ -1231,6 +1244,29 @@
     }
 
     function openAddRecipeModal() {
+      document.getElementById('edit-recipe-id').value = '';
+      document.getElementById('form-modal-title').innerText = 'Add New Recipe';
+      document.getElementById('add-recipe-form').reset();
+      document.getElementById('add-recipe-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function openEditRecipeModal(recipe) {
+      document.getElementById('edit-recipe-id').value = recipe.id;
+      document.getElementById('form-modal-title').innerText = `Edit Recipe: ${recipe.title}`;
+      
+      document.getElementById('new-title').value = recipe.title;
+      document.getElementById('new-category').value = recipe.category;
+      document.getElementById('new-preptime').value = recipe.prepTime;
+      document.getElementById('new-servings').value = recipe.baseServings;
+      document.getElementById('new-unit').value = recipe.servingsUnit;
+      document.getElementById('new-desc').value = recipe.description;
+
+      const ingText = recipe.ingredients.map(i => `${i.name} | ${i.amount} | ${i.unit}`).join('\n');
+      document.getElementById('new-ingredients').value = ingText;
+
+      document.getElementById('new-steps').value = recipe.steps.join('\n');
+
       document.getElementById('add-recipe-modal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
     }
@@ -1419,9 +1455,10 @@
       }
     }
 
-    function handleNewRecipeSubmit(event) {
+    function handleRecipeFormSubmit(event) {
       event.preventDefault();
 
+      const editId = document.getElementById('edit-recipe-id').value;
       const title = document.getElementById('new-title').value.trim();
       const category = document.getElementById('new-category').value;
       const prepTime = document.getElementById('new-preptime').value.trim();
@@ -1440,10 +1477,10 @@
       });
 
       const rawSteps = document.getElementById('new-steps').value.trim().split('\n').filter(l => l.trim().length > 0);
-      const newId = title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      const recipeId = editId ? editId : title.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
-      const newRecipe = {
-        id: newId,
+      const updatedRecipe = {
+        id: recipeId,
         title,
         category,
         description,
@@ -1454,14 +1491,24 @@
         steps: rawSteps
       };
 
-      recipesData.push(newRecipe);
+      if (editId) {
+        const index = recipesData.findIndex(r => r.id === editId);
+        if (index !== -1) {
+          recipesData[index] = updatedRecipe;
+        }
+      } else {
+        recipesData.push(updatedRecipe);
+      }
+
       localStorage.setItem('preetha_custom_recipes', JSON.stringify(recipesData));
 
       closeAddRecipeModal();
       document.getElementById('add-recipe-form').reset();
       renderRecipes();
       renderDrawerMenu();
-      openModal(newId);
+      
+      closeModal();
+      openModal(recipeId);
     }
 
     window.addEventListener('keydown', (e) => {
