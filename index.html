@@ -13,7 +13,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
 
+  <!-- Firebase SDKs (Compat version for global real-time synchronization) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
   <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBDzIOvBK5DVPqKd8NYToLSrV6dYxqSoQ8",
+      authDomain: "preethasrecipebook.firebaseapp.com",
+      projectId: "preethasrecipebook",
+      storageBucket: "preethasrecipebook.firebasestorage.app",
+      messagingSenderId: "895966735732",
+      appId: "1:895966735732:web:2f2362297f05b39c429021"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     tailwind.config = {
       theme: {
         extend: {
@@ -131,7 +149,7 @@
           <div class="cursor-pointer flex items-center space-x-3" onclick="resetFilters()">
             <div>
               <h1 class="text-2xl font-title font-bold tracking-wide text-pdfTextDark">Preetha's Recipe Book</h1>
-              <p class="text-xs text-pdfAccent font-medium tracking-widest uppercase -mt-0.5">A compilation of homemade Recipes</p>
+              <p class="text-xs text-pdfAccent font-medium tracking-widest uppercase -mt-0.5">Cloud-Synced Recipe Collection</p>
             </div>
           </div>
         </div>
@@ -185,7 +203,7 @@
         <input 
           type="text" 
           id="search-input" 
-          placeholder="Search recipes or ingredients (e.g., coconut, tea, egg)..." 
+          placeholder="Search recipes or ingredients..." 
           class="w-full pl-11 pr-10 py-3.5 rounded-2xl bg-white border border-pdfBorder text-pdfTextDark placeholder-pdfTextBody/60 focus:outline-none focus:ring-2 focus:ring-pdfAccent/30 focus:border-pdfAccent text-sm shadow-xs transition"
           oninput="handleSearch()"
         />
@@ -242,8 +260,7 @@
   <footer class="bg-pdfBg border-t border-pdfBorder py-8 text-center text-xs text-pdfTextBody">
     <div class="max-w-7xl mx-auto px-4 space-y-2">
       <p class="font-title text-base text-pdfTextDark font-bold">Preetha's Recipe Book</p>
-      <p class="text-pdfTextBody/80">A traditional handwritten-style recipe book compiled with exact measurements and clear preparation instructions</p>
-      <p class="text-pdfTextBody/50 pt-2">&copy; Preetha's Recipe Book. All Rights Reserved.</p>
+      <p class="text-pdfTextBody/80">Live Cloud-Synced Version</p>
     </div>
   </footer>
 
@@ -307,10 +324,10 @@
           </div>
         </div>
 
-        <!-- PDF Side-by-Side Document Columns (Aligned Headers Across Horizontal Line) -->
+        <!-- PDF Side-by-Side Document Columns -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
           
-          <!-- Column 1: Ingredients & Measurements (Sleeker Width: md:col-span-4) -->
+          <!-- Column 1: Ingredients -->
           <div class="md:col-span-4 pdf-ingredients-card space-y-4">
             <div class="pb-2 border-b border-pdfIngHeader/20 flex items-center justify-between">
               <h3 class="font-script font-bold text-3xl text-pdfIngHeader flex items-center gap-2">
@@ -320,11 +337,11 @@
             </div>
 
             <ul id="modal-ingredients-list" class="space-y-2.5">
-              <!-- Dynamically populated green ingredient pill boxes -->
+              <!-- Populated dynamically -->
             </ul>
           </div>
 
-          <!-- Column 2: Instructions & Steps (Wider Column: md:col-span-8) -->
+          <!-- Column 2: Instructions -->
           <div class="md:col-span-8 pdf-instructions-card space-y-4">
             <div class="pb-2 border-b border-pdfInstHeaderRed/20 flex items-center justify-between">
               <h3 class="font-script font-bold text-3xl text-pdfInstTitleBlue flex items-center gap-2">
@@ -336,7 +353,7 @@
             </div>
 
             <div id="modal-steps-list" class="space-y-3">
-              <!-- Dynamically populated steps -->
+              <!-- Populated dynamically -->
             </div>
           </div>
 
@@ -345,7 +362,7 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="bg-pdfBg px-6 py-4 border-t border-pdfBorder flex items-center justify-between">
+      <div class="bg-pdfBg px-6 py-4 border-t border-pdfBorder flex items-center justify-between flex-wrap gap-2">
         <div class="flex items-center gap-2 flex-wrap">
           <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-medium px-4 py-2 rounded-xl border border-pdfBorder bg-white hover:bg-pdfAccentLight flex items-center gap-2 text-pdfTextDark transition shadow-2xs">
             <i class="fa-regular fa-bookmark text-pdfAccent" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
@@ -370,8 +387,6 @@
     </div>
   </div>
 
-  <!-- GLOBAL TOP-LAYER MODALS -->
-  
   <!-- ADMIN PASSCODE VERIFICATION MODAL -->
   <div id="admin-auth-modal" class="fixed inset-0 z-[9999] bg-pdfTextDark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 border border-pdfBorder space-y-4 text-center">
@@ -409,7 +424,6 @@
           <i class="fa-solid fa-xmark text-sm"></i>
         </button>
         <h2 id="form-modal-title" class="text-2xl font-serif font-bold text-pdfTextDark">Add New Recipe</h2>
-        <p class="text-xs text-pdfTextBody">Use the instruction formatting toolbar buttons below to structure your steps easily.</p>
       </div>
 
       <!-- Form Body -->
@@ -479,8 +493,7 @@
               </div>
             </div>
 
-            <textarea id="new-steps" required rows="6" onkeydown="handleStepsKeyDown(event)" placeholder="Prepare Tempering&#10;1. In a pan,&#10;• Heat **oil** over medium flame.&#10;• Add **mustard seeds** and let them crackle." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
-            <p class="text-[10px] text-pdfTextBody/70 mt-1">Tip: Pressing Enter on a numbered line or bullet automatically continues the list!</p>
+            <textarea id="new-steps" required rows="6" onkeydown="handleStepsKeyDown(event)" placeholder="Prepare Tempering&#10;1. In a pan,&#10;• Heat **oil** over medium flame." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
           </div>
 
           <div class="pt-4 flex justify-end gap-3 border-t border-pdfBorder">
@@ -493,68 +506,18 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT APP LOGIC & ILLUSTRATIONS -->
+  <!-- JAVASCRIPT APP LOGIC & FIREBASE REAL-TIME SYNC -->
   <script>
     const ADMIN_PASSCODE = "preetha123"; 
 
     let pendingAdminAction = null;
-
-    function verifyAdminBeforeAction(actionType) {
-      pendingAdminAction = actionType;
-      if (sessionStorage.getItem('preetha_admin_auth') === 'true') {
-        executeAdminAction(pendingAdminAction);
-      } else {
-        closeModal();
-        document.getElementById('admin-passcode-input').value = '';
-        document.getElementById('auth-error-msg').classList.add('hidden');
-        document.getElementById('admin-auth-modal').classList.remove('hidden');
-      }
-    }
-
-    function handleAdminAuth(event) {
-      event.preventDefault();
-      const enteredPass = document.getElementById('admin-passcode-input').value;
-      if (enteredPass === ADMIN_PASSCODE) {
-        sessionStorage.setItem('preetha_admin_auth', 'true');
-        closeAdminAuthModal();
-        executeAdminAction(pendingAdminAction);
-      } else {
-        document.getElementById('auth-error-msg').classList.remove('hidden');
-      }
-    }
-
-    function closeAdminAuthModal() {
-      document.getElementById('admin-auth-modal').classList.add('hidden');
-      pendingAdminAction = null;
-    }
-
-    function executeAdminAction(actionType) {
-      if (actionType === 'add') {
-        openAddRecipeModal();
-      } else if (actionType === 'edit') {
-        if (currentRecipe) {
-          openEditRecipeModal(currentRecipe);
-        }
-      } else if (actionType === 'delete') {
-        if (currentRecipe) {
-          if (confirm(`Are you sure you want to delete "${currentRecipe.title}" from your recipe book?`)) {
-            deleteRecipe(currentRecipe.id);
-          }
-        }
-      }
-    }
-
-    function deleteRecipe(id) {
-      recipesData = recipesData.filter(r => r.id !== id);
-      localStorage.setItem('preetha_custom_recipes', JSON.stringify(recipesData));
-      
-      favorites = favorites.filter(fId => fId !== id);
-      localStorage.setItem('preetha_pdf_favs', JSON.stringify(favorites));
-
-      closeModal();
-      renderRecipes();
-      renderDrawerMenu();
-    }
+    let recipesData = [];
+    let activeCategory = 'All';
+    let searchQuery = '';
+    let favorites = JSON.parse(localStorage.getItem('preetha_pdf_favs') || '[]');
+    let currentRecipe = null;
+    let currentServings = 1;
+    let showingFavsOnly = false;
 
     const svgIllustrations = {
       coffee: `<svg viewBox="0 0 100 100" class="w-full h-full text-pdfAccent fill-current"><path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><path d="M22 38 h51 v6 h-51 z" fill="#8C522A"/><path d="M70 45 h8 a8 8 0 0 1 8 8 v4 a8 8 0 0 1 -8 8 h-8" fill="none" stroke="#8C522A" stroke-width="3.5"/><path d="M20 83 h56 v4 h-56 z" fill="#8C522A"/><path d="M38 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/><path d="M50 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/></svg>`,
@@ -986,27 +949,95 @@
       }
     ];
 
-    let recipesData = loadRecipes();
-    let activeCategory = 'All';
-    let searchQuery = '';
-    let favorites = JSON.parse(localStorage.getItem('preetha_pdf_favs') || '[]');
-    let currentRecipe = null;
-    let currentServings = 1;
-    let showingFavsOnly = false;
+    // Real-time listener fetching data from Firebase Cloud Firestore
+    window.onload = function() {
+      defaultRecipes.forEach(r => {
+        db.collection("recipes").doc(r.id).set({ ...r, adminKey: "preetha123" });
+      });
+      db.collection("recipes").onSnapshot((snapshot) => {
+        let cloudRecipes = [];
+        snapshot.forEach((doc) => {
+          cloudRecipes.push(doc.data());
+        });
 
-    function loadRecipes() {
-      const saved = localStorage.getItem('preetha_custom_recipes');
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) { return defaultRecipes; }
+        if (cloudRecipes.length > 0) {
+          recipesData = cloudRecipes;
+        } else {
+          // Seed defaults into Firebase if empty
+          defaultRecipes.forEach(r => {
+            db.collection("recipes").doc(r.id).set({ ...r, adminKey: "preetha123" });
+          });
+          recipesData = defaultRecipes;
+        }
+
+        renderCategoryTabs();
+        renderRecipes();
+        renderDrawerMenu();
+        
+        if (currentRecipe) {
+          const updated = recipesData.find(r => r.id === currentRecipe.id);
+          if (updated) {
+            currentRecipe = updated;
+            updateModalServingsUI();
+          }
+        }
+      });
+    };
+
+    function verifyAdminBeforeAction(actionType) {
+      pendingAdminAction = actionType;
+      if (sessionStorage.getItem('preetha_admin_auth') === 'true') {
+        executeAdminAction(pendingAdminAction);
+      } else {
+        closeModal();
+        document.getElementById('admin-passcode-input').value = '';
+        document.getElementById('auth-error-msg').classList.add('hidden');
+        document.getElementById('admin-auth-modal').classList.remove('hidden');
       }
-      return defaultRecipes;
     }
 
-    window.onload = function() {
-      renderCategoryTabs();
-      renderRecipes();
-      renderDrawerMenu();
-    };
+    function handleAdminAuth(event) {
+      event.preventDefault();
+      const enteredPass = document.getElementById('admin-passcode-input').value;
+      if (enteredPass === ADMIN_PASSCODE) {
+        sessionStorage.setItem('preetha_admin_auth', 'true');
+        closeAdminAuthModal();
+        executeAdminAction(pendingAdminAction);
+      } else {
+        document.getElementById('auth-error-msg').classList.remove('hidden');
+      }
+    }
+
+    function closeAdminAuthModal() {
+      document.getElementById('admin-auth-modal').classList.add('hidden');
+      pendingAdminAction = null;
+    }
+
+    function executeAdminAction(actionType) {
+      if (actionType === 'add') {
+        openAddRecipeModal();
+      } else if (actionType === 'edit') {
+        if (currentRecipe) {
+          openEditRecipeModal(currentRecipe);
+        }
+      } else if (actionType === 'delete') {
+        if (currentRecipe) {
+          if (confirm(`Are you sure you want to delete "${currentRecipe.title}" from the cloud database?`)) {
+            deleteRecipeFromCloud(currentRecipe.id);
+          }
+        }
+      }
+    }
+
+    function deleteRecipeFromCloud(id) {
+      db.collection("recipes").doc(id).delete().then(() => {
+        favorites = favorites.filter(fId => fId !== id);
+        localStorage.setItem('preetha_pdf_favs', JSON.stringify(favorites));
+        closeModal();
+      }).catch(err => {
+        alert("Permission denied or error deleting recipe.");
+      });
+    }
 
     function renderCategoryTabs() {
       const categories = ['All', 'Beverages', 'Breakfast', 'Side Dishes', 'Main Course'];
@@ -1048,6 +1079,7 @@
 
       container.innerHTML = categories.map(cat => {
         const catRecipes = recipesData.filter(r => r.category === cat);
+        if (catRecipes.length === 0) return '';
         return `
           <div>
             <h3 class="font-serif font-bold text-base text-pdfAccent pb-2 border-b border-pdfBorder mb-3">${cat}</h3>
@@ -1342,12 +1374,10 @@
       return fractionStr ? fractionStr : `${rounded}`;
     }
 
-    /* Toggle Ingredient Strikethrough by Clicking the Box */
     function toggleIngredientBox(element) {
       element.classList.toggle('struck');
     }
 
-    /* RENDER INGREDIENTS in green pill boxes without checkboxes */
     function renderModalIngredients() {
       const container = document.getElementById('modal-ingredients-list');
       const countLabel = document.getElementById('ingredient-count');
@@ -1375,7 +1405,6 @@
       }).join('');
     }
 
-    /* RENDER STEPS with Caveat font subheaders (natural casing, red text, no underline) */
     function renderModalSteps() {
       const container = document.getElementById('modal-steps-list');
 
@@ -1501,6 +1530,7 @@
       }
     }
 
+    // Save recipe to Cloud Firestore with your secure adminKey
     function handleRecipeFormSubmit(event) {
       event.preventDefault();
 
@@ -1534,28 +1564,18 @@
         baseServings,
         servingsUnit,
         ingredients,
-        steps,
-        adminKey: "preetha123"
+        steps: rawSteps,
+        adminKey: ADMIN_PASSCODE // Included to satisfy your locked Firebase security rules
       };
 
-      if (editId) {
-        const index = recipesData.findIndex(r => r.id === editId);
-        if (index !== -1) {
-          recipesData[index] = updatedRecipe;
-        }
-      } else {
-        recipesData.push(updatedRecipe);
-      }
-
-      localStorage.setItem('preetha_custom_recipes', JSON.stringify(recipesData));
-
-      closeAddRecipeModal();
-      document.getElementById('add-recipe-form').reset();
-      renderRecipes();
-      renderDrawerMenu();
-      
-      closeModal();
-      openModal(recipeId);
+      // Save directly to Firestore (updates globally for everyone instantly)
+      db.collection("recipes").doc(recipeId).set(updatedRecipe).then(() => {
+        closeAddRecipeModal();
+        document.getElementById('add-recipe-form').reset();
+        openModal(recipeId);
+      }).catch(err => {
+        alert("Error saving recipe. Check your admin key or permissions.");
+      });
     }
 
     window.addEventListener('keydown', (e) => {
