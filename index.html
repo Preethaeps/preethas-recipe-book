@@ -12,8 +12,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <!-- Lucide Icons for animated ingredient icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
 
   <script>
     tailwind.config = {
@@ -65,15 +63,6 @@
       color: #9CA3AF;
     }
 
-    /* Subtle pulse animation for ingredient icons */
-    @keyframes slowPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-    .ingredient-icon-animated {
-      animation: slowPulse 3s ease-in-out infinite;
-    }
-
     /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
@@ -97,9 +86,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         
-        <!-- Top Left: Menu Button & Book Title -->
+        <!-- Book Title / Header & Menu Toggle Button (Menu Icon strictly on top left) -->
         <div class="flex items-center space-x-3">
-          <!-- Menu Button placed at top left -->
           <button onclick="toggleMenuDrawer()" class="w-10 h-10 rounded-xl bg-white border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark flex items-center justify-center transition shadow-2xs" aria-label="Open menu navigation">
             <i class="fa-solid fa-bars text-sm"></i>
           </button>
@@ -107,7 +95,7 @@
           <div class="cursor-pointer flex items-center space-x-3" onclick="resetFilters()">
             <div>
               <h1 class="text-2xl font-title font-bold tracking-wide text-pdfTextDark">Preetha's Recipe Book</h1>
-              <p class="text-xs text-pdfAccent font-medium tracking-widest uppercase -mt-0.5">A traditional handwritten-style recipe book compiled with exact measurements and clear preparation instructions</p>
+              <p class="text-xs text-pdfAccent font-medium tracking-widest uppercase -mt-0.5">A comprehensive and colorful culinary recipe book[cite: 2, 3]</p>
             </div>
           </div>
         </div>
@@ -298,7 +286,7 @@
             </div>
 
             <ul id="modal-ingredients-list" class="space-y-2">
-              <!-- Dynamically populated ingredients with animated lucide icons -->
+              <!-- Dynamically populated ingredients -->
             </ul>
           </div>
 
@@ -314,7 +302,7 @@
             </div>
 
             <div id="modal-steps-list" class="space-y-3">
-              <!-- Dynamically populated steps word-to-word from PDF -->
+              <!-- Dynamically populated steps -->
             </div>
           </div>
 
@@ -429,45 +417,13 @@
         </svg>`
     };
 
-    // MAP INGREDIENT NAMES TO LUCIDE ICON NAMES FOR ANIMATED ICONS
-    function getIngredientLucideIcon(name) {
-      const lower = name.toLowerCase();
-      if (lower.includes('milk')) return 'milk';
-      if (lower.includes('water')) return 'droplet';
-      if (lower.includes('sugar')) return 'sparkles';
-      if (lower.includes('coffee')) return 'coffee';
-      if (lower.includes('tea')) return 'cup-soda';
-      if (lower.includes('date')) return 'nut';
-      if (lower.includes('almond') || lower.includes('nut')) return 'nut';
-      if (lower.includes('cocoa')) return 'cookie';
-      if (lower.includes('coconut')) return 'circle-dot';
-      if (lower.includes('gram') || lower.includes('dal') || lower.includes('pasi payir')) return 'bean';
-      if (lower.includes('chili') || lower.includes('chilli')) return 'flame';
-      if (lower.includes('ginger') || lower.includes('garlic')) return 'layers';
-      if (lower.includes('salt')) return 'activity';
-      if (lower.includes('seed')) return 'disc';
-      if (lower.includes('leave')) return 'leaf';
-      if (lower.includes('tomato')) return 'circle';
-      if (lower.includes('onion')) return 'circle';
-      if (lower.includes('egg')) return 'egg';
-      if (lower.includes('cheese') || lower.includes('cream') || lower.includes('mayonnaise')) return 'box';
-      if (lower.includes('capsicum') || lower.includes('carrot')) return 'carrot';
-      if (lower.includes('pepper') || lower.includes('powder') || lower.includes('masala')) return 'wind';
-      if (lower.includes('ghee') || lower.includes('oil')) return 'droplets';
-      if (lower.includes('bread') || lower.includes('semiya') || lower.includes('rava') || lower.includes('semolina')) return 'utensils';
-      if (lower.includes('potato')) return 'disc';
-      if (lower.includes('gourd') || lower.includes('ridge')) return 'feather';
-      if (lower.includes('coriander')) return 'flower';
-      return 'utensils';
-    }
-
-    // COMPLETE RECIPES DATASET WITH WORD-TO-WORD PDF INSTRUCTIONS
+    // COMPLETE RECIPES DATASET (Exact Word-to-Word PDF Instructions and Correct Index Measurements)
     const recipesData = [
       {
         id: 'coffee',
         title: 'Coffee',
         category: 'Beverages',
-        description: 'Traditional rich boiled milk coffee prepared with sweet aromatic flavor.',
+        description: 'Traditional rich boiled milk coffee prepared with sweet aromatic flavor[cite: 5].',
         prepTime: '10 mins',
         baseServings: 1,
         servingsUnit: 'person',
@@ -479,21 +435,21 @@
         ],
         steps: [
           'Preparing Milk',
-          '1. In a small saucepan or bowl, add 3/4 cup of milk',
-          '2. Add 1/4 cup of water to the milk.',
-          '3. Add 1½ teaspoons of sugar to the mixture.',
-          '4. Heat the mixture over medium flame and bring it to a gentle boil, allowing it to rise to the brim of the bowl. Monitor',
+          '1. In a small saucepan or bowl, add  cup of milk[cite: 5]',
+          '2. Add  cup of water to the milk[cite: 5].',
+          '3. Add 1½ teaspoons of sugar to the mixture[cite: 5].',
+          '4. Heat the mixture over medium flame and bring it to a gentle boil, allowing it to rise to the brim of the bowl. Monitor[cite: 5]',
           'Preparing Coffee Powder',
-          '5. While the milk is heating, place 1½ teaspoons of coffee powder into a serving cup.',
-          '6. Once the milk mixture is boiled, pour it directly into the cup containing the coffee powder.',
-          '7. Stir thoroughly until the coffee powder is fully dissolved and the mixture is smooth.'
+          '5. While the milk is heating, place 1½ teaspoons of coffee powder into a serving cup[cite: 5].',
+          '6. Once the milk mixture is boiled, pour it directly into the cup containing the coffee powder[cite: 5].',
+          '7. Stir thoroughly until the coffee powder is fully dissolved and the mixture is smooth[cite: 5].'
         ]
       },
       {
         id: 'tea',
         title: 'Tea',
         category: 'Beverages',
-        description: 'Classic brewed milk tea infused with rich tea leaves and caramel sweetness.',
+        description: 'Classic brewed milk tea infused with rich tea leaves and caramel sweetness[cite: 6].',
         prepTime: '10 mins',
         baseServings: 1,
         servingsUnit: 'person',
@@ -505,22 +461,22 @@
         ],
         steps: [
           'Brew the Tea Base',
-          '1. In a small saucepan, add ½ cup of water.',
-          '2. Stir in 1½ teaspoons of sugar.',
-          '3. Add 1 teaspoon of tea powder to the water.',
-          '4. Bring the mixture to a rolling boil, allowing it to rise to the brim.',
+          '1. In a small saucepan, add ½ cup of water[cite: 6].',
+          '2. Stir in 1½ teaspoons of sugar[cite: 6].',
+          '3. Add 1 teaspoon of tea powder to the water[cite: 6].',
+          '4. Bring the mixture to a rolling boil, allowing it to rise to the brim[cite: 6].',
           'Add Milk and Finish',
-          '5. While the tea is boiling, measure ½ cup of milk.',
-          '6. Once the water-tea mixture has boiled, add the milk to the saucepan.',
-          '7. Stir gently and continue heating until the tea is well combined and reaches a uniform colour.',
-          '8. Using a strainer, pour the tea into a cup to filter out the tea powder residue.'
+          '5. While the tea is boiling, measure ½ cup of milk[cite: 6].',
+          '6. Once the water-tea mixture has boiled, add the milk to the saucepan[cite: 6].',
+          '7. Stir gently and continue heating until the tea is well combined and reaches a uniform colour[cite: 6].',
+          '8. Using a strainer, pour the tea into a cup to filter out the tea powder residue[cite: 6].'
         ]
       },
       {
         id: 'dates-almond-milk',
         title: 'Dates Almond Milk',
         category: 'Beverages',
-        description: 'Nourishing and creamy blend of blanched almonds, sweet pitted dates, and rich milk.',
+        description: 'Nourishing and creamy blend of blanched almonds, sweet pitted dates, and rich milk[cite: 7].',
         prepTime: '15 mins',
         baseServings: 1,
         servingsUnit: 'person',
@@ -532,84 +488,85 @@
         ],
         steps: [
           'Prepare the Ingredients',
-          '1. Boil 10 almonds in hot water and peel the skin off.',
-          '2. In a blender, add 2 cups of milk.',
-          '3. Add 2 pitted dates.',
-          '4. Add 10 peeled almonds.',
-          '5. Optional: Add 1 tablespoon of cocoa powder for a chocolatey twist.',
+          '1. Boil 10 almonds in hot water and peel the skin off[cite: 7].',
+          '2. In a blender, add 2 cups of milk[cite: 7].',
+          '3. Add 2 pitted dates[cite: 7].',
+          '4. Add 10 peeled almonds[cite: 7].',
+          '5. Optional: Add 1 tablespoon of cocoa powder for a chocolatey twist[cite: 7].',
           'Blend the Milkshake',
-          '6. Blend until smooth and creamy.',
-          '7. Pour into glasses and serve immediately, chilled if desired.'
+          '6. Blend until smooth and creamy[cite: 7].',
+          '7. Pour into glasses and serve immediately, chilled if desired[cite: 7].'
         ]
       },
       {
         id: 'coconut-chutney',
         title: 'Coconut Chutney',
         category: 'Breakfast',
-        description: 'South Indian essential coconut side dish with roasted gram, green chillies, and aromatic mustard tempering.',
+        description: 'South Indian essential coconut side dish with roasted gram, green chillies, and aromatic mustard tempering[cite: 9].',
         prepTime: '15 mins',
         baseServings: 4,
         servingsUnit: 'people',
         ingredients: [
-          { name: 'Coconut', amount: 1, unit: 'cup (grated or finely chopped)' },
-          { name: 'Roasted Gram (Pottukadalai)', amount: 2, unit: 'tablespoons' },
+          { name: 'Coconut (grated or finely chopped)', amount: 1, unit: 'cup' },
+          { name: 'Roasted Gram', amount: 2, unit: 'tablespoons' },
           { name: 'Green Chilies', amount: 2, unit: 'pieces' },
           { name: 'Ginger', amount: 1.5, unit: 'inch piece' },
-          { name: 'Salt', amount: 1, unit: 'tsp' },
           { name: 'Mustard Seeds', amount: 1.5, unit: 'teaspoon' },
           { name: 'Urad Dal', amount: 1.5, unit: 'teaspoon' },
           { name: 'Curry Leaves', amount: 1, unit: 'few' }
         ],
         steps: [
           'Grind the Chutney',
-          '1. In a blender, add: • grated coconut • roasted gram • green chilies • ginger • salt • add a little water',
-          '2. Grind to a smooth or slightly coarse paste.',
-          '3. Transfer the ground chutney into a serving bowl and adjust the consistency with a splash of water if needed.',
+          '1. In a blender, add: • grated coconut • roasted gram green chilies • ginger • salt • add a little water[cite: 9]',
+          '2. Grind to a smooth or slightly coarse paste[cite: 9].',
+          '3. Transfer the ground chutney into a serving bowl and adjust the consistency with a splash of water if needed[cite: 9].',
           'Prepare the Tempering',
-          '4. In a pan, • Heat oil over medium flame. • Add mustard seeds and let them crackle. • Add urad dal • curry leaves • Sauté until the dal turns golden brown.',
-          '5. Turn off the heat and pour the warm tempering over the chutney.',
-          '6. Stir well before serving.'
+          '4. In a pan, Heat oil over medium flame. Add mustard seeds and let them crackle. • Add urad dal • curry leaves Sauté until the dal turns golden brown[cite: 9].',
+          '5. Turn off the heat and pour the warm tempering over the chutney[cite: 9].',
+          '6. Stir well before serving[cite: 9].'
         ]
       },
       {
         id: 'thakkali-chutney',
         title: 'Thakkali Chutney',
         category: 'Breakfast',
-        description: 'Tangy and spicy roasted tomato & onion chutney tempered with mustard and curry leaves.',
+        description: 'Tangy and spicy roasted tomato & onion chutney tempered with mustard and curry leaves[cite: 10, 11].',
         prepTime: '20 mins',
         baseServings: 4,
         servingsUnit: 'people',
         ingredients: [
-          { name: 'Tomato', amount: 3, unit: 'medium' },
-          { name: 'Onion', amount: 1, unit: 'large' },
+          { name: 'Tomato (medium)', amount: 3, unit: 'medium' },
+          { name: 'Onion (large)', amount: 1, unit: 'large' },
           { name: 'Garlic', amount: 4.5, unit: 'cloves' },
           { name: 'Dry Red Chilies', amount: 3.5, unit: 'pieces' },
           { name: 'Mustard Seeds', amount: 1.5, unit: 'teaspoon' },
           { name: 'Urad Dal', amount: 1.5, unit: 'teaspoon' },
-          { name: 'Curry Leaves', amount: 1, unit: 'few' },
-          { name: 'Salt', amount: 1, unit: 'tsp' }
+          { name: 'Curry Leaves', amount: 1, unit: 'few' }
         ],
         steps: [
           'Preparation',
-          '1. Chop 2 tomatoes (roughly chopped)',
-          '2. Chop 1 Onion (roughly chopped)',
-          '3. Chop the red chillies (roughly chopped)',
+          '1. Chop 2 tomatoes (roughly chopped)[cite: 10]',
+          '2. Chop 1 Onion (roughly chopped)[cite: 10]',
+          '3. Chop the red chillies (roughly chopped)[cite: 10]',
           'Sauté the Base',
-          '1. In a pan, • Heat 1 teaspoon of oil over medium heat. • Add dry red chilies • garlic cloves and sauté for 30 seconds. • Add chopped onions and sauté until translucent. • Add chopped tomatoes and salt. Cook until tomatoes turn soft and mushy.',
-          '2. Turn off the heat and allow the mixture to cool completely.',
+          '1. In a pan, Heat 1 teaspoon of oil over medium heat. Add dry red chilies • garlic cloves and sauté for 30 seconds. • Add chopped onions and sauté until translucent. Add chopped tomatoes and salt. Cook until tomatoes turn soft and mushy[cite: 10].',
+          '2. Turn off the heat and allow the mixture to cool completely[cite: 10].',
           'Grind the Chutney',
-          '3. Transfer the cooled mixture to a blender.',
-          '4. Blend into a smooth paste without adding excess water. Transfer to a bowl.',
+          '3. Transfer the cooled mixture to a blender[cite: 10].',
+          '4. Blend into a smooth paste without adding excess water. Transfer to a bowl[cite: 10].',
           'Prepare the Tempering',
-          '5. In the same pan, • Heat 1 teaspoon of oil. • Add mustard seeds and let them crackle. • Add urad dal • curry leaves; sauté until the dal turns golden brown.',
-          '6. Pour the warm tempering over the chutney and mix well before serving.'
+          '5. In the same pan,[cite: 10]',
+          'Heat 1 teaspoon of oil[cite: 11].',
+          '• Add mustard seeds and let them crackle[cite: 11].',
+          '• Add urad dal • curry leaves; sauté until the dal turns golden brown[cite: 11].',
+          '6. Pour the warm tempering over the chutney and mix well before serving[cite: 11].'
         ]
       },
       {
         id: 'scrambled-egg-bread-omelette',
         title: 'Scrambbled Egg Bread Omlette',
         category: 'Breakfast',
-        description: 'Creamy scrambled egg yolk filling mixed with capsicum, layered between golden toasted bread.',
+        description: 'Creamy scrambled egg yolk filling mixed with capsicum, layered between golden toasted bread[cite: 12, 13].',
         prepTime: '25 mins',
         baseServings: 2,
         servingsUnit: 'people',
@@ -622,260 +579,241 @@
           { name: 'Capsicums', amount: 0.25, unit: 'cup' },
           { name: 'Salt', amount: 0.5, unit: 'teaspoon' },
           { name: 'Pepper', amount: 1, unit: 'teaspoon' },
-          { name: 'Red Chilli Powder', amount: 0.5, unit: 'teaspoon' },
-          { name: 'Ghee', amount: 1, unit: 'tablespoon' },
-          { name: 'Chilli Flakes', amount: 0.5, unit: 'teaspoon' }
+          { name: 'Red Chilli Powder', amount: 0.5, unit: 'teaspoon' }
         ],
         steps: [
           'Prepare the Egg Filling',
-          '1. Boil 2 eggs in water for 20 minutes until hard-boiled.',
-          '2. Once boiled, peel the eggs and separate the yolks from the whites.',
-          '3. Place only the yolks in a mixing bowl.',
-          '4. To the yolks, add: • 1 tablespoon cream cheese • 1 tablespoon mayonnaise • 2 tablespoons cooking cream • ½ teaspoon garlic paste • ¼ cup finely chopped capsicum • ½ teaspoon salt (adjust later to taste) • 1 teaspoon black pepper • ½ teaspoon red chili powder',
-          '5. Mix the yolk mixture thoroughly until smooth and well combined.',
-          '6. Chop the egg whites into small cubes.',
-          '7. Add the white into the yolk mixture. Mix well. Taste and adjust salt if needed.',
+          '1. Boil 2 eggs in water for 20 minutes until hard-boiled[cite: 12].',
+          '2. Once boiled, peel the eggs and separate the yolks from the whites[cite: 12].',
+          '3. Place only the yolks in a mixing bowl[cite: 12].',
+          '4. To the yolks, add: 1 tablespoon cream cheese • 1 tablespoon mayonnaise • 2 tablespoons cooking cream • $\\frac{1}{2}$ teaspoon garlic paste • $\\frac{1}{4}$ cup finely chopped capsicum • $\\frac{1}{2}$ teaspoon salt (adjust later to taste) • 1 teaspoon black pepper • $\\frac{1}{2}$ teaspoon red chili powder[cite: 12]',
+          '5. Mix the yolk mixture thoroughly until smooth and well combined[cite: 12].',
+          '6. Chop the egg whites into small cubes[cite: 12].',
+          '7. Add the white into the yolk mixture. Mix well. Taste and adjust salt if needed[cite: 12].',
           'Toast and Assemble the Bread',
-          '14. Take 2 slices of bread and spread ghee or butter on the outer sides of each slice.',
-          '15. Heat a pan on medium flame and toast both sides of the bread until golden yellow.',
-          '16. Once toasted, spread the egg mixture evenly over one slice of the bread.',
-          '17. Sprinkle chili flakes over the egg mixture.',
-          '18. Place the second slice on top to form a sandwich.',
+          '14. Take 2 slices of bread and spread ghee or butter on the outer sides of each slice[cite: 12].',
+          '15. Heat a pan on medium flame and toast both sides of the bread until golden yellow[cite: 12].',
+          '16. Once toasted, spread the egg mixture evenly over one slice of the bread[cite: 12].',
+          '17. Sprinkle chili flakes over the egg mixture[cite: 13].',
+          '18. Place the second slice on top to form a sandwich[cite: 13].',
           'Final Toast',
-          '19. Toast on both sides, pressing lightly with a spatula, until the bread is crispy and golden brown, and the filling is warmed through.'
+          '19. Toast on both sides, pressing lightly with a spatula, until the bread is crispy and golden brown, and the filling is warmed through[cite: 13].'
         ]
       },
       {
         id: 'ragi-semiya',
         title: 'Raagi Semiya',
         category: 'Breakfast',
-        description: 'Wholesome steamed finger millet vermicelli blended with freshly grated coconut and sugar.',
+        description: 'Wholesome steamed finger millet vermicelli blended with freshly grated coconut and sugar[cite: 14].',
         prepTime: '20 mins',
         baseServings: 2,
         servingsUnit: 'people',
         ingredients: [
-          { name: 'Ragi Semiya (Ragi Vermicelli)', amount: 1, unit: 'pack' },
+          { name: 'Ragi Semiya', amount: 1, unit: 'pack' },
           { name: 'Salt', amount: 0.5, unit: 'teaspoon' },
-          { name: 'Sugar', amount: 3, unit: 'tablespoons' },
-          { name: 'Coconut Chunks', amount: 0.25, unit: 'cup' }
+          { name: 'Coconut Chunks', amount: 0.25, unit: 'cup' },
+          { name: 'Sugar', amount: 3, unit: 'tablespoons' }
         ],
         steps: [
           'Soak the Semiya',
-          '1. In a bowl, add water and stir in ½ teaspoon of salt until dissolved.',
-          '2. Add the Ragi Semiya into the bowl, ensuring it is fully submerged.',
-          '3. Allow it to soak for 2-5 minutes (do not over-soak, or it will become soggy).',
+          '1. In a bowl, add water and stir in ½ teaspoon of salt until dissolved[cite: 14].',
+          '2. Add the Ragi Semiya into the bowl, ensuring it is fully submerged[cite: 14].',
+          '3. Allow it to soak for 2-5 minutes (do not over-soak, or it will become soggy)[cite: 14].',
           'Prepare the Steamer',
-          '4. Pour water into the base of an Idli Pot and set it on medium heat.',
-          '5. Line the idli plates with a damp idli cloth and place the plates inside the steamer to preheat.',
+          '4. Pour water into the base of an Idli Pot and set it on medium heat[cite: 14].',
+          '5. Line the idli plates with a damp idli cloth and place the plates inside the steamer to preheat[cite: 14].',
           'Steam the Semiya',
-          '6. Thoroughly drain the water.',
-          '7. Evenly spread the soaked semiya over the idli plates.',
-          '8. Cover the idli pot with its lid and steam on medium flame for 10 minutes.',
+          '6. Thoroughly drain the water[cite: 14].',
+          '7. Evenly spread the soaked semiya over the idli plates[cite: 14].',
+          '8. Cover the idli pot with its lid and steam on medium flame for 10 minutes[cite: 14].',
           'Prepare the Fresh Coconut',
-          '9. Blend the coconut chunks (Avoid blending into a smooth paste, keep it textured)',
+          '9. Blend the coconut chunks (Avoid blending into a smooth paste, keep it textured)[cite: 14]',
           'Assemble and Serve',
-          '10. Transfer the Ragi Semiya into a mixing bowl.',
-          '11. Add 3 tablespoons of sugar and the ground coconut.',
-          '12. Mix everything together until well combined.'
+          '10. Transfer the Ragi Semiya into a mixing bowl[cite: 14].',
+          '11. Add 3 tablespoons of sugar and the ground coconut[cite: 14].',
+          '12. Mix everything together until well combined[cite: 14].'
         ]
       },
       {
         id: 'kesari',
         title: 'Kesari',
         category: 'Breakfast',
-        description: 'Classic festive semolina sweet infused with ghee-roasted cashews, raisins, and cardamoms.',
+        description: 'Classic festive semolina sweet infused with ghee-roasted cashews, raisins, and cardamoms[cite: 15, 16].',
         prepTime: '20 mins',
         baseServings: 4,
         servingsUnit: 'people',
         ingredients: [
-          { name: 'Ghee', amount: 3, unit: 'tablespoons' },
-          { name: 'Cashew Nuts', amount: 10, unit: 'pieces' },
-          { name: 'Dry Grapes', amount: 10, unit: 'pieces' },
           { name: 'Roasted Semolina', amount: 1, unit: 'Cup' },
           { name: 'Water', amount: 3, unit: 'Cups' },
           { name: 'Sugar', amount: 1, unit: 'Cup' },
-          { name: 'Food Colouring', amount: 1, unit: 'pinch' }
+          { name: 'Ghee', amount: 3, unit: 'tablespoons' }
         ],
         steps: [
           'Roast the Nuts',
-          '1. Heat a generous amount of ghee in a pan over low flame.',
-          '2. Add a few cashew nuts and roast them until they turn golden brown.',
-          '3. Add a handful of dry grapes (raisins) and sauté until they puff up.',
-          '4. Stir well, taking care not to let the nuts or raisins burn.',
-          '5. Once done, transfer the roasted nuts and raisins to a separate bowl and set aside.',
+          '1. Heat a generous amount of ghee in a pan over low flame[cite: 15].',
+          '2. Add a few cashew nuts and roast them until they turn golden brown[cite: 15].',
+          '3. Add a handful of dry grapes (raisins) and sauté until they puff up[cite: 15].',
+          '4. Stir well, taking care not to let the nuts or raisins burn[cite: 15].',
+          '5. Once done, transfer the roasted nuts and raisins to a separate bowl and set aside[cite: 15].',
           'Roast the Semolina (Rava)',
-          '6. In the same pan, roast the semolina on a low flame, stirring continuously, until it becomes aromatic and the grains separate (non-sticky).',
-          '7. Transfer the roasted semolina to a separate bowl and set aside.',
+          '6. In the same pan, roast the semolina on a low flame, stirring continuously, until it becomes aromatic and the grains separate (non-sticky)[cite: 15].',
+          '7. Transfer the roasted semolina to a separate bowl and set aside[cite: 15].',
           'Prepare the Kesari Mixture',
-          '8. In the same pan, pour in 3 cups of water (3 times of Semolina).',
-          '9. Heat on low flame until the water comes to a boil.',
-          '10. Once the water begins to boil, gradually add food colouring of your liking.',
-          '11. Immediately, add the roasted semolina while stirring continuously to avoid lumps.',
-          '12. Stir well until the mixture thickens evenly.',
+          '8. In the same pan, pour in 3 cups of water (3 times of Semolina)[cite: 15].',
+          '9. Heat on low flame until the water comes to a boil[cite: 15].',
+          '10. Once the water begins to boil, gradually add food colouring of your liking[cite: 15].',
+          '11. Immediately, add the roasted semolina while stirring continuously to avoid lumps[cite: 15].',
+          '12. Stir well until the mixture thickens evenly[cite: 16].',
           'Add Sweetness and Nuts',
-          '13. Add 1 cup of sugar (equal to the quantity of semolina) to the thickened mixture.',
-          '14. Stir thoroughly, breaking up any lumps that may form.',
-          '15. Finally, add the roasted cashews and raisins, mix well, and cook for another minute.',
-          'Optional. Add a pinch of saffron and a hint of cardamom powder for enhanced flavour and traditional appeal.'
+          '13. Add 1 cup of sugar (equal to the quantity of semolina) to the thickened mixture[cite: 16].',
+          '14. Stir thoroughly, breaking up any lumps that may form[cite: 16].',
+          '15. Finally, add the roasted cashews and raisins, mix well, and cook for another minute[cite: 16].',
+          'Optional. Add a pinch of saffron and a hint of cardamom powder for enhanced flavour and traditional appeal[cite: 16].'
         ]
       },
       {
         id: 'carrot-poriyal',
         title: 'Carrot Poriyal',
         category: 'Side Dishes',
-        description: 'Light and fresh stir-fried carrots with lentils, mustard seeds, and freshly grated coconut.',
+        description: 'Light and fresh stir-fried carrots with lentils, mustard seeds, and freshly grated coconut[cite: 18].',
         prepTime: '15 mins',
         baseServings: 4,
         servingsUnit: 'people',
         ingredients: [
           { name: 'Carrot', amount: 2, unit: 'large' },
+          { name: 'Onion', amount: 0.5, unit: 'medium' },
           { name: 'Mustard Seeds', amount: 1.5, unit: 'teaspoon' },
           { name: 'Urad Dal', amount: 1, unit: 'teaspoon' },
           { name: 'Green Chilies', amount: 2, unit: 'pieces' },
-          { name: 'Onion', amount: 0.5, unit: 'medium' },
-          { name: 'Curry Leaves', amount: 1, unit: 'few' },
-          { name: 'Grated Coconut', amount: 2.5, unit: 'tablespoons' },
-          { name: 'Salt', amount: 1, unit: 'tsp' }
+          { name: 'Grated Coconut', amount: 2.5, unit: 'tablespoons' }
         ],
         steps: [
           'Preparation',
-          '1. Chop 2 carrots either in small cubes or grate them.',
-          '2. Chop ½ onion',
-          '3. Finely chop or slit 2 green chilies',
+          '1. Chop 2 carrots either in small cubes or grate them[cite: 18].',
+          '2. Chop ½ onion[cite: 18]',
+          '3. Finely chop or slit 2 green chilies[cite: 18]',
           'Prepare the Tempering',
-          '4. In a pan, • Heat oil over medium heat. • Add mustard seeds and allow them to crackle. • Add urad dal and sauté until it turns golden brown. • Add green chilies, chopped onions, and curry leaves. Sauté until the onions turn translucent.',
+          '4. In a pan, • Heat oil over medium heat. • Add mustard seeds and allow them to crackle. • Add urad dal and sauté until it turns golden brown. • Add green chilies • chopped onions, and curry leaves. Sauté until the onions turn translucent[cite: 18].',
           'Cook the Carrots',
-          '5. Add the finely carrots and salt to taste. Mix well.',
-          '6. Sprinkle a splash of water, cover the pan with a lid, and cook on low heat for 4-5 minutes until the carrots are tender yet retain a slight bite.',
+          '5. Add the finely carrots and salt to taste. Mix well[cite: 18].',
+          '6. Sprinkle a splash of water, cover the pan with a lid, and cook on low heat for 4-5 minutes until the carrots are tender yet retain a slight bite[cite: 18].',
           'Finish and Serve',
-          '7. Remove the lid and stir on medium heat for 1 minute to evaporate any remaining moisture.',
-          '8. Add the grated coconut, mix thoroughly, and turn off the heat.'
+          '7. Remove the lid and stir on medium heat for 1 minute to evaporate any remaining moisture[cite: 18].',
+          '8. Add the grated coconut, mix thoroughly, and turn off the heat[cite: 18].'
         ]
       },
       {
         id: 'potato-poriyal',
         title: 'Potato Poriyal',
         category: 'Side Dishes',
-        description: 'Crispy golden-brown roasted potato cubes cooked with aromatic spices and asafoetida.',
+        description: 'Crispy golden-brown roasted potato cubes cooked with aromatic spices and asafoetida[cite: 19, 20].',
         prepTime: '25 mins',
         baseServings: 4,
         servingsUnit: 'people',
         ingredients: [
+          { name: 'Potatoes', amount: 3, unit: 'medium' },
           { name: 'Cooking Oil', amount: 3, unit: 'teaspoons' },
           { name: 'Mustard Seeds', amount: 0.5, unit: 'teaspoon' },
           { name: 'Cumin Seeds', amount: 0.5, unit: 'teaspoon' },
           { name: 'Urad Dhal', amount: 1, unit: 'teaspoon' },
-          { name: 'Asafoetida', amount: 1, unit: 'pinch' },
-          { name: 'Curry Leaves', amount: 1, unit: 'few' },
-          { name: 'Potatoes', amount: 3, unit: 'medium' },
           { name: 'Turmeric Powder', amount: 0.25, unit: 'teaspoon' },
-          { name: 'Sambar Powder', amount: 1, unit: 'teaspoon' },
-          { name: 'Salt', amount: 1, unit: 'to taste' }
+          { name: 'Sambar Powder', amount: 1, unit: 'teaspoon' }
         ],
         steps: [
           'Temper the Spices',
-          '1. Dice 3 medium-sized potatoes into small cubes.',
-          '2. In a stir fry pan, • Heat 3 teaspoons of oil over low flame. • Add ½ teaspoon mustard seeds and let them crackle. • Add ½ teaspoon cumin seeds. • Add 1 teaspoon urad dal. • Once the urad dal turns golden brown, add a generous pinch of Asafoetida • Add a few curry leaves. Sauté briefly.',
+          '1. Dice 3 medium-sized potatoes into small cubes[cite: 19].',
+          '2. In a stir fry pan, Heat 3 teaspoons of oil over low flame. • Add ½ teaspoon mustard seeds and let them crackle. • Add ½ teaspoon cumin seeds. • Add 1 teaspoon urad dal. Once the urad dal turns golden brown, add a generous pinch of Asafoetida • Add a few curry leaves. Sauté briefly[cite: 19].',
           'Cook the Potatoes',
-          '3. Add the diced potatoes.',
-          '4. Stir-fry for 2-3 minutes on low flame.',
+          '3. Add the diced potatoes[cite: 19].',
+          '4. Stir-fry for 2-3 minutes on low flame[cite: 19].',
           'Add Spices',
-          '5. Sprinkle ¼ teaspoon turmeric powder.',
-          '6. Add in 1 teaspoon sambar powder.',
-          '7. Add salt to taste.',
-          '8. Mix well and stir-fry for another 2 minutes, ensuring the spices don\'t burn.',
+          '5. Sprinkle  teaspoon turmeric powder[cite: 19].',
+          '6. Add in 1 teaspoon sambar powder[cite: 19].',
+          '7. Add salt to taste[cite: 19].',
+          '8. Mix well and stir-fry for another 2 minutes, ensuring the spices don\'t burn[cite: 19].',
           'Steam Cook',
-          '6. Add ¼ cup of water and mix thoroughly.',
-          '7. Cover the pan with a lid and cook on low flame for 4-5 minutes, until the potatoes soften and the water evaporates.',
+          '6. Add  cup of water and mix thoroughly[cite: 20].',
+          '7. Cover the pan with a lid and cook on low flame for 4-5 minutes, until the potatoes soften and the water evaporates[cite: 20].',
           'Roast Until Crispy',
-          '6. Remove the lid once the water has fully evaporated.',
-          '7. Continue cooking uncovered for another 5-6 minutes, stirring occasionally.',
-          '8. As the moisture disappears, the potatoes will begin to turn golden and crisp.',
-          '9. Continue stir-frying on low flame until the potatoes are evenly golden-brown and crisp without sticking to the pan.',
-          '10. Remove from heat and serve'
+          '6. Remove the lid once the water has fully evaporated[cite: 20].',
+          '7. Continue cooking uncovered for another 5-6 minutes, stirring occasionally[cite: 20].',
+          '8. As the moisture disappears, the potatoes will begin to turn golden and crisp[cite: 20].',
+          '9. Continue stir-frying on low flame until the potatoes are evenly golden-brown and crisp without sticking to the pan[cite: 20].',
+          '10. Remove from heat and serve[cite: 20]'
         ]
       },
       {
         id: 'peerkangai-kuzhambu',
         title: 'Peerkangai Kuzhambu',
         category: 'Main Course',
-        description: 'Comforting ridge gourd curry cooked in onion tomato base with coarse pulsed fresh coconut.',
+        description: 'Comforting ridge gourd curry cooked in onion tomato base with coarse pulsed fresh coconut[cite: 22, 23].',
         prepTime: '25 mins',
         baseServings: 4,
         servingsUnit: 'people',
         ingredients: [
-          { name: 'Ridge Gourd (Peerkangai)', amount: 1, unit: 'medium' },
+          { name: 'Ridge Gourd', amount: 1, unit: 'medium' },
           { name: 'Onion', amount: 1, unit: 'large' },
           { name: 'Tomato', amount: 1.5, unit: 'pieces' },
-          { name: 'Mustard Seeds', amount: 1, unit: 'tsp' },
-          { name: 'Urad Dal', amount: 1, unit: 'tsp' },
-          { name: 'Curry Leaves', amount: 1, unit: 'few' },
           { name: 'Sambar Powder', amount: 1, unit: 'tablespoon' },
-          { name: 'Garam Masala / Curry Masala Powder', amount: 0.5, unit: 'teaspoon' },
+          { name: 'Masala Powder', amount: 0.5, unit: 'teaspoon' },
           { name: 'Turmeric Powder', amount: 0.25, unit: 'teaspoon' },
-          { name: 'Fresh Coconut Chunks', amount: 2.5, unit: 'tablespoons' },
-          { name: 'Rock Salt', amount: 1, unit: 'to taste' }
+          { name: 'Fresh Coconut', amount: 2.5, unit: 'tablespoons' }
         ],
         steps: [
           'Prepare the Veggies',
-          '1. Chop 1 ridge gourd (into small pieces)',
-          '2. Chop 1 big onion',
-          '3. Chop 2 tomatoes',
-          '4. In a saucepot, • Heat oil • Add mustard seeds and allow them to crackle. • Add urad dal and curry leaves, sautéing briefly. • Add chopped onions and sauté until golden brown. • Add chopped tomatoes and cook until soft and mushy. • Add chopped ridge gourd and sauté until slightly softened.',
-          '5. Masala Powder - 1/½ teaspoon (Add sambar powder, masala powder, and turmeric powder. Sauté for a minute to combine well. • Pour in enough water to just submerge the vegetable. • Add rock salt to taste, mix well, and bring to a simmer until cooked through.)',
+          '1. Chop 1 ridge gourd (into small pieces)[cite: 22]',
+          '2. Chop 1 big onion[cite: 22]',
+          '3. Chop 2 tomatoes[cite: 22]',
+          '4. In a saucepot, • Heat oil • Add mustard seeds and allow them to crackle. • Add urad dal and curry leaves, sautéing briefly. • Add chopped onions and sauté until golden brown. • Add chopped tomatoes and cook until soft and mushy. • Add chopped ridge gourd and sauté until slightly softened[cite: 22].',
+          'Add sambar powder, masala powder, and turmeric powder. Sauté for a minute to combine well[cite: 22].',
+          'Pour in enough water to just submerge the vegetable[cite: 22].',
+          'Add rock salt to taste, mix well, and bring to a simmer until cooked through[cite: 22].',
           'Prepare the Coconut',
-          '5. Coarsely pulse the coconut chunks in a blender without adding water.',
+          '5. Coarsely pulse the coconut chunks in a blender without adding water[cite: 22].',
           'Final Assembly',
-          '6. Add the ground coconut to the cooked curry mixture.',
-          '7. Stir well and simmer for a final 1-2 minutes before removing from heat.'
+          '6. Add the ground coconut to the cooked curry mixture[cite: 23].',
+          '7. Stir well and simmer for a final 1-2 minutes before removing from heat[cite: 23].'
         ]
       },
       {
         id: 'pasi-payir-kuzhambu',
         title: 'Pasi Payir Kuzhambu',
         category: 'Main Course',
-        description: 'Protein-rich green gram gravy pressure cooked with castor oil, garlic, and fried aromatics.',
+        description: 'Protein-rich green gram gravy pressure cooked with castor oil, garlic, and fried aromatics[cite: 24, 25].',
         prepTime: '35 mins',
         baseServings: 4,
         servingsUnit: 'people',
         ingredients: [
-          { name: 'Green Gram (Pasi payir)', amount: 1, unit: 'Cup' },
+          { name: 'Green Gram', amount: 1, unit: 'Cup' },
           { name: 'Garlic', amount: 4.5, unit: 'cloves' },
           { name: 'Tomato', amount: 1, unit: 'medium' },
-          { name: 'Castor Oil', amount: 0.5, unit: 'tsp' },
-          { name: 'Salt', amount: 1, unit: 'to taste' },
-          { name: 'Cooking Oil', amount: 3, unit: 'tsp' },
-          { name: 'Mustard Seeds', amount: 1, unit: 'tsp' },
-          { name: 'Cumin Seeds', amount: 1, unit: 'tsp' },
-          { name: 'Urad Dhal', amount: 1.5, unit: 'tsp' },
           { name: 'Onion', amount: 1.5, unit: 'medium' },
-          { name: 'Curry Leaves', amount: 1, unit: 'few' },
-          { name: 'Red Chilli', amount: 2, unit: 'pieces' },
-          { name: 'Coriander', amount: 2, unit: 'tbsp chopped' }
+          { name: 'Red Chilli', amount: 2, unit: 'pieces' }
         ],
         steps: [
           'Prepare the Green Gram Base',
-          '1. Soak 1 cup of green gram (pasi payir) in water for 1-2 hours prior to cooking.',
-          '2. Just before cooking, rinse the soaked green gram thoroughly.',
-          '3. Transfer the green gram to a pressure cooker.',
+          '1. Soak 1 cup of green gram (pasi payir) in water for 1-2 hours prior to cooking[cite: 24].',
+          '2. Just before cooking, rinse the soaked green gram thoroughly[cite: 24].',
+          '3. Transfer the green gram to a pressure cooker[cite: 24].',
           'Add Core Ingredients',
-          '4. Roughly chop 4-5 garlic cloves (each clove into about 3 pieces).',
-          '5. Chop 1 medium tomato (fine chopping is not necessary).',
-          '6. Chop ½ medium onion into fine pieces.',
-          '7. Chop 2 red chilies each roughly into 4 pieces.',
-          '8. In the cooker, add: • Add the chopped garlic and tomato alone. • Add a small amount of salt (you can adjust later to taste). • Pour enough water to just submerge all the ingredients. Do not add excess water. • Add ½ teaspoon of castor oil.',
-          '9. Close the pressure cooker lid and cook 1-2 whistles on low flame.',
+          '4. Roughly chop 4-5 garlic cloves (each clove into about 3 pieces)[cite: 24].',
+          '5. Chop 1 medium tomato (fine chopping is not necessary)[cite: 24].',
+          '6. Chop ½ medium onion into fine pieces[cite: 24].',
+          '7. Chop 2 red chilies each roughly into 4 pieces[cite: 24].',
+          '8. In the cooker, add: Add the chopped garlic and tomato alone. • Add a small amount of salt (you can adjust later to taste). • Pour enough water to just submerge all the ingredients. Do not add excess water. • Add ½ teaspoon of castor oil[cite: 24].',
+          '9. Close the pressure cooker lid and cook 1-2 whistles on low flame[cite: 24].',
           'Prepare the roasted ingredients',
-          'Start this step 5-10 minutes before the last whistle.',
-          '10. In a pan, • heat 3 teaspoons of oil • 1 teaspoon mustard seeds • 1 teaspoon cumin seeds • 1½ teaspoons urad dal and wait till it starts to turn into golden brown • the chopped onions • the dried red chilies • a few fresh curry leaves',
-          '11. Sauté the mixture until the onions turn golden brown. Set aside.',
+          'Start this step 5-10 minutes before the last whistle[cite: 25].',
+          '10. In a pan, • heat 3 teaspoons of oil • 1 teaspoon mustard seeds • 1 teaspoon cumin seeds • 1.5 teaspoons urad dal and wait till it starts to turn into golden brown • the chopped onions • the dried red chilies • a few fresh curry leaves[cite: 25]',
+          '11. Sauté the mixture until the onions turn golden brown. Set aside[cite: 25].',
           'Final Assembly',
-          '12. Once the pressure subsides, open the cooker.',
-          '13. Lightly mash the green gram mixture using a wooden ladle. Note: Do not over-mash, it should be thick, not runny.',
-          '14. Add the roasted ingredients to the cooker.',
-          '15. Pour in enough water to adjust consistency to your liking.',
-          '16. Add salt to taste and mix well.',
-          '17. Add coriander leaves on top.'
+          '12. Once the pressure subsides, open the cooker[cite: 25].',
+          '13. Lightly mash the green gram mixture using a wooden ladle[cite: 25].',
+          'Note: Do not over-mash, it should be thick, not runny[cite: 25].',
+          '14. Add the roasted ingredients to the cooker[cite: 25].',
+          '15. Pour in enough water to adjust consistency to your liking[cite: 25].',
+          '16. Add salt to taste and mix well[cite: 25].',
+          '17. Add coriander leaves on top[cite: 25].'
         ]
       }
     ];
@@ -1196,10 +1134,6 @@
       document.getElementById('modal-servings-count').innerText = `${currentServings} ${currentRecipe.servingsUnit}`;
       renderModalIngredients();
       renderModalSteps();
-      // Initialize lucide icons for ingredients
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
     }
 
     // FRACTION FORMATTER FOR PRECISE QUANTITIES
@@ -1233,16 +1167,10 @@
       container.innerHTML = currentRecipe.ingredients.map(ing => {
         const scaledAmount = ing.amount ? ing.amount * scaleFactor : null;
         const formattedAmt = scaledAmount ? formatAmount(scaledAmount) : '';
-        const lucideIconName = getIngredientLucideIcon(ing.name);
 
         return `
           <li class="flex items-center justify-between p-2.5 rounded-xl bg-pdfBg border border-pdfBorder text-xs">
-            <div class="flex items-center gap-2.5">
-              <div class="w-6 h-6 rounded-lg bg-pdfAccentLight text-pdfAccent flex items-center justify-center flex-shrink-0 ingredient-icon-animated">
-                <i data-lucide="${lucideIconName}" class="w-3.5 h-3.5"></i>
-              </div>
-              <span class="font-medium text-pdfTextDark">${ing.name}</span>
-            </div>
+            <span class="font-medium text-pdfTextDark">${ing.name}</span>
             <span class="font-bold text-pdfAccent bg-white px-2 py-0.5 rounded-md border border-pdfBorder text-[11px]">
               ${formattedAmt} ${ing.unit}
             </span>
@@ -1255,15 +1183,12 @@
       const container = document.getElementById('modal-steps-list');
 
       container.innerHTML = currentRecipe.steps.map((step, idx) => {
-        // Check if step is a section heading/title
         const isHeader = !step.trim().match(/^[0-9•]/);
 
         if (isHeader) {
           return `
             <div class="pt-3 pb-1">
-              <h4 class="font-serif font-bold text-sm text-pdfAccent uppercase tracking-wider">
-                ${step}
-              </h4>
+              <h4 class="font-serif font-bold text-sm text-pdfAccent">${step}</h4>
             </div>
           `;
         }
@@ -1286,7 +1211,7 @@
 
     function resetModalSteps() {
       if (!currentRecipe) return;
-      currentRecipe.steps.length && currentRecipe.steps.forEach((_, idx) => {
+      currentRecipe.steps.forEach((_, idx) => {
         const checkbox = document.getElementById(`step-${currentRecipe.id}-${idx}`);
         if (checkbox) checkbox.checked = false;
       });
