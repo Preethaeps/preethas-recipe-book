@@ -18,17 +18,17 @@
       theme: {
         extend: {
           colors: {
-            pdfBg: '#FFFDF4',        /* Warm cheerful cream background */
+            pdfBg: '#FFF9E6',        /* Warm sunny cream background */
             pdfCard: '#FFFFFF',      /* Crisp clean recipe card background */
-            pdfBorder: '#F0E2BC',    /* Soft warm border tint */
-            pdfTextDark: '#2C221E',  /* Deep rich espresso for titles */
-            pdfTextBody: '#594A42',  /* Warm neutral text */
-            pdfAccent: '#D97724',    /* Vibrant warm saffron accent */
-            pdfAccentHover: '#B45309',/* Deep amber hover */
-            pdfAccentLight: '#FEF3C7',/* Cheerful golden pill fill */
-            pdfHighlight: '#F59E0B', /* Warm sunshine gold */
-            pdfPink: '#F43F5E',      /* Fun vibrant pop color */
-            pdfTeal: '#0D9488',      /* Professional fresh accent */
+            pdfBorder: '#FDE047',    /* Bright warm yellow border accent */
+            pdfTextDark: '#1E293B',  /* Deep dark slate for crisp titles */
+            pdfTextBody: '#475569',  /* Readable warm neutral text */
+            pdfPrimary: '#F59E0B',   /* Vibrant sunny amber */
+            pdfAccent: '#D97724',    /* Rich terracotta warm accent */
+            pdfRose: '#FB7185',      /* Fun playful coral-rose */
+            pdfTeal: '#2DD4BF',      /* Fresh vibrant teal accent */
+            pdfPurple: '#A78BFA',    /* Cheerful purple pop */
+            pdfGreen: '#34D399',     /* Fresh mint green accent */
           },
           fontFamily: {
             serif: ['"Playfair Display"', 'serif'],
@@ -43,21 +43,21 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: linear-gradient(135deg, #FFFDF4 0%, #FEFCE8 100%);
-      color: #2C221E;
+      background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 50%, #ECFDF5 100%);
+      color: #1E293B;
       min-height: 100vh;
     }
     
     .recipe-doc-page {
       background: #ffffff;
-      border: 2px solid #F0E2BC;
-      box-shadow: 0 6px 24px -4px rgba(217, 119, 36, 0.08);
+      border: 2px solid #FDE047;
+      box-shadow: 0 8px 30px -4px rgba(245, 158, 11, 0.15);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .recipe-doc-page:hover {
-      box-shadow: 0 12px 36px -6px rgba(217, 119, 36, 0.18);
-      border-color: #D97724;
+      box-shadow: 0 16px 40px -6px rgba(245, 158, 11, 0.3);
+      border-color: #F59E0B;
       transform: translateY(-4px);
     }
 
@@ -72,10 +72,10 @@
       width: 8px;
     }
     ::-webkit-scrollbar-track {
-      background: #FFFDF4;
+      background: #FEF3C7;
     }
     ::-webkit-scrollbar-thumb {
-      background: #F0E2BC;
+      background: #F59E0B;
       border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
@@ -86,30 +86,30 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200 selection:text-amber-900">
 
   <!-- TOP NAVIGATION HEADER -->
-  <header class="bg-pdfBg/95 border-b-2 border-pdfBorder sticky top-0 z-30 backdrop-blur-md">
+  <header class="bg-white/90 border-b-4 border-amber-300 sticky top-0 z-30 backdrop-blur-md shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         
         <!-- Book Title / Header -->
         <div class="flex items-center space-x-3 cursor-pointer group" onclick="resetFilters()">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-pdfAccent flex items-center justify-center text-white text-xl shadow-md group-hover:scale-105 transition-transform">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-teal-400 flex items-center justify-center text-white text-xl shadow-md group-hover:scale-105 transition-transform">
             <i class="fa-solid fa-book-bookmark"></i>
           </div>
           <div>
             <h1 class="text-2xl font-title font-bold tracking-wide text-pdfTextDark flex items-center gap-2">
-              Preetha's Recipe Book <span class="text-xs bg-pdfAccent text-white px-2 py-0.5 rounded-full font-sans tracking-normal shadow-2xs">✨ Pro Edition</span>
+              Preetha's Recipe Book 🍳
             </h1>
-            <p class="text-xs text-pdfAccent font-semibold tracking-widest uppercase">Classic Homemade Collection</p>
+            <p class="text-xs text-amber-600 font-bold tracking-widest uppercase">Colorful & Homemade Collection</p>
           </div>
         </div>
 
         <!-- Saved / Actions -->
         <div class="flex items-center space-x-3">
-          <div id="recipe-count-badge" class="bg-pdfAccentLight text-pdfAccent text-xs px-3.5 py-2 rounded-full border border-pdfBorder hidden sm:flex items-center gap-1.5 font-semibold shadow-2xs">
-            <i class="fa-solid fa-utensils text-xs"></i> <span id="visible-count">0</span> Recipes Available
+          <div id="recipe-count-badge" class="bg-amber-100 text-amber-800 text-xs px-3.5 py-2 rounded-full border-2 border-amber-300 hidden sm:flex items-center gap-1.5 font-bold shadow-2xs">
+            <i class="fa-solid fa-utensils text-xs text-amber-600"></i> <span id="visible-count">0</span> Recipes Available
           </div>
-          <button onclick="toggleFavoritesOnly()" id="fav-filter-btn" class="bg-white hover:bg-amber-50 text-pdfTextDark px-4 py-2.5 rounded-xl border-2 border-pdfBorder text-sm flex items-center gap-2 transition shadow-sm font-semibold">
-            <i class="fa-regular fa-bookmark text-pdfAccent" id="fav-btn-icon"></i>
+          <button onclick="toggleFavoritesOnly()" id="fav-filter-btn" class="bg-white hover:bg-rose-50 text-pdfTextDark px-4 py-2.5 rounded-xl border-2 border-rose-300 text-sm flex items-center gap-2 transition shadow-sm font-bold">
+            <i class="fa-regular fa-bookmark text-rose-500 text-base" id="fav-btn-icon"></i>
             <span class="hidden sm:inline">Saved Recipes</span>
           </button>
         </div>
@@ -118,24 +118,24 @@
   </header>
 
   <!-- SEARCH & CATEGORY BANNER SECTION -->
-  <section class="py-10 px-4 sm:px-6 border-b border-pdfBorder bg-gradient-to-b from-amber-50/60 to-pdfBg">
+  <section class="py-10 px-4 sm:px-6 border-b-2 border-amber-200 bg-gradient-to-r from-amber-100/70 via-rose-100/60 to-teal-100/70">
     <div class="max-w-5xl mx-auto text-center space-y-6">
       
       <!-- Subtitle -->
-      <p class="text-base font-serif italic text-pdfAccent max-w-xl mx-auto font-medium">
-        "A cherished collection of homemade recipes, carefully measured and step-by-step guided." 🍳
+      <p class="text-base font-serif italic text-amber-900 max-w-xl mx-auto font-bold">
+        "A vibrant, cherished collection of homemade recipes, carefully measured and step-by-step guided." ✨
       </p>
 
       <!-- Search Bar -->
       <div class="relative max-w-xl mx-auto">
-        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-pdfAccent">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-amber-600">
           <i class="fa-solid fa-magnifying-glass text-base"></i>
         </div>
         <input 
           type="text" 
           id="search-input" 
-          placeholder="Search delicious recipes or ingredients (e.g., coffee, coconut, egg)..." 
-          class="w-full pl-11 pr-10 py-4 rounded-2xl bg-white border-2 border-pdfBorder text-pdfTextDark placeholder-pdfTextBody/60 focus:outline-none focus:ring-4 focus:ring-pdfAccent/20 focus:border-pdfAccent text-sm shadow-md transition"
+          placeholder="Search colourful recipes or ingredients (e.g., coffee, coconut, egg)..." 
+          class="w-full pl-11 pr-10 py-4 rounded-2xl bg-white border-2 border-amber-400 text-pdfTextDark placeholder-pdfTextBody/60 focus:outline-none focus:ring-4 focus:ring-amber-400/30 focus:border-amber-500 text-sm shadow-md transition font-medium"
           oninput="handleSearch()"
         />
         <button 
@@ -148,7 +148,7 @@
       </div>
 
       <!-- Categories Pills -->
-      <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2" id="category-tabs">
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2" id="category-tabs">
         <!-- Dynamically rendered tabs -->
       </div>
     </div>
@@ -158,12 +158,12 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
     
     <!-- Active Filter Badge Indicator -->
-    <div id="active-filter-bar" class="hidden flex items-center justify-between bg-pdfAccentLight border-2 border-pdfBorder rounded-2xl px-5 py-3 mb-8 text-sm text-pdfTextDark shadow-sm">
+    <div id="active-filter-bar" class="hidden flex items-center justify-between bg-teal-100 border-2 border-teal-300 rounded-2xl px-5 py-3 mb-8 text-sm text-teal-900 shadow-sm">
       <div class="flex items-center gap-2">
-        <span class="font-bold text-pdfAccent">🎯 Filtered View:</span>
-        <span id="filter-tag-text" class="bg-white text-pdfTextDark px-3 py-1 rounded-lg font-semibold text-xs border border-pdfBorder shadow-2xs">All</span>
+        <span class="font-bold text-teal-700">🎯 Filtered View:</span>
+        <span id="filter-tag-text" class="bg-white text-teal-900 px-3 py-1 rounded-lg font-bold text-xs border border-teal-300 shadow-2xs">All</span>
       </div>
-      <button onclick="resetFilters()" class="text-xs font-bold text-pdfAccent hover:underline flex items-center gap-1 bg-white px-3 py-1 rounded-lg border border-pdfBorder">
+      <button onclick="resetFilters()" class="text-xs font-bold text-teal-800 hover:underline bg-white px-3 py-1 rounded-lg border border-teal-300 shadow-2xs">
         <i class="fa-solid fa-rotate-left"></i> Reset Filters
       </button>
     </div>
@@ -175,12 +175,12 @@
 
     <!-- EMPTY STATE -->
     <div id="empty-state" class="hidden text-center py-24 px-4">
-      <div class="w-20 h-20 bg-pdfAccentLight text-pdfAccent rounded-3xl flex items-center justify-center mx-auto mb-4 text-3xl border-2 border-pdfBorder shadow-md">
+      <div class="w-20 h-20 bg-rose-100 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-4 text-3xl border-2 border-rose-300 shadow-md">
         <i class="fa-solid fa-utensils"></i>
       </div>
       <h3 class="text-2xl font-serif font-bold text-pdfTextDark mb-2">No recipes found</h3>
-      <p class="text-pdfTextBody text-sm max-w-sm mx-auto mb-6">We couldn't find any recipes matching your current filter. Try searching for something else!</p>
-      <button onclick="resetFilters()" class="bg-pdfAccent hover:bg-pdfAccentHover text-white font-bold px-6 py-3 rounded-xl shadow-md text-sm transition">
+      <p class="text-pdfTextBody text-sm max-w-sm mx-auto mb-6 font-medium">We couldn't find any recipes matching your current filter. Try searching for something else!</p>
+      <button onclick="resetFilters()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-xl shadow-md text-sm transition">
         Clear Filters
       </button>
     </div>
@@ -188,48 +188,48 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-pdfBg border-t-2 border-pdfBorder py-10 text-center text-xs text-pdfTextBody mt-12">
+  <footer class="bg-white border-t-4 border-teal-300 py-10 text-center text-xs text-pdfTextBody mt-12 shadow-inner">
     <div class="max-w-7xl mx-auto px-4 space-y-3">
       <p class="font-title text-lg text-pdfTextDark font-bold flex items-center justify-center gap-2">
-        <span>🍲</span> Preetha's Recipe Book <span>✨</span>
+        <span>🌈</span> Preetha's Recipe Book <span>✨</span>
       </p>
-      <p class="text-pdfTextBody/90 font-medium">Interactive Cooking Companion & Serving Scaler</p>
-      <p class="text-pdfTextBody/50 pt-2">&copy; 2026 Preetha's Recipe Book. All Rights Reserved.</p>
+      <p class="text-pdfTextBody font-bold">Interactive Colorful Cooking Companion & Serving Scaler</p>
+      <p class="text-pdfTextBody/60 pt-2 font-medium">&copy; 2026 Preetha's Recipe Book. All Rights Reserved.</p>
     </div>
   </footer>
 
   <!-- RECIPE DETAIL MODAL (FULL PDF PAGE VIEW) -->
-  <div id="recipe-modal" class="fixed inset-0 z-50 overflow-y-auto bg-pdfTextDark/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 hidden">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden border-2 border-pdfBorder relative transform transition-all">
+  <div id="recipe-modal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 hidden">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden border-4 border-amber-300 relative transform transition-all">
       
       <!-- Modal Header -->
-      <div class="bg-gradient-to-r from-pdfBg via-amber-50 to-pdfBg border-b-2 border-pdfBorder p-6 sm:p-8 relative">
+      <div class="bg-gradient-to-r from-amber-100 via-rose-100 to-teal-100 border-b-2 border-amber-300 p-6 sm:p-8 relative">
         <button 
           onclick="closeModal()" 
-          class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white border-2 border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark flex items-center justify-center transition shadow-md font-bold text-base"
+          class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white border-2 border-rose-300 hover:bg-rose-50 text-rose-500 flex items-center justify-center transition shadow-md font-bold text-base"
           aria-label="Close modal"
         >
           <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-pdfAccent mb-2">
-          <span id="modal-category" class="bg-pdfAccentLight px-3.5 py-1 rounded-full border border-pdfBorder shadow-2xs">Category</span>
-          <span class="flex items-center gap-1 text-pdfTextBody font-semibold"><i class="fa-regular fa-clock text-pdfAccent"></i> <span id="modal-prep-time">15 mins</span></span>
+        <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-amber-800 mb-2">
+          <span id="modal-category" class="bg-amber-200 px-3.5 py-1 rounded-full border border-amber-400 shadow-2xs">Category</span>
+          <span class="flex items-center gap-1 text-slate-700 font-bold"><i class="fa-regular fa-clock text-amber-600"></i> <span id="modal-prep-time">15 mins</span></span>
         </div>
 
         <h2 id="modal-title" class="text-3xl sm:text-4xl font-serif font-bold text-pdfTextDark mb-2 pr-12">Recipe Title</h2>
-        <p id="modal-description" class="text-pdfTextBody text-sm leading-relaxed max-w-2xl font-medium">Recipe description goes here.</p>
+        <p id="modal-description" class="text-slate-700 text-sm leading-relaxed max-w-2xl font-medium">Recipe description goes here.</p>
       </div>
 
       <!-- Modal Body -->
       <div class="p-6 sm:p-8 overflow-y-auto space-y-8 flex-grow bg-white">
         
         <!-- Recipe Artwork / Illustration Bar & Serving Scaler -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-gradient-to-r from-amber-50/50 to-pdfBg border-2 border-pdfBorder p-5 rounded-2xl shadow-xs">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-gradient-to-r from-amber-50 to-teal-50 border-2 border-amber-300 p-5 rounded-2xl shadow-sm">
           
           <!-- Illustration Box -->
           <div class="md:col-span-4 flex items-center justify-center">
-            <div id="modal-illustration-container" class="w-32 h-32 flex items-center justify-center bg-white rounded-2xl border-2 border-pdfBorder p-2 shadow-sm">
+            <div id="modal-illustration-container" class="w-32 h-32 flex items-center justify-center bg-white rounded-2xl border-2 border-amber-300 p-2 shadow-sm">
               <!-- Dynamic SVG Art Inserted Here -->
             </div>
           </div>
@@ -241,20 +241,20 @@
                 <h4 class="font-serif font-bold text-pdfTextDark text-base flex items-center gap-1.5">
                   <span>✨</span> Portion & Servings Scaler
                 </h4>
-                <p class="text-xs text-pdfTextBody font-medium">Adjust servings below to automatically recalculate ingredient quantities.</p>
+                <p class="text-xs text-slate-600 font-medium">Adjust servings below to automatically recalculate ingredient quantities.</p>
               </div>
             </div>
 
             <div class="flex items-center gap-3 pt-1">
-              <span class="text-xs font-bold uppercase text-pdfTextBody">Servings:</span>
-              <div class="flex items-center bg-white border-2 border-pdfBorder rounded-xl p-1 shadow-sm">
-                <button onclick="updateServings(-1)" class="w-9 h-9 rounded-lg bg-pdfAccentLight hover:bg-amber-200 text-pdfAccent font-bold flex items-center justify-center text-sm transition">
+              <span class="text-xs font-bold uppercase text-slate-700">Servings:</span>
+              <div class="flex items-center bg-white border-2 border-amber-300 rounded-xl p-1 shadow-sm">
+                <button onclick="updateServings(-1)" class="w-9 h-9 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-700 font-bold flex items-center justify-center text-sm transition">
                   <i class="fa-solid fa-minus text-xs"></i>
                 </button>
                 <span class="px-5 font-bold text-pdfTextDark text-sm min-w-[5rem] text-center" id="modal-servings-count">
                   1 person
                 </span>
-                <button onclick="updateServings(1)" class="w-9 h-9 rounded-lg bg-pdfAccentLight hover:bg-amber-200 text-pdfAccent font-bold flex items-center justify-center text-sm transition">
+                <button onclick="updateServings(1)" class="w-9 h-9 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-700 font-bold flex items-center justify-center text-sm transition">
                   <i class="fa-solid fa-plus text-xs"></i>
                 </button>
               </div>
@@ -267,11 +267,11 @@
           
           <!-- Column 1: Ingredients & Measurements -->
           <div class="md:col-span-5 space-y-4">
-            <div class="border-b-2 border-pdfBorder pb-2 flex items-center justify-between">
+            <div class="border-b-2 border-amber-300 pb-2 flex items-center justify-between">
               <h3 class="font-serif font-bold text-lg text-pdfTextDark flex items-center gap-2">
-                <i class="fa-solid fa-basket-shopping text-pdfAccent text-sm"></i> Ingredients
+                <i class="fa-solid fa-basket-shopping text-teal-600 text-sm"></i> Ingredients
               </h3>
-              <span id="ingredient-count" class="text-xs font-bold text-pdfAccent bg-pdfAccentLight px-2.5 py-0.5 rounded-full border border-pdfBorder">0 items</span>
+              <span id="ingredient-count" class="text-xs font-bold text-teal-800 bg-teal-100 px-2.5 py-0.5 rounded-full border border-teal-300">0 items</span>
             </div>
 
             <ul id="modal-ingredients-list" class="space-y-2.5">
@@ -281,11 +281,11 @@
 
           <!-- Column 2: Instructions & Steps -->
           <div class="md:col-span-7 space-y-4">
-            <div class="border-b-2 border-pdfBorder pb-2 flex items-center justify-between">
+            <div class="border-b-2 border-amber-300 pb-2 flex items-center justify-between">
               <h3 class="font-serif font-bold text-lg text-pdfTextDark flex items-center gap-2">
-                <i class="fa-solid fa-list-check text-pdfAccent text-sm"></i> Instructions
+                <i class="fa-solid fa-list-check text-rose-500 text-sm"></i> Instructions
               </h3>
-              <button onclick="resetModalSteps()" class="text-xs font-bold text-pdfAccent hover:underline bg-pdfAccentLight px-3 py-1 rounded-lg border border-pdfBorder">
+              <button onclick="resetModalSteps()" class="text-xs font-bold text-rose-600 hover:underline bg-rose-100 px-3 py-1 rounded-lg border border-rose-300">
                 Reset Checklist
               </button>
             </div>
@@ -300,11 +300,11 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="bg-pdfBg px-6 py-4 border-t-2 border-pdfBorder flex items-center justify-between">
-        <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-bold px-5 py-2.5 rounded-xl border-2 border-pdfBorder bg-white hover:bg-amber-50 flex items-center gap-2 text-pdfTextDark transition shadow-sm">
-          <i class="fa-regular fa-bookmark text-pdfAccent text-base" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
+      <div class="bg-amber-50 px-6 py-4 border-t-2 border-amber-300 flex items-center justify-between">
+        <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-bold px-5 py-2.5 rounded-xl border-2 border-rose-300 bg-white hover:bg-rose-50 flex items-center gap-2 text-pdfTextDark transition shadow-sm">
+          <i class="fa-regular fa-bookmark text-rose-500 text-base" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
         </button>
-        <button onclick="closeModal()" class="bg-pdfAccent hover:bg-pdfAccentHover text-white font-bold px-7 py-2.5 rounded-xl text-sm transition shadow-md">
+        <button onclick="closeModal()" class="bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-bold px-7 py-2.5 rounded-xl text-sm transition shadow-md">
           Close Document
         </button>
       </div>
@@ -317,8 +317,8 @@
     // STYLIZED SVG ILLUSTRATIONS FOR DISHES
     const svgIllustrations = {
       coffee: `
-        <svg viewBox="0 0 100 100" class="w-full h-full text-pdfAccent fill-current">
-          <path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#D97724" opacity="0.2" stroke="#D97724" stroke-width="3"/>
+        <svg viewBox="0 0 100 100" class="w-full h-full text-amber-700 fill-current">
+          <path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#D97724" opacity="0.25" stroke="#D97724" stroke-width="3"/>
           <path d="M22 38 h51 v6 h-51 z" fill="#D97724"/>
           <path d="M70 45 h8 a8 8 0 0 1 8 8 v4 a8 8 0 0 1 -8 8 h-8" fill="none" stroke="#D97724" stroke-width="3.5"/>
           <path d="M20 83 h56 v4 h-56 z" fill="#D97724"/>
@@ -327,81 +327,81 @@
         </svg>`,
       tea: `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M30 35 L35 75 A10 10 0 0 0 45 83 L55 83 A10 10 0 0 0 65 75 L70 35 Z" fill="#D97724" opacity="0.2" stroke="#D97724" stroke-width="3"/>
-          <path d="M28 32 h44 v5 h-44 z" fill="#D97724"/>
-          <path d="M40 22 Q45 15 42 10" fill="none" stroke="#D97724" stroke-width="3" stroke-linecap="round"/>
-          <path d="M52 22 Q57 15 54 10" fill="none" stroke="#D97724" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="50" cy="55" r="8" fill="#F59E0B" opacity="0.5"/>
+          <path d="M30 35 L35 75 A10 10 0 0 0 45 83 L55 83 A10 10 0 0 0 65 75 L70 35 Z" fill="#34D399" opacity="0.3" stroke="#0D9488" stroke-width="3"/>
+          <path d="M28 32 h44 v5 h-44 z" fill="#0D9488"/>
+          <path d="M40 22 Q45 15 42 10" fill="none" stroke="#0D9488" stroke-width="3" stroke-linecap="round"/>
+          <path d="M52 22 Q57 15 54 10" fill="none" stroke="#0D9488" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="50" cy="55" r="8" fill="#F59E0B" opacity="0.6"/>
         </svg>`,
       'dates-almond-milk': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <rect x="36" y="25" width="28" height="55" rx="6" fill="#D97724" opacity="0.2" stroke="#D97724" stroke-width="3"/>
-          <path d="M32 25 h36 v5 h-36 z" fill="#D97724"/>
+          <rect x="36" y="25" width="28" height="55" rx="6" fill="#A78BFA" opacity="0.3" stroke="#7C3AED" stroke-width="3"/>
+          <path d="M32 25 h36 v5 h-36 z" fill="#7C3AED"/>
           <ellipse cx="50" cy="65" rx="6" ry="9" fill="#D97724"/>
           <ellipse cx="30" cy="75" rx="5" ry="8" fill="#F59E0B" transform="rotate(-30 30 75)"/>
         </svg>`,
       'coconut-chutney': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#FFFDF4" stroke="#D97724" stroke-width="3"/>
-          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#FEF3C7" stroke="#D97724" stroke-width="2"/>
-          <circle cx="45" cy="48" r="2.5" fill="#2C221E"/>
-          <circle cx="55" cy="52" r="2.5" fill="#2C221E"/>
+          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#FEF3C7" stroke="#F59E0B" stroke-width="3"/>
+          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#FDE047" stroke="#D97724" stroke-width="2"/>
+          <circle cx="45" cy="48" r="2.5" fill="#1E293B"/>
+          <circle cx="55" cy="52" r="2.5" fill="#1E293B"/>
           <path d="M48 46 Q52 43 56 48" fill="none" stroke="#D97724" stroke-width="2.5"/>
         </svg>`,
       'thakkali-chutney': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#F43F5E" opacity="0.3" stroke="#D97724" stroke-width="3"/>
-          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#F43F5E" opacity="0.5" stroke="#D97724" stroke-width="2"/>
-          <circle cx="42" cy="49" r="2.5" fill="#2C221E"/>
-          <circle cx="58" cy="51" r="2.5" fill="#2C221E"/>
+          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#FB7185" opacity="0.4" stroke="#E11D48" stroke-width="3"/>
+          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#FB7185" opacity="0.6" stroke="#E11D48" stroke-width="2"/>
+          <circle cx="42" cy="49" r="2.5" fill="#1E293B"/>
+          <circle cx="58" cy="51" r="2.5" fill="#1E293B"/>
         </svg>`,
       'scrambled-egg-bread-omelette': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <rect x="25" y="30" width="50" height="40" rx="6" fill="#FEF3C7" stroke="#D97724" stroke-width="3"/>
-          <path d="M20 65 L80 65 L75 75 L25 75 Z" fill="#D97724" opacity="0.4"/>
-          <circle cx="50" cy="50" r="10" fill="#F59E0B"/>
+          <rect x="25" y="30" width="50" height="40" rx="6" fill="#FDE047" stroke="#D97724" stroke-width="3"/>
+          <path d="M20 65 L80 65 L75 75 L25 75 Z" fill="#D97724" opacity="0.5"/>
+          <circle cx="50" cy="50" r="10" fill="#FB7185"/>
         </svg>`,
       'ragi-semiya': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#D97724" opacity="0.2" stroke="#D97724" stroke-width="3"/>
-          <path d="M30 45 Q50 65 70 45" fill="none" stroke="#D97724" stroke-width="2.5"/>
-          <path d="M35 40 Q50 60 65 40" fill="none" stroke="#D97724" stroke-width="2.5"/>
+          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#7C3AED" opacity="0.25" stroke="#7C3AED" stroke-width="3"/>
+          <path d="M30 45 Q50 65 70 45" fill="none" stroke="#7C3AED" stroke-width="2.5"/>
+          <path d="M35 40 Q50 60 65 40" fill="none" stroke="#7C3AED" stroke-width="2.5"/>
         </svg>`,
       'kesari': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M30 65 L35 40 L65 40 L70 65 Z" fill="#F59E0B" opacity="0.6" stroke="#D97724" stroke-width="3"/>
+          <path d="M30 65 L35 40 L65 40 L70 65 Z" fill="#F59E0B" opacity="0.7" stroke="#D97724" stroke-width="3"/>
           <ellipse cx="50" cy="40" rx="15" ry="5" fill="#F59E0B" stroke="#D97724" stroke-width="2"/>
-          <circle cx="48" cy="39" r="2" fill="#FFFDF4"/>
-          <circle cx="53" cy="41" r="2" fill="#FFFDF4"/>
+          <circle cx="48" cy="39" r="2" fill="#FFFFFF"/>
+          <circle cx="53" cy="41" r="2" fill="#FFFFFF"/>
         </svg>`,
       'carrot-poriyal': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#FEF3C7" stroke="#D97724" stroke-width="3"/>
-          <rect x="35" y="45" width="7" height="7" fill="#F59E0B" rx="1"/>
-          <rect x="45" y="42" width="7" height="7" fill="#F59E0B" rx="1"/>
-          <rect x="55" y="46" width="7" height="7" fill="#F59E0B" rx="1"/>
+          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#FED7AA" stroke="#F97316" stroke-width="3"/>
+          <rect x="35" y="45" width="7" height="7" fill="#EA580C" rx="1"/>
+          <rect x="45" y="42" width="7" height="7" fill="#EA580C" rx="1"/>
+          <rect x="55" y="46" width="7" height="7" fill="#EA580C" rx="1"/>
         </svg>`,
       'potato-poriyal': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#FEF3C7" stroke="#D97724" stroke-width="3"/>
-          <rect x="34" y="44" width="9" height="9" fill="#D97724" opacity="0.5" rx="2"/>
-          <rect x="46" y="41" width="9" height="9" fill="#D97724" opacity="0.5" rx="2"/>
-          <rect x="57" y="45" width="9" height="9" fill="#D97724" opacity="0.5" rx="2"/>
+          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#FEF08A" stroke="#CA8A04" stroke-width="3"/>
+          <rect x="34" y="44" width="9" height="9" fill="#A16207" opacity="0.6" rx="2"/>
+          <rect x="46" y="41" width="9" height="9" fill="#A16207" opacity="0.6" rx="2"/>
+          <rect x="57" y="45" width="9" height="9" fill="#A16207" opacity="0.6" rx="2"/>
         </svg>`,
       'peerkangai-kuzhambu': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="52" r="28" fill="#0D9488" opacity="0.2" stroke="#0D9488" stroke-width="3"/>
-          <circle cx="50" cy="52" r="22" fill="#FEF3C7"/>
-          <circle cx="44" cy="48" r="4" fill="#0D9488" opacity="0.4"/>
-          <circle cx="56" cy="54" r="5" fill="#0D9488" opacity="0.4"/>
+          <circle cx="50" cy="52" r="28" fill="#2DD4BF" opacity="0.3" stroke="#0D9488" stroke-width="3"/>
+          <circle cx="50" cy="52" r="22" fill="#CCFBF1"/>
+          <circle cx="44" cy="48" r="4" fill="#0D9488" opacity="0.5"/>
+          <circle cx="56" cy="54" r="5" fill="#0D9488" opacity="0.5"/>
         </svg>`,
       'pasi-payir-kuzhambu': `
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="52" r="28" fill="#0D9488" opacity="0.2" stroke="#0D9488" stroke-width="3"/>
-          <circle cx="50" cy="52" r="22" fill="#F0E2BC"/>
-          <circle cx="42" cy="50" r="3.5" fill="#0D9488"/>
-          <circle cx="50" cy="46" r="3.5" fill="#0D9488"/>
-          <circle cx="55" cy="55" r="3.5" fill="#0D9488"/>
+          <circle cx="50" cy="52" r="28" fill="#34D399" opacity="0.3" stroke="#059669" stroke-width="3"/>
+          <circle cx="50" cy="52" r="22" fill="#A7F3D0"/>
+          <circle cx="42" cy="50" r="3.5" fill="#065F46"/>
+          <circle cx="50" cy="46" r="3.5" fill="#065F46"/>
+          <circle cx="55" cy="55" r="3.5" fill="#065F46"/>
         </svg>`
     };
 
@@ -813,23 +813,29 @@
       renderRecipes();
     };
 
-    // CATEGORIES RENDERING
+    // CATEGORIES RENDERING WITH VIBRANT COLORS
     function renderCategoryTabs() {
-      const categories = ['All', 'Beverages', 'Breakfast', 'Side Dishes', 'Main Course'];
+      const categories = [
+        { name: 'All', color: 'bg-amber-500 text-white' }, 
+        { name: 'Beverages', color: 'bg-teal-500 text-white' }, 
+        { name: 'Breakfast', color: 'bg-rose-500 text-white' }, 
+        { name: 'Side Dishes', color: 'bg-purple-500 text-white' }, 
+        { name: 'Main Course', color: 'bg-emerald-500 text-white' }
+      ];
       const container = document.getElementById('category-tabs');
 
       container.innerHTML = categories.map(cat => {
-        const isActive = activeCategory === cat && !showingFavsOnly;
+        const isActive = activeCategory === cat.name && !showingFavsOnly;
         return `
           <button 
-            onclick="selectCategory('${cat}')"
-            class="px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide transition shadow-2xs ${
+            onclick="selectCategory('${cat.name}')"
+            class="px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide transition shadow-sm ${
               isActive 
-                ? 'bg-pdfAccent text-white shadow-md scale-105' 
-                : 'bg-white text-pdfTextDark border-2 border-pdfBorder hover:bg-amber-50'
+                ? `${cat.color} scale-105 shadow-md ring-2 ring-offset-2 ring-amber-400` 
+                : 'bg-white text-pdfTextDark border-2 border-amber-200 hover:bg-amber-50'
             }"
           >
-            ${cat}
+            ${cat.name}
           </button>
         `;
       }).join('');
@@ -880,11 +886,11 @@
       const btn = document.getElementById('fav-filter-btn');
       const icon = document.getElementById('fav-btn-icon');
       if (showingFavsOnly) {
-        btn.classList.add('bg-pdfAccentLight', 'border-pdfAccent');
-        icon.className = 'fa-solid fa-bookmark text-pdfAccent';
+        btn.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-700');
+        icon.className = 'fa-solid fa-bookmark text-rose-500';
       } else {
-        btn.classList.remove('bg-pdfAccentLight', 'border-pdfAccent');
-        icon.className = 'fa-regular fa-bookmark text-pdfAccent';
+        btn.classList.remove('bg-rose-100', 'border-rose-400', 'text-rose-700');
+        icon.className = 'fa-regular fa-bookmark text-rose-500';
       }
     }
 
@@ -947,57 +953,64 @@
         const isFav = favorites.includes(recipe.id);
         const illustration = svgIllustrations[recipe.id] || '';
 
+        // Assign vibrant category badge colors
+        let badgeColor = 'bg-amber-100 text-amber-800 border-amber-300';
+        if (recipe.category === 'Beverages') badgeColor = 'bg-teal-100 text-teal-800 border-teal-300';
+        if (recipe.category === 'Breakfast') badgeColor = 'bg-rose-100 text-rose-800 border-rose-300';
+        if (recipe.category === 'Side Dishes') badgeColor = 'bg-purple-100 text-purple-800 border-purple-300';
+        if (recipe.category === 'Main Course') badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-300';
+
         return `
           <div class="recipe-doc-page rounded-3xl p-6 flex flex-col justify-between cursor-pointer group" onclick="openModal('${recipe.id}')">
             
             <div>
               <!-- PDF Card Top Section: Title & Illustration -->
-              <div class="flex items-start justify-between border-b-2 border-pdfBorder pb-4 mb-5">
+              <div class="flex items-start justify-between border-b-2 border-amber-200 pb-4 mb-5">
                 <div class="space-y-1.5 pr-4">
-                  <span class="text-[11px] font-bold tracking-widest uppercase text-pdfAccent bg-pdfAccentLight px-3 py-1 rounded-lg border border-pdfBorder inline-block shadow-2xs">
+                  <span class="text-[11px] font-bold tracking-widest uppercase ${badgeColor} px-3 py-1 rounded-lg border inline-block shadow-2xs">
                     ${recipe.category}
                   </span>
-                  <h3 class="text-2xl font-serif font-bold text-pdfTextDark group-hover:text-pdfAccent transition-colors">
+                  <h3 class="text-2xl font-serif font-bold text-pdfTextDark group-hover:text-amber-600 transition-colors">
                     ${recipe.title}
                   </h3>
-                  <p class="text-xs text-pdfTextBody font-semibold flex items-center gap-2 pt-0.5">
-                    <span><i class="fa-regular fa-clock text-pdfAccent mr-1"></i>${recipe.prepTime}</span>
+                  <p class="text-xs text-slate-600 font-bold flex items-center gap-2 pt-0.5">
+                    <span><i class="fa-regular fa-clock text-amber-500 mr-1"></i>${recipe.prepTime}</span>
                     <span>•</span>
                     <span>${recipe.baseServings} ${recipe.servingsUnit}</span>
                   </p>
                 </div>
 
                 <!-- SVG Artwork Frame -->
-                <div class="w-20 h-20 bg-amber-50/80 rounded-2xl border-2 border-pdfBorder p-1.5 flex-shrink-0 flex items-center justify-center shadow-sm group-hover:border-pdfAccent transition-colors">
+                <div class="w-20 h-20 bg-amber-50 rounded-2xl border-2 border-amber-300 p-1.5 flex-shrink-0 flex items-center justify-center shadow-sm group-hover:border-amber-500 transition-colors">
                   ${illustration}
                 </div>
               </div>
 
               <!-- PDF Card Description -->
-              <p class="text-pdfTextBody text-xs leading-relaxed mb-6 font-medium line-clamp-2">
+              <p class="text-slate-600 text-xs leading-relaxed mb-6 font-medium line-clamp-2">
                 ${recipe.description}
               </p>
 
               <!-- Mini Ingredients Snapshot -->
-              <div class="bg-amber-50/50 border-2 border-pdfBorder rounded-xl p-3.5 mb-5 shadow-2xs">
-                <p class="text-[11px] font-bold text-pdfAccent uppercase tracking-wider mb-1">🥕 Ingredients Preview:</p>
-                <p class="text-xs text-pdfTextDark/90 font-medium truncate">
+              <div class="bg-gradient-to-r from-amber-50 to-teal-50 border-2 border-amber-200 rounded-xl p-3.5 mb-5 shadow-2xs">
+                <p class="text-[11px] font-bold text-amber-800 uppercase tracking-wider mb-1">🥕 Ingredients Preview:</p>
+                <p class="text-xs text-pdfTextDark font-medium truncate">
                   ${recipe.ingredients.map(i => i.name).join(', ')}
                 </p>
               </div>
             </div>
 
             <!-- Card Bottom Bar -->
-            <div class="flex items-center justify-between border-t-2 border-pdfBorder pt-4">
+            <div class="flex items-center justify-between border-t-2 border-amber-200 pt-4">
               <button 
                 onclick="event.stopPropagation(); toggleFavorite('${recipe.id}')" 
-                class="text-xs font-bold text-pdfTextBody hover:text-pdfAccent flex items-center gap-1.5 transition bg-amber-50 px-3 py-1.5 rounded-lg border border-pdfBorder"
+                class="text-xs font-bold text-slate-700 hover:text-rose-500 flex items-center gap-1.5 transition bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200"
               >
-                <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-bookmark text-pdfAccent"></i>
+                <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-bookmark text-rose-500"></i>
                 <span>${isFav ? 'Saved' : 'Save Recipe'}</span>
               </button>
 
-              <span class="text-xs font-bold text-pdfAccent group-hover:translate-x-1 transition-transform flex items-center gap-1 bg-pdfAccentLight px-3 py-1.5 rounded-lg border border-pdfBorder">
+              <span class="text-xs font-bold text-amber-700 group-hover:translate-x-1 transition-transform flex items-center gap-1 bg-amber-100 px-3 py-1.5 rounded-lg border border-amber-300">
                 Open Recipe <i class="fa-solid fa-arrow-right text-[10px]"></i>
               </span>
             </div>
@@ -1035,10 +1048,10 @@
       const text = document.getElementById('modal-fav-text');
 
       if (isFav) {
-        icon.className = 'fa-solid fa-bookmark text-pdfAccent';
+        icon.className = 'fa-solid fa-bookmark text-rose-500';
         text.innerText = 'Saved';
       } else {
-        icon.className = 'fa-regular fa-bookmark text-pdfAccent';
+        icon.className = 'fa-regular fa-bookmark text-rose-500';
         text.innerText = 'Save Recipe';
       }
     }
@@ -1119,9 +1132,9 @@
         const formattedAmt = scaledAmount ? formatAmount(scaledAmount) : '';
 
         return `
-          <li class="flex items-center justify-between p-3 rounded-xl bg-amber-50/40 border-2 border-pdfBorder text-xs shadow-2xs">
+          <li class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-50 to-teal-50 border-2 border-amber-200 text-xs shadow-2xs">
             <span class="font-bold text-pdfTextDark">${ing.name}</span>
-            <span class="font-bold text-pdfAccent bg-white px-2.5 py-1 rounded-lg border border-pdfBorder text-xs shadow-2xs">
+            <span class="font-bold text-teal-800 bg-white px-2.5 py-1 rounded-lg border border-teal-300 text-xs shadow-2xs">
               ${formattedAmt} ${ing.unit}
             </span>
           </li>
@@ -1133,13 +1146,12 @@
       const container = document.getElementById('modal-steps-list');
 
       container.innerHTML = currentRecipe.steps.map((step, idx) => {
-        // Check if step is a section header (e.g. doesn't start with a number or bullet)
         const isHeader = !step.trim().match(/^[0-9•]/);
 
         if (isHeader) {
           return `
             <div class="pt-3 pb-1">
-              <h4 class="font-serif font-bold text-base text-pdfAccent flex items-center gap-2">
+              <h4 class="font-serif font-bold text-base text-amber-700 flex items-center gap-2">
                 <span>📌</span> ${step}
               </h4>
             </div>
@@ -1148,13 +1160,13 @@
 
         const checkboxId = `step-${currentRecipe.id}-${idx}`;
         return `
-          <label for="${checkboxId}" class="flex items-start gap-3 p-3.5 rounded-xl bg-pdfBg border-2 border-pdfBorder hover:border-pdfAccent cursor-pointer transition text-xs group shadow-2xs">
+          <label for="${checkboxId}" class="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50/50 border-2 border-amber-200 hover:border-amber-400 cursor-pointer transition text-xs group shadow-2xs">
             <input 
               type="checkbox" 
               id="${checkboxId}" 
-              class="step-checkbox mt-0.5 w-4 h-4 text-pdfAccent rounded border-pdfBorder focus:ring-pdfAccent cursor-pointer accent-pdfAccent"
+              class="step-checkbox mt-0.5 w-4 h-4 text-amber-600 rounded border-amber-300 focus:ring-amber-500 cursor-pointer accent-amber-500"
             />
-            <span class="text-pdfTextDark font-medium leading-relaxed group-hover:text-pdfAccent">
+            <span class="text-slate-700 font-medium leading-relaxed group-hover:text-amber-800">
               ${step}
             </span>
           </label>
