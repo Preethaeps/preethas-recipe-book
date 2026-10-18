@@ -11,26 +11,35 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            pdfBg: '#FFFDEB',        /* Solid pastel cream background */
-            pdfCard: '#FFFFFF',      /* Crisp clean recipe card background */
-            pdfBorder: '#EFE2C2',    /* Soft warm border tint */
-            pdfTextDark: '#3A2E2B',  /* Deep brownish charcoal for titles */
-            pdfTextBody: '#5C4E4A',  /* Warm neutral text */
-            pdfAccent: '#8C522A',    /* Terracotta warm accent */
-            pdfAccentLight: '#F7EED3',/* Soft pill fill */
-            pdfHighlight: '#D97724', /* Warm gold highlight */
+            pdfBg: '#FFFDEB',          /* Solid pastel cream background */
+            pdfCard: '#FFFFFF',        /* Recipe card background */
+            pdfBorder: '#EFE2C2',      /* Soft warm border tint */
+            pdfTextDark: '#3A2E2B',    /* Deep charcoal for titles */
+            pdfTextBody: '#5C4E4A',    /* Warm neutral text */
+            pdfAccent: '#8C522A',      /* Terracotta warm accent */
+            pdfAccentLight: '#F7EED3',  /* Soft pill fill */
+            
+            /* PDF Recipe Theme Colors */
+            pdfIngCardBg: '#EEF4E8',   /* Green ingredient pill box background */
+            pdfIngBorder: '#D2E2C4',   /* Border for green ingredient pill box */
+            pdfIngHeader: '#2D5A27',   /* Deep forest green header */
+            pdfInstBg: '#E4EFFA',      /* Soft pastel ice blue for instructions container */
+            pdfInstHeaderRed: '#C0392B',/* Red accent for instruction section headers */
+            pdfInstTitleBlue: '#1E3A8A',/* Dark navy blue for Instructions title */
+            pdfBlueHighlight: '#1E3A8A'/* Dark blue for highlighted ingredients in steps */
           },
           fontFamily: {
             serif: ['"Playfair Display"', 'serif'],
             title: ['"Marcellus"', 'serif'],
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            script: ['"Caveat"', 'cursive'],
           }
         }
       }
@@ -57,10 +66,37 @@
       transform: translateY(-2px);
     }
 
-    /* Custom Checkbox Styling */
+    /* Custom Checkbox and Click-through Strikethrough Styling */
     .step-checkbox:checked + span {
       text-decoration: line-through;
       color: #9CA3AF;
+    }
+
+    /* Interactive Ingredient Pill Box Toggle (No Checkbox Icon) */
+    .ing-pill {
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .ing-pill.struck .ing-name {
+      text-decoration: line-through;
+      color: #9CA3AF;
+    }
+
+    .ing-pill.struck {
+      opacity: 0.65;
+    }
+
+    .pdf-ingredients-card {
+      background-color: transparent;
+      padding: 1.25rem 0.5rem;
+    }
+
+    .pdf-instructions-card {
+      background-color: #E4EFFA;
+      border-radius: 1rem;
+      padding: 1.25rem;
     }
 
     /* Custom scrollbar */
@@ -230,19 +266,19 @@
           <span class="flex items-center gap-1 text-pdfTextBody"><i class="fa-regular fa-clock text-pdfAccent"></i> <span id="modal-prep-time">15 mins</span></span>
         </div>
 
-        <h2 id="modal-title" class="text-3xl sm:text-4xl font-serif font-bold text-pdfTextDark mb-2 pr-10">Recipe Title</h2>
+        <h2 id="modal-title" class="text-3xl sm:text-4xl font-title font-bold text-pdfTextDark mb-2 pr-10">Recipe Title</h2>
         <p id="modal-description" class="text-pdfTextBody text-sm leading-relaxed max-w-2xl">Recipe description goes here.</p>
       </div>
 
       <!-- Modal Body -->
-      <div class="p-6 sm:p-8 overflow-y-auto space-y-8 flex-grow">
+      <div class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-grow">
         
         <!-- Recipe Artwork / Illustration Bar & Serving Scaler -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-pdfBg border border-pdfBorder p-5 rounded-2xl">
           
           <!-- Illustration Box -->
           <div class="md:col-span-4 flex items-center justify-center">
-            <div id="modal-illustration-container" class="w-32 h-32 flex items-center justify-center bg-white rounded-2xl border border-pdfBorder p-2 shadow-2xs">
+            <div id="modal-illustration-container" class="w-32 h-32 flex items-center justify-center bg-white rounded-2xl border border-pdfBorder p-2 shadow-2xs overflow-hidden">
               <!-- Dynamic SVG Art Inserted Here -->
             </div>
           </div>
@@ -271,28 +307,28 @@
           </div>
         </div>
 
-        <!-- PDF Side-by-Side Document Columns -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <!-- PDF Side-by-Side Document Columns (Aligned Headers Across Horizontal Line) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
           
-          <!-- Column 1: Ingredients & Measurements -->
-          <div class="md:col-span-5 space-y-4">
-            <div class="border-b border-pdfBorder pb-2 flex items-center justify-between">
-              <h3 class="font-serif font-bold text-lg text-pdfTextDark flex items-center gap-2">
-                <i class="fa-solid fa-basket-shopping text-pdfAccent text-sm"></i> Ingredients
+          <!-- Column 1: Ingredients & Measurements (Slightly Reduced Width: md:col-span-4) -->
+          <div class="md:col-span-4 pdf-ingredients-card space-y-4">
+            <div class="pb-2 border-b border-pdfIngHeader/20 flex items-center justify-between">
+              <h3 class="font-script font-bold text-3xl text-pdfIngHeader flex items-center gap-2">
+                Ingredients
               </h3>
-              <span id="ingredient-count" class="text-xs font-medium text-pdfTextBody/70">0 items</span>
+              <span id="ingredient-count" class="text-xs font-semibold text-pdfIngHeader/80">0 items</span>
             </div>
 
-            <ul id="modal-ingredients-list" class="space-y-2">
-              <!-- Dynamically populated ingredients -->
+            <ul id="modal-ingredients-list" class="space-y-2.5">
+              <!-- Dynamically populated green ingredient pill boxes -->
             </ul>
           </div>
 
-          <!-- Column 2: Instructions & Steps -->
-          <div class="md:col-span-7 space-y-4">
-            <div class="border-b border-pdfBorder pb-2 flex items-center justify-between">
-              <h3 class="font-serif font-regular text-lg text-pdfTextDark flex items-center gap-2">
-                <i class="fa-solid fa-list-check text-pdfAccent text-sm"></i> Instructions
+          <!-- Column 2: Instructions & Steps (Wider Column: md:col-span-8) -->
+          <div class="md:col-span-8 pdf-instructions-card space-y-4">
+            <div class="pb-2 border-b border-pdfInstHeaderRed/20 flex items-center justify-between">
+              <h3 class="font-script font-bold text-3xl text-pdfInstTitleBlue flex items-center gap-2">
+                Instructions
               </h3>
               <button onclick="resetModalSteps()" class="text-xs font-semibold text-pdfAccent hover:underline">
                 Reset Checklist
@@ -459,19 +495,15 @@
 
   <!-- JAVASCRIPT APP LOGIC & ILLUSTRATIONS -->
   <script>
-    // ==========================================
-    // CONFIGURABLE ADMIN PASSCODE (CHANGE HERE)
-    // ==========================================
     const ADMIN_PASSCODE = "preetha123"; 
 
-    let pendingAdminAction = null; // 'add', 'edit', or 'delete'
+    let pendingAdminAction = null;
 
     function verifyAdminBeforeAction(actionType) {
       pendingAdminAction = actionType;
       if (sessionStorage.getItem('preetha_admin_auth') === 'true') {
         executeAdminAction(pendingAdminAction);
       } else {
-        // Close recipe detail modal first so auth modal pops up cleanly without overlapping
         closeModal();
         document.getElementById('admin-passcode-input').value = '';
         document.getElementById('auth-error-msg').classList.add('hidden');
@@ -555,13 +587,13 @@
           { name: 'Coffee powder', amount: 1, unit: 'spoon' }
         ],
         steps: [
-          'PREPARING MILK',
+          'Preparing Milk',
           '1. In a small saucepan or bowl,',
           '• add ¾ cup of **milk**.',
           '• Add ¼ cup of **water** to the milk.',
           '• Add 1½ teaspoons of **sugar** to the mixture.',
           '• Heat the mixture over medium flame and bring it to a gentle boil.',
-          'PREPARING COFFEE POWDER',
+          'Preparing Coffee Powder',
           '2. While the milk is heating, place 1½ teaspoons of **coffee powder** into a serving cup.',
           '3. Once the milk mixture is boiled, pour it directly into the cup containing the coffee powder.',
           '4. Stir thoroughly until the coffee powder is fully dissolved and the mixture is smooth.'
@@ -582,13 +614,13 @@
           { name: 'Tea Powder', amount: 1, unit: 'spoon' }
         ],
         steps: [
-          'BREW THE TEA BASE',
+          'Brew the Tea Base',
           '1. In a small saucepan,',
           '• add ½ cup of **water**.',
           '• Stir in 1½ teaspoons of **sugar**.',
           '• Add 1 teaspoon of **tea powder** to the water.',
           '• Bring the mixture to a rolling boil, allowing it to rise to the brim.',
-          'ADD MILK AND FINISH',
+          'Add Milk and Finish',
           '2. While the tea is boiling, measure ½ cup of **milk**.',
           '3. Once the water-tea mixture has boiled, add the milk to the saucepan.',
           '4. Stir gently and continue heating until uniform in colour.',
@@ -610,14 +642,14 @@
           { name: 'Cocoa Powder (Unsweetened)', amount: 1, unit: 'teaspoon' }
         ],
         steps: [
-          'PREPARE THE INGREDIENTS',
+          'Prepare the Ingredients',
           '1. Boil 10 **almonds** in hot water and peel the skin off.',
           '2. In a blender,',
           '• add 2 cups of **milk**.',
           '• Add 2 pitted **dates**.',
           '• Add 10 peeled **almonds**.',
           '• Optional: Add 1 tablespoon of **cocoa powder**.',
-          'BLEND THE MILKSHAKE',
+          'Blend the Milkshake',
           '3. Blend until smooth and creamy.',
           '4. Pour into glasses and serve immediately.'
         ]
@@ -640,7 +672,7 @@
           { name: 'Curry Leaves', amount: 1, unit: 'few' }
         ],
         steps: [
-          'GRIND THE CHUTNEY',
+          'Grind the Chutney',
           '1. In a blender, add:',
           '• grated **coconut**',
           '• **roasted gram**',
@@ -650,7 +682,7 @@
           '• add a little **water**',
           '2. Grind to a smooth or slightly coarse paste.',
           '3. Transfer into a bowl and adjust consistency.',
-          'PREPARE THE TEMPERING',
+          'Prepare the Tempering',
           '4. In a pan,',
           '• Heat **oil** over medium heat.',
           '• Add **mustard seeds** and allow them to crackle.',
@@ -677,23 +709,23 @@
           { name: 'Curry Leaves', amount: 1, unit: 'few' }
         ],
         steps: [
-          'PREPARATION',
+          'Preparation',
           '1. Chop 2 **tomatoes** (roughly chopped)',
-          '2. Chop 1 **onion** (roughly chopped)',
+          '2. Chop 1 **Onion** (roughly chopped)',
           '3. Chop the **red chillies** (roughly chopped)',
-          'SAUTÉ THE BASE',
-          '4. In a pan,',
+          'Sauté the Base',
+          '1. In a pan,',
           '• Heat 1 teaspoon of **oil** over medium heat.',
           '• Add **dry red chilies** and **garlic cloves**; sauté for 30 seconds.',
           '• Add chopped **onions** and sauté until translucent.',
           '• Add chopped **tomatoes** and **salt**; cook until soft.',
-          '5. Allow the mixture to cool completely and grind to a smooth paste.',
-          'PREPARE THE TEMPERING',
-          '6. In the same pan,',
+          '2. Allow the mixture to cool completely and grind to a smooth paste.',
+          'Prepare the Tempering',
+          '1. In the same pan,',
           '• Heat 1 teaspoon of **oil**.',
           '• Add **mustard seeds** and let them crackle.',
           '• Add **urad dal** and **curry leaves**.',
-          '7. Pour the tempering over chutney and mix well.'
+          '2. Pour the tempering over chutney and mix well.'
         ]
       },
       {
@@ -716,7 +748,7 @@
           { name: 'Red Chilli Powder', amount: 0.5, unit: 'teaspoon' }
         ],
         steps: [
-          'PREPARE THE EGG FILLING',
+          'Prepare the Egg Filling',
           '1. Boil 2 **eggs** in water for 20 minutes until hard-boiled.',
           '2. Peel the eggs and separate the yolks into a bowl.',
           '3. To the yolks, add:',
@@ -729,7 +761,7 @@
           '• 1 teaspoon **black pepper**',
           '• ½ teaspoon **red chili powder**',
           '4. Mix until smooth, then fold in chopped **egg whites**.',
-          'TOAST AND ASSEMBLE',
+          'Toast and Assemble',
           '5. Take 2 slices of **bread**, spread **ghee** or **butter**, and toast in a pan.',
           '6. Spread filling onto one slice, sprinkle **chili flakes**, cover, and toast until crispy.'
         ]
@@ -749,13 +781,13 @@
           { name: 'Sugar', amount: 3, unit: 'tablespoons' }
         ],
         steps: [
-          'SOAK THE SEMIYA',
+          'Soak the Semiya',
           '1. In a bowl, add water and ½ teaspoon **salt**.',
           '2. Submerge **Ragi Semiya** and soak for 2–5 minutes.',
-          'STEAM THE SEMIYA',
+          'Steam the Semiya',
           '3. Drain completely and spread over idli plates.',
           '4. Steam on medium flame for 10 minutes.',
-          'ASSEMBLE AND SERVE',
+          'Assemble and Serve',
           '5. Transfer to a bowl, add **sugar** and coarse ground **coconut**.',
           '6. Mix well and serve warm.'
         ]
@@ -775,12 +807,12 @@
           { name: 'Ghee', amount: 3, unit: 'tablespoons' }
         ],
         steps: [
-          'ROAST THE NUTS',
+          'Roast the Nuts',
           '1. Heat **ghee** in a pan over low flame.',
           '2. Roast **cashews** and **raisins** until golden and puffed; set aside.',
-          'ROAST THE SEMOLINA',
+          'Roast the Semolina',
           '3. In the same pan, roast **semolina (rava)** on low flame until aromatic.',
-          'PREPARE KESARI',
+          'Prepare Kesari',
           '4. Boil 3 cups of **water**, add food colour, then slowly stir in roasted **semolina**.',
           '5. Add 1 cup **sugar**, mix well, and finish with roasted nuts and **cardamom powder**.'
         ]
@@ -802,16 +834,16 @@
           { name: 'Grated Coconut', amount: 2.5, unit: 'tablespoons' }
         ],
         steps: [
-          'PREPARATION',
+          'Preparation',
           '1. Chop or grate 2 **carrots**.',
           '2. Chop ½ **onion** and 2 **green chilies**.',
-          'PREPARE THE TEMPERING',
+          'Prepare the Tempering',
           '3. In a pan,',
           '• Heat **oil** over medium heat.',
           '• Add **mustard seeds** and allow them to crackle.',
           '• Add **urad dal** and sauté until golden brown.',
           '• Add **green chilies**, chopped **onions**, and **curry leaves**.',
-          'COOK AND FINISH',
+          'Cook and Finish',
           '4. Add **carrots** and **salt**; sprinkle water and steam covered for 4-5 mins.',
           '5. Stir in grated **coconut** and remove from heat.'
         ]
@@ -834,14 +866,14 @@
           { name: 'Sambar Powder', amount: 1, unit: 'teaspoon' }
         ],
         steps: [
-          'TEMPER THE SPICES',
+          'Temper the Spices',
           '1. Dice 3 medium **potatoes** into small cubes.',
           '2. In a stir fry pan,',
           '• Heat 3 teaspoons of **oil** over low flame.',
           '• Add ½ tsp **mustard seeds** and let them crackle.',
           '• Add ½ tsp **cumin seeds** and 1 tsp **urad dal**.',
           '• Add **asafoetida** and **curry leaves**.',
-          'COOK AND ROAST',
+          'Cook and Roast',
           '3. Add **potatoes**, **turmeric powder**, **sambar powder**, and **salt**.',
           '4. Steam cook with ¼ cup water, then roast uncovered until golden brown and crisp.'
         ]
@@ -864,7 +896,7 @@
           { name: 'Fresh Coconut', amount: 2.5, unit: 'tablespoons' }
         ],
         steps: [
-          'PREPARE THE VEGGIES',
+          'Prepare the Veggies',
           '1. Chop 1 **ridge gourd**, 1 **onion**, and 2 **tomatoes**.',
           '2. In a saucepot,',
           '• Heat **oil** over medium heat.',
@@ -874,7 +906,7 @@
           '• Add chopped **tomatoes** and cook until soft and mushy.',
           '• Add chopped **ridge gourd** and sauté until slightly softened.',
           '3. Add **sambar powder**, **masala powder**, **turmeric powder**, water, and salt. Simmer until cooked.',
-          'PREPARE COCONUT AND FINISH',
+          'Prepare Coconut and Finish',
           '4. Coarsely pulse **coconut** chunks and stir into the curry. Simmer for 2 minutes.'
         ]
       },
@@ -894,11 +926,11 @@
           { name: 'Red Chilli', amount: 2, unit: 'pieces' }
         ],
         steps: [
-          'PREPARE GREEN GRAM BASE',
+          'Prepare Green Gram Base',
           '1. Soak 1 cup **green gram (pasi payir)** for 1-2 hours.',
           '2. In a pressure cooker, add soaked gram, chopped **garlic**, **tomatoes**, salt, water, and ½ tsp **castor oil**.',
           '3. Cook for 1-2 whistles on low flame.',
-          'ROAST AROMATICS',
+          'Roast Aromatics',
           '4. In a pan,',
           '• Heat 3 teaspoons of **oil**.',
           '• Add **mustard seeds**, **cumin seeds**, and **urad dal**.',
@@ -929,14 +961,14 @@
           { name: 'Dry Kasturi Methi', amount: 1, unit: 'teaspoon' }
         ],
         steps: [
-          'BEFORE HAND PREP',
+          'Before Hand Prep',
           '1. Keep the **paneer** and **butter** outside atleast ½ an hour before, so that it becomes soft to cut.',
           '2. Soak **cashewnuts** in water for ½ an hour.',
           '3. In a vessel, heat tap **water** and when its rolling boil, add **tomatoes** and let it be for 2 to 3 minutes before you switch off. Take off the vessel from stove, and keep aside.',
           '4. Don’t drain the water, instead take out the tomatoes and peel off the skin, and keep aside tomatoes to cool.',
           '5. Immediately after taking out tomatoes from the hot water, in that hot water add the chopped **onions** and let it be there for 5 to 10 minutes. After that drain the water, and keep aside onions to cool.',
           '6. Once onions and tomatoes are cool, grind them separately and keep aside.',
-          'COOKING',
+          'Cooking',
           '7. In a small vessel boil 1 glass of drinking **water** to luke warm, and add a tsp of **salt** in it.',
           '8. At the same time, whichever pan you are going to use for cooking gravy, in that add 1 tbsp of **butter** and add in batches the **paneer** and toss them to get golden, once they turn golden drop them in luke warm water (it keeps the paneer soft and not turn rubbery) and be there until you add finally.',
           '9. Now in the same pan in which you tossed the paneer,',
@@ -1137,7 +1169,7 @@
                   <span class="text-[11px] font-bold tracking-widest uppercase text-pdfAccent bg-pdfAccentLight px-2.5 py-0.5 rounded-md border border-pdfBorder inline-block">
                     ${recipe.category}
                   </span>
-                  <h3 class="text-2xl font-serif font-bold text-pdfTextDark group-hover:text-pdfAccent transition-colors">
+                  <h3 class="text-2xl font-title font-bold text-pdfTextDark group-hover:text-pdfAccent transition-colors">
                     ${recipe.title}
                   </h3>
                   <p class="text-xs text-pdfTextBody/80 flex items-center gap-2 pt-0.5">
@@ -1310,6 +1342,12 @@
       return fractionStr ? fractionStr : `${rounded}`;
     }
 
+    /* Toggle Ingredient Strikethrough by Clicking the Box directly */
+    function toggleIngredientBox(element) {
+      element.classList.toggle('struck');
+    }
+
+    /* RENDER INGREDIENTS in green pill boxes without visible checkboxes */
     function renderModalIngredients() {
       const container = document.getElementById('modal-ingredients-list');
       const countLabel = document.getElementById('ingredient-count');
@@ -1317,14 +1355,19 @@
 
       countLabel.innerText = `${currentRecipe.ingredients.length} items`;
 
-      container.innerHTML = currentRecipe.ingredients.map(ing => {
+      container.innerHTML = currentRecipe.ingredients.map((ing) => {
         const scaledAmount = ing.amount ? ing.amount * scaleFactor : null;
         const formattedAmt = scaledAmount ? formatAmount(scaledAmount) : '';
 
         return `
-          <li class="flex items-center justify-between p-2.5 rounded-xl bg-pdfBg border border-pdfBorder text-xs">
-            <span class="font-medium text-pdfTextDark">${ing.name}</span>
-            <span class="font-bold text-pdfAccent bg-white px-2 py-0.5 rounded-md border border-pdfBorder text-[11px]">
+          <li 
+            onclick="toggleIngredientBox(this)" 
+            class="ing-pill flex items-center justify-between px-3.5 py-2 rounded-2xl bg-pdfIngCardBg border border-pdfIngBorder text-xs transition-all hover:border-pdfIngHeader/40"
+          >
+            <span class="ing-name font-script font-semibold text-lg text-pdfTextDark transition-colors">
+              ${ing.name}
+            </span>
+            <span class="font-bold text-pdfIngHeader bg-white px-3 py-1 rounded-xl border border-pdfIngBorder text-[11px] shadow-2xs shrink-0">
               ${formattedAmt} ${ing.unit}
             </span>
           </li>
@@ -1332,6 +1375,7 @@
       }).join('');
     }
 
+    /* RENDER STEPS with Caveat font subheaders (natural casing, red text, underlined) */
     function renderModalSteps() {
       const container = document.getElementById('modal-steps-list');
 
@@ -1340,14 +1384,14 @@
         const isSubBullet = step.trim().startsWith('•');
 
         const formatText = (txt) => {
-          return txt.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-pdfTextDark">$1</strong>');
+          return txt.replace(/\*\*(.*?)\*\*/g, '<span class="text-pdfBlueHighlight font-medium">$1</span>');
         };
 
         if (isHeader) {
           return `
-            <div class="pt-4 pb-1 border-b border-pdfBorder/60 mb-2">
-              <h4 class="font-serif font-bold text-sm text-pdfAccent uppercase tracking-wide flex items-center gap-2">
-                <i class="fa-solid fa-utensils text-xs"></i> ${step}
+            <div class="pt-3 pb-1 border-b border-pdfInstHeaderRed/30 mb-2">
+              <h4 class="font-script font-bold text-2xl text-pdfInstHeaderRed underline underline-offset-2">
+                ${step}
               </h4>
             </div>
           `;
@@ -1355,8 +1399,8 @@
 
         if (isSubBullet) {
           return `
-            <div class="flex items-start gap-2.5 pl-10 pr-3 py-1.5 text-xs text-pdfTextBody">
-              <span class="text-pdfAccent font-bold text-sm leading-none mt-0.5">•</span>
+            <div class="flex items-start gap-2.5 pl-6 pr-3 py-1 text-xs text-pdfTextDark">
+              <span class="text-pdfTextDark font-bold text-sm leading-none mt-0.5">•</span>
               <span class="leading-relaxed">
                 ${formatText(step.replace(/^•\s*/, ''))}
               </span>
@@ -1366,13 +1410,13 @@
 
         const checkboxId = `step-${currentRecipe.id}-${idx}`;
         return `
-          <label for="${checkboxId}" class="flex items-start gap-3 p-3 rounded-xl bg-pdfBg/40 border border-pdfBorder hover:border-pdfAccent/50 cursor-pointer transition text-xs text-pdfTextDark group mt-2">
+          <label for="${checkboxId}" class="flex items-start gap-3 p-2 rounded-lg hover:bg-white/50 cursor-pointer transition text-xs text-pdfTextDark group mt-1">
             <input 
               type="checkbox" 
               id="${checkboxId}" 
-              class="step-checkbox mt-0.5 w-4 h-4 text-pdfAccent rounded border-pdfBorder focus:ring-pdfAccent/20 cursor-pointer"
+              class="step-checkbox mt-0.5 w-4 h-4 text-pdfBlueHighlight rounded border-pdfBorder focus:ring-pdfBlueHighlight/20 cursor-pointer"
             />
-            <span class="leading-relaxed group-hover:text-pdfAccent">
+            <span class="leading-relaxed">
               ${formatText(step)}
             </span>
           </label>
@@ -1386,6 +1430,8 @@
         const checkbox = document.getElementById(`step-${currentRecipe.id}-${idx}`);
         if (checkbox) checkbox.checked = false;
       });
+      const ingPills = document.querySelectorAll('.ing-pill');
+      ingPills.forEach(pill => pill.classList.remove('struck'));
     }
 
     function insertInstructionFormat(type) {
@@ -1417,7 +1463,7 @@
         cursorOffset = selectedText ? insertion.length : 2;
       } else if (type === 'header') {
         const prefix = (start > 0 && textarea.value[start - 1] !== '\n') ? '\n\n' : '';
-        const headerText = (selectedText || 'SECTION TITLE').toUpperCase();
+        const headerText = selectedText || 'Section Title';
         insertion = `${prefix}${headerText}\n`;
         cursorOffset = insertion.length;
       }
