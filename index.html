@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preetha's Recipe Book</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pdfBg: '#FFFDEB',        /* Pale warm pastel cream background */
+            pdfCard: '#FFFFFF',      /* Crisp clean recipe card background */
+            pdfBorder: '#EFE2C2',    /* Soft warm border tint */
+            pdfTextDark: '#3A2E2B',  /* Deep brownish charcoal for titles */
+            pdfTextBody: '#5C4E4A',  /* Warm neutral text */
+            pdfAccent: '#8C522A',    /* Terracotta warm accent */
+            pdfAccentLight: '#F7EED3',/* Soft pill fill */
+            pdfHighlight: '#D97724', /* Warm gold highlight */
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            title: ['"Marcellus"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FFFDEB;
+      color: #3A2E2B;
+    }
+    
+    .recipe-doc-page {
+      background-color: #ffffff;
+      border: 1px solid #EFE2C2;
+      box-shadow: 0 4px 20px -2px rgba(140, 82, 42, 0.06);
+      transition: all 0.25s ease-in-out;
+    }
+
+    .recipe-doc-page:hover {
+      box-shadow: 0 8px 30px -4px rgba(140, 82, 42, 0.12);
+      border-color: #D6C29A;
+      transform: translateY(-2px);
+    }
+
+    /* Custom Checkbox Styling */
+    .step-checkbox:checked + span {
+      text-decoration: line-through;
+      color: #9CA3AF;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FFFDEB;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #EFE2C2;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D6C29A;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200 selection:text-amber-900">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="bg-pdfBg border-b border-pdfBorder sticky top-0 z-30 backdrop-blur-md bg-opacity-95">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Book Title / Header -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="resetFilters()">
+          <div class="w-11 h-11 rounded-full bg-pdfAccentLight border border-pdfBorder flex items-center justify-center text-pdfAccent text-xl shadow-xs">
+            <i class="fa-solid fa-book-bookmark"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-title font-bold tracking-wide text-pdfTextDark">Preetha's Recipe Book</h1>
+            <p class="text-xs text-pdfAccent font-medium tracking-widest uppercase -mt-0.5">Classic Homemade Collection</p>
+          </div>
+        </div>
+
+        <!-- Saved / Actions -->
+        <div class="flex items-center space-x-3">
+          <div id="recipe-count-badge" class="bg-pdfAccentLight text-pdfAccent text-xs px-3.5 py-1.5 rounded-full border border-pdfBorder hidden sm:flex items-center gap-1.5 font-medium">
+            <i class="fa-solid fa-utensils text-xs"></i> <span id="visible-count">0</span> Recipes
+          </div>
+          <button onclick="toggleFavoritesOnly()" id="fav-filter-btn" class="bg-white hover:bg-pdfAccentLight text-pdfTextDark px-4 py-2 rounded-xl border border-pdfBorder text-sm flex items-center gap-2 transition shadow-2xs font-medium">
+            <i class="fa-regular fa-bookmark text-pdfAccent" id="fav-btn-icon"></i>
+            <span class="hidden sm:inline">Saved Recipes</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SEARCH & CATEGORY BANNER SECTION -->
+  <section class="py-8 px-4 sm:px-6 border-b border-pdfBorder bg-gradient-to-b from-pdfBg to-amber-50/40">
+    <div class="max-w-5xl mx-auto text-center space-y-6">
+      
+      <!-- Subtitle -->
+      <p class="text-sm font-serif italic text-pdfAccent max-w-lg mx-auto">
+        "A cherished collection of homemade recipes, carefully measured and step-by-step guided."
+      </p>
+
+      <!-- Search Bar -->
+      <div class="relative max-w-xl mx-auto">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-pdfAccent">
+          <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </div>
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Search recipes or ingredients (e.g., coconut, tea, egg)..." 
+          class="w-full pl-11 pr-10 py-3.5 rounded-2xl bg-white border border-pdfBorder text-pdfTextDark placeholder-pdfTextBody/60 focus:outline-none focus:ring-2 focus:ring-pdfAccent/30 focus:border-pdfAccent text-sm shadow-xs transition"
+          oninput="handleSearch()"
+        />
+        <button 
+          id="clear-search-btn" 
+          onclick="clearSearch()" 
+          class="absolute inset-y-0 right-0 pr-4 flex items-center text-pdfTextBody/50 hover:text-pdfTextDark hidden"
+        >
+          <i class="fa-solid fa-circle-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Categories Pills -->
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-2" id="category-tabs">
+        <!-- Dynamically rendered tabs -->
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN RECIPES DISPLAY AREA -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow">
+    
+    <!-- Active Filter Badge Indicator -->
+    <div id="active-filter-bar" class="hidden flex items-center justify-between bg-pdfAccentLight/80 border border-pdfBorder rounded-xl px-4 py-2.5 mb-8 text-sm text-pdfTextDark">
+      <div class="flex items-center gap-2">
+        <span class="font-medium">Filtered View:</span>
+        <span id="filter-tag-text" class="bg-white text-pdfAccent px-2.5 py-0.5 rounded-md font-semibold text-xs border border-pdfBorder">All</span>
+      </div>
+      <button onclick="resetFilters()" class="text-xs font-semibold text-pdfAccent hover:underline flex items-center gap-1">
+        <i class="fa-solid fa-rotate-left"></i> Reset
+      </button>
+    </div>
+
+    <!-- RECIPES GRID (PDF DOCUMENT STYLE CARDS) -->
+    <div id="recipes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div id="empty-state" class="hidden text-center py-20 px-4">
+      <div class="w-16 h-16 bg-pdfAccentLight text-pdfAccent rounded-full flex items-center justify-center mx-auto mb-4 text-2xl border border-pdfBorder">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+      <h3 class="text-xl font-serif font-bold text-pdfTextDark mb-1">No recipes found</h3>
+      <p class="text-pdfTextBody text-sm max-w-sm mx-auto mb-6">We couldn't find any recipes matching your current filter.</p>
+      <button onclick="resetFilters()" class="bg-pdfAccent hover:bg-pdfTextDark text-white font-medium px-5 py-2.5 rounded-xl shadow-xs text-sm transition">
+        Clear Filters
+      </button>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-pdfBg border-t border-pdfBorder py-8 text-center text-xs text-pdfTextBody">
+    <div class="max-w-7xl mx-auto px-4 space-y-2">
+      <p class="font-title text-base text-pdfTextDark font-bold">Preetha's Recipe Book</p>
+      <p class="text-pdfTextBody/80">Interactive Cooking Companion & Serving Scaler</p>
+      <p class="text-pdfTextBody/50 pt-2">&copy; Preetha's Recipe Book. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- RECIPE DETAIL MODAL (FULL PDF PAGE VIEW) -->
+  <div id="recipe-modal" class="fixed inset-0 z-50 overflow-y-auto bg-pdfTextDark/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 hidden">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-pdfBorder relative transform transition-all">
+      
+      <!-- Modal Header (Cream PDF Header) -->
+      <div class="bg-pdfBg border-b border-pdfBorder p-6 sm:p-8 relative">
+        <button 
+          onclick="closeModal()" 
+          class="absolute top-6 right-6 w-9 h-9 rounded-full bg-white border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark flex items-center justify-center transition shadow-2xs"
+          aria-label="Close modal"
+        >
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+
+        <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-pdfAccent mb-2">
+          <span id="modal-category" class="bg-pdfAccentLight px-3 py-1 rounded-full border border-pdfBorder">Category</span>
+          <span class="flex items-center gap-1 text-pdfTextBody"><i class="fa-regular fa-clock text-pdfAccent"></i> <span id="modal-prep-time">15 mins</span></span>
+        </div>
+
+        <h2 id="modal-title" class="text-3xl sm:text-4xl font-serif font-bold text-pdfTextDark mb-2 pr-10">Recipe Title</h2>
+        <p id="modal-description" class="text-pdfTextBody text-sm leading-relaxed max-w-2xl">Recipe description goes here.</p>
+      </div>
+
+      <!-- Modal Body (Scrollable Document Page) -->
+      <div class="p-6 sm:p-8 overflow-y-auto space-y-8 flex-grow">
+        
+        <!-- Recipe Artwork / Illustration Bar & Serving Scaler -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-pdfBg/60 border border-pdfBorder p-5 rounded-2xl">
+          
+          <!-- Illustration Box -->
+          <div class="md:col-span-4 flex items-center justify-center">
+            <div id="modal-illustration-container" class="w-32 h-32 flex items-center justify-center bg-white rounded-2xl border border-pdfBorder p-2 shadow-2xs">
+              <!-- Dynamic SVG Art Inserted Here -->
+            </div>
+          </div>
+
+          <!-- Serving Scaler Tool -->
+          <div class="md:col-span-8 flex flex-col justify-center space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-serif font-bold text-pdfTextDark text-base">Portion & Servings Scaler</h4>
+                <p class="text-xs text-pdfTextBody">Adjust servings below to automatically recalculate ingredient quantities.</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-1">
+              <span class="text-xs font-semibold uppercase text-pdfTextBody">Servings:</span>
+              <div class="flex items-center bg-white border border-pdfBorder rounded-xl p-1 shadow-2xs">
+                <button onclick="updateServings(-1)" class="w-8 h-8 rounded-lg bg-pdfAccentLight hover:bg-pdfAccent/10 text-pdfAccent font-bold flex items-center justify-center text-sm transition">
+                  <i class="fa-solid fa-minus text-xs"></i>
+                </button>
+                <span class="px-4 font-bold text-pdfTextDark text-sm min-w-[4rem] text-center" id="modal-servings-count">
+                  1 person
+                </span>
+                <button onclick="updateServings(1)" class="w-8 h-8 rounded-lg bg-pdfAccentLight hover:bg-pdfAccent/10 text-pdfAccent font-bold flex items-center justify-center text-sm transition">
+                  <i class="fa-solid fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF Side-by-Side Document Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+          
+          <!-- Column 1: Ingredients & Measurements -->
+          <div class="md:col-span-5 space-y-4">
+            <div class="border-b border-pdfBorder pb-2 flex items-center justify-between">
+              <h3 class="font-serif font-bold text-lg text-pdfTextDark flex items-center gap-2">
+                <i class="fa-solid fa-basket-shopping text-pdfAccent text-sm"></i> Ingredients
+              </h3>
+              <span id="ingredient-count" class="text-xs font-medium text-pdfTextBody/70">0 items</span>
+            </div>
+
+            <ul id="modal-ingredients-list" class="space-y-2">
+              <!-- Dynamically populated ingredients -->
+            </ul>
+          </div>
+
+          <!-- Column 2: Instructions & Steps -->
+          <div class="md:col-span-7 space-y-4">
+            <div class="border-b border-pdfBorder pb-2 flex items-center justify-between">
+              <h3 class="font-serif font-bold text-lg text-pdfTextDark flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-pdfAccent text-sm"></i> Instructions
+              </h3>
+              <button onclick="resetModalSteps()" class="text-xs font-semibold text-pdfAccent hover:underline">
+                Reset Checklist
+              </button>
+            </div>
+
+            <div id="modal-steps-list" class="space-y-3">
+              <!-- Dynamically populated steps -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-pdfBg px-6 py-4 border-t border-pdfBorder flex items-center justify-between">
+        <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-medium px-4 py-2 rounded-xl border border-pdfBorder bg-white hover:bg-pdfAccentLight flex items-center gap-2 text-pdfTextDark transition shadow-2xs">
+          <i class="fa-regular fa-bookmark text-pdfAccent" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
+        </button>
+        <button onclick="closeModal()" class="bg-pdfAccent hover:bg-pdfTextDark text-white font-medium px-6 py-2 rounded-xl text-sm transition shadow-2xs">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC & ILLUSTRATIONS -->
+  <script>
+    // STYLIZED SVG ILLUSTRATIONS FOR PDF SPECIFIC DISHES
+    const svgIllustrations = {
+      coffee: `
+        <svg viewBox="0 0 100 100" class="w-full h-full text-pdfAccent fill-current">
+          <path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
+          <path d="M22 38 h51 v6 h-51 z" fill="#8C522A"/>
+          <path d="M70 45 h8 a8 8 0 0 1 8 8 v4 a8 8 0 0 1 -8 8 h-8" fill="none" stroke="#8C522A" stroke-width="3.5"/>
+          <path d="M20 83 h56 v4 h-56 z" fill="#8C522A"/>
+          <path d="M38 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M50 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>`,
+      tea: `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M30 35 L35 75 A10 10 0 0 0 45 83 L55 83 A10 10 0 0 0 65 75 L70 35 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/>
+          <path d="M28 32 h44 v5 h-44 z" fill="#8C522A"/>
+          <path d="M40 22 Q45 15 42 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M52 22 Q57 15 54 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="50" cy="55" r="8" fill="#D97724" opacity="0.4"/>
+        </svg>`,
+      'dates-almond-milk': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <rect x="36" y="25" width="28" height="55" rx="6" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
+          <path d="M32 25 h36 v5 h-36 z" fill="#8C522A"/>
+          <ellipse cx="50" cy="65" rx="6" ry="9" fill="#8C522A"/>
+          <ellipse cx="30" cy="75" rx="5" ry="8" fill="#D97724" transform="rotate(-30 30 75)"/>
+        </svg>`,
+      'coconut-chutney': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#FFFDEB" stroke="#8C522A" stroke-width="3"/>
+          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#EFE2C2" stroke="#8C522A" stroke-width="2"/>
+          <circle cx="45" cy="48" r="2" fill="#3A2E2B"/>
+          <circle cx="55" cy="52" r="2" fill="#3A2E2B"/>
+          <path d="M48 46 Q52 44 56 48" fill="none" stroke="#8C522A" stroke-width="2"/>
+        </svg>`,
+      'thakkali-chutney': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#D97724" opacity="0.25" stroke="#8C522A" stroke-width="3"/>
+          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#D97724" opacity="0.4" stroke="#8C522A" stroke-width="2"/>
+          <circle cx="42" cy="49" r="2" fill="#8C522A"/>
+          <circle cx="58" cy="51" r="2" fill="#8C522A"/>
+        </svg>`,
+      'scrambled-egg-bread-omelette': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <rect x="25" y="30" width="50" height="40" rx="6" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/>
+          <path d="M20 65 L80 65 L75 75 L25 75 Z" fill="#8C522A" opacity="0.3"/>
+          <circle cx="50" cy="50" r="10" fill="#D97724"/>
+        </svg>`,
+      'ragi-semiya': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/>
+          <path d="M30 45 Q50 65 70 45" fill="none" stroke="#8C522A" stroke-width="2"/>
+          <path d="M35 40 Q50 60 65 40" fill="none" stroke="#8C522A" stroke-width="2"/>
+        </svg>`,
+      'kesari': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M30 65 L35 40 L65 40 L70 65 Z" fill="#D97724" opacity="0.5" stroke="#8C522A" stroke-width="3"/>
+          <ellipse cx="50" cy="40" rx="15" ry="5" fill="#D97724" stroke="#8C522A" stroke-width="2"/>
+          <circle cx="48" cy="39" r="2" fill="#FFFDEB"/>
+          <circle cx="53" cy="41" r="2" fill="#FFFDEB"/>
+        </svg>`,
+      'carrot-poriyal': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/>
+          <rect x="35" y="45" width="6" height="6" fill="#D97724" rx="1"/>
+          <rect x="45" y="42" width="6" height="6" fill="#D97724" rx="1"/>
+          <rect x="55" y="46" width="6" height="6" fill="#D97724" rx="1"/>
+        </svg>`,
+      'potato-poriyal': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/>
+          <rect x="34" y="44" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/>
+          <rect x="46" y="41" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/>
+          <rect x="57" y="45" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/>
+        </svg>`,
+      'peerkangai-kuzhambu': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <circle cx="50" cy="52" r="28" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
+          <circle cx="50" cy="52" r="22" fill="#F7EED3"/>
+          <circle cx="44" cy="48" r="4" fill="#8C522A" opacity="0.3"/>
+          <circle cx="56" cy="54" r="5" fill="#8C522A" opacity="0.3"/>
+        </svg>`,
+      'pasi-payir-kuzhambu': `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <circle cx="50" cy="52" r="28" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
+          <circle cx="50" cy="52" r="22" fill="#EFE2C2"/>
+          <circle cx="42" cy="50" r="3" fill="#8C522A"/>
+          <circle cx="50" cy="46" r="3" fill="#8C522A"/>
+          <circle cx="55" cy="55" r="3" fill="#8C522A"/>
+        </svg>`
+    };
+
+    // COMPLETE RECIPES DATASET
+    const recipesData = [
+      {
+        id: 'coffee',
+        title: 'Coffee',
+        category: 'Beverages',
+        description: 'Traditional rich boiled milk coffee prepared with sweet aromatic flavor.',
+        prepTime: '10 mins',
+        baseServings: 1,
+        servingsUnit: 'person',
+        ingredients: [
+          { name: 'Milk', amount: 0.75, unit: 'cup' },
+          { name: 'Water', amount: 0.25, unit: 'cup' },
+          { name: 'Sugar', amount: 1.5, unit: 'tsp' },
+          { name: 'Coffee powder', amount: 1, unit: 'tsp' }
+        ],
+        steps: [
+          'In a small saucepan, add 3/4 cup of milk.',
+          'Add 1/4 cup of water to the milk.',
+          'Add 1 1/2 teaspoons of sugar to the mixture.',
+          'Heat over medium flame and bring it to a gentle boil, allowing it to rise to the brim.',
+          'While milk is heating, place 1 teaspoon of coffee powder into a serving cup.',
+          'Once boiled, pour hot milk directly into the cup containing coffee powder.',
+          'Stir thoroughly until fully dissolved and smooth.'
+        ]
+      },
+      {
+        id: 'tea',
+        title: 'Tea',
+        category: 'Beverages',
+        description: 'Classic brewed milk tea infused with rich tea leaves and caramel sweetness.',
+        prepTime: '10 mins',
+        baseServings: 1,
+        servingsUnit: 'person',
+        ingredients: [
+          { name: 'Water', amount: 0.5, unit: 'cup' },
+          { name: 'Sugar', amount: 1.5, unit: 'tsp' },
+          { name: 'Tea Powder', amount: 1, unit: 'tsp' },
+          { name: 'Milk', amount: 0.75, unit: 'cup' }
+        ],
+        steps: [
+          'In a small saucepan, add 1/2 cup of water.',
+          'Stir in 1 1/2 teaspoons of sugar.',
+          'Add 1 teaspoon of tea powder.',
+          'Bring mixture to a rolling boil, allowing it to rise to the brim.',
+          'Measure 3/4 cup of milk and add to the saucepan once water-tea mixture boils.',
+          'Stir gently and heat until tea reaches a uniform rich color.',
+          'Using a strainer, filter tea directly into serving cup.'
+        ]
+      },
+      {
+        id: 'dates-almond-milk',
+        title: 'Dates Almond Milk',
+        category: 'Beverages',
+        description: 'Nourishing and creamy blend of blanched almonds, sweet pitted dates, and rich milk.',
+        prepTime: '15 mins',
+        baseServings: 1,
+        servingsUnit: 'person',
+        ingredients: [
+          { name: 'Milk', amount: 2, unit: 'cups' },
+          { name: 'Dates (pitted)', amount: 2, unit: 'pieces' },
+          { name: 'Almonds', amount: 10, unit: 'pieces' },
+          { name: 'Cocoa Powder (Unsweetened - Optional)', amount: 1, unit: 'tsp' }
+        ],
+        steps: [
+          'Boil 10 almonds in hot water for a few minutes and peel the skin off easily.',
+          'In a blender jar, pour 2 cups of milk.',
+          'Add 2 pitted dates.',
+          'Add 10 peeled almonds.',
+          'Optional: Add 1 teaspoon cocoa powder for a rich chocolatey twist.',
+          'Blend on high speed until completely smooth and creamy.',
+          'Pour into glasses and serve.'
+        ]
+      },
+      {
+        id: 'coconut-chutney',
+        title: 'Coconut Chutney',
+        category: 'Breakfast',
+        description: 'South Indian essential coconut side dish with roasted gram, green chillies, and aromatic mustard tempering.',
+        prepTime: '15 mins',
+        baseServings: 4,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Grated Coconut', amount: 1, unit: 'cup' },
+          { name: 'Roasted Gram (Pottukadalai)', amount: 2, unit: 'tbsp' },
+          { name: 'Green Chilies', amount: 2, unit: 'pieces' },
+          { name: 'Ginger', amount: 1.5, unit: 'inch piece' },
+          { name: 'Salt', amount: 1, unit: 'tsp (to taste)' },
+          { name: 'Mustard Seeds', amount: 1.5, unit: 'tsp' },
+          { name: 'Urad Dal', amount: 1.5, unit: 'tsp' },
+          { name: 'Curry Leaves', amount: 6, unit: 'leaves' }
+        ],
+        steps: [
+          'In a blender, combine grated coconut, roasted gram, green chilies, ginger, salt, and a splash of water.',
+          'Grind to a smooth or slightly coarse paste.',
+          'Transfer ground chutney to a serving bowl and adjust consistency with water if required.',
+          'Prepare tempering: Heat oil in a pan over medium heat. Add mustard seeds till crackling.',
+          'Add urad dal and curry leaves. Sauté until urad dal turns golden brown.',
+          'Pour warm tempering over chutney and stir well.'
+        ]
+      },
+      {
+        id: 'thakkali-chutney',
+        title: 'Thakkali Chutney (Tomato Chutney)',
+        category: 'Breakfast',
+        description: 'Tangy and spicy roasted tomato & onion chutney tempered with mustard and curry leaves.',
+        prepTime: '20 mins',
+        baseServings: 4,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Tomatoes (medium)', amount: 3, unit: 'pieces' },
+          { name: 'Onion (large)', amount: 1, unit: 'piece' },
+          { name: 'Garlic', amount: 4.5, unit: 'cloves' },
+          { name: 'Dry Red Chilies', amount: 3.5, unit: 'pieces' },
+          { name: 'Mustard Seeds', amount: 1.5, unit: 'tsp' },
+          { name: 'Urad Dal', amount: 1.5, unit: 'tsp' },
+          { name: 'Curry Leaves', amount: 6, unit: 'leaves' },
+          { name: 'Salt', amount: 1, unit: 'tsp (to taste)' }
+        ],
+        steps: [
+          'Roughly chop tomatoes, onion, and red chillies.',
+          'Heat 1 tsp oil in a pan. Add red chilies and garlic cloves; sauté for 30 seconds.',
+          'Add chopped onions and sauté until translucent.',
+          'Add tomatoes and salt. Cook until tomatoes become soft and mushy.',
+          'Turn off heat and let mixture cool completely.',
+          'Blend cooled mixture into a smooth paste without adding excess water.',
+          'Temper: Heat 1 tsp oil in same pan, pop mustard seeds, add urad dal & curry leaves until golden.',
+          'Pour hot tempering into chutney and mix.'
+        ]
+      },
+      {
+        id: 'scrambled-egg-bread-omelette',
+        title: 'Scrambled Egg Bread Omelette',
+        category: 'Breakfast',
+        description: 'Creamy scrambled egg yolk filling mixed with capsicum, layered between golden toasted bread.',
+        prepTime: '25 mins',
+        baseServings: 2,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Eggs', amount: 2, unit: 'pieces' },
+          { name: 'Cream Cheese', amount: 1, unit: 'tbsp' },
+          { name: 'Mayonnaise', amount: 1, unit: 'tbsp' },
+          { name: 'Cooking Cream', amount: 2, unit: 'tbsp' },
+          { name: 'Garlic Paste', amount: 0.5, unit: 'tsp' },
+          { name: 'Finely Chopped Capsicum', amount: 0.25, unit: 'cup' },
+          { name: 'Salt', amount: 0.5, unit: 'tsp' },
+          { name: 'Black Pepper', amount: 1, unit: 'tsp' },
+          { name: 'Red Chili Powder', amount: 0.5, unit: 'tsp' },
+          { name: 'Ghee or Butter', amount: 1, unit: 'tbsp' },
+          { name: 'Chili Flakes', amount: 0.5, unit: 'tsp' },
+          { name: 'Bread Slices', amount: 2, unit: 'slices' }
+        ],
+        steps: [
+          'Hard-boil 2 eggs in water for 20 minutes.',
+          'Peel eggs and separate yolks into a mixing bowl.',
+          'To yolks, add cream cheese, mayo, cooking cream, garlic paste, capsicum, salt, pepper, and chili powder.',
+          'Mix yolk mixture thoroughly until creamy and smooth.',
+          'Chop egg whites into small cubes and gently fold into yolk cream.',
+          'Spread ghee/butter on outer sides of 2 bread slices.',
+          'Toast both sides of bread on pan until golden.',
+          'Spread creamy egg mixture onto one slice, sprinkle chili flakes, and cover with second slice.',
+          'Press gently with spatula and toast until crispy golden brown.'
+        ]
+      },
+      {
+        id: 'ragi-semiya',
+        title: 'Ragi Semiya',
+        category: 'Breakfast',
+        description: 'Wholesome steamed finger millet vermicelli blended with freshly grated coconut and sugar.',
+        prepTime: '20 mins',
+        baseServings: 2,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Ragi Semiya (Vermicelli)', amount: 1, unit: 'pack' },
+          { name: 'Salt', amount: 0.5, unit: 'tsp' },
+          { name: 'Sugar', amount: 3, unit: 'tbsp' },
+          { name: 'Coconut Chunks', amount: 0.25, unit: 'cup' }
+        ],
+        steps: [
+          'In a bowl, dissolve 1/2 tsp salt in water.',
+          'Submerge Ragi Semiya into salted water and soak for 2-5 minutes (do not over-soak).',
+          'Preheat idli pot/steamer with damp cloth lining.',
+          'Drain semiya completely and spread evenly on steamer plates.',
+          'Cover and steam on medium flame for 10 minutes.',
+          'Pulse coconut chunks in blender to retain a coarse texture.',
+          'Transfer steamed ragi semiya into bowl, add sugar and pulsed coconut, then mix gently.'
+        ]
+      },
+      {
+        id: 'kesari',
+        title: 'Kesari',
+        category: 'Breakfast',
+        description: 'Classic festive semolina sweet infused with ghee-roasted cashews, raisins, and cardamoms.',
+        prepTime: '20 mins',
+        baseServings: 4,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Roasted Semolina (Rava)', amount: 1, unit: 'cup' },
+          { name: 'Water', amount: 3, unit: 'cups' },
+          { name: 'Sugar', amount: 1, unit: 'cup' },
+          { name: 'Ghee', amount: 3, unit: 'tbsp' },
+          { name: 'Cashew Nuts', amount: 10, unit: 'pieces' },
+          { name: 'Dry Grapes (Raisins)', amount: 10, unit: 'pieces' },
+          { name: 'Food Colouring', amount: 1, unit: 'pinch' },
+          { name: 'Cardamom Powder / Saffron (Optional)', amount: 1, unit: 'pinch' }
+        ],
+        steps: [
+          'Heat ghee in pan over low flame. Roast cashews until golden brown, then add raisins until puffed.',
+          'Transfer roasted nuts and raisins to a bowl.',
+          'Roast semolina in remaining ghee stirring continuously until aromatic.',
+          'Boil 3 cups of water in same pan, then stir in desired food colouring.',
+          'Gradually add semolina while stirring continuously to prevent lump formation.',
+          'Once thickened, stir in 1 cup of sugar thoroughly.',
+          'Mix in roasted cashews, raisins, and optional cardamom powder before serving warm.'
+        ]
+      },
+      {
+        id: 'carrot-poriyal',
+        title: 'Carrot Poriyal',
+        category: 'Side Dishes',
+        description: 'Light and fresh stir-fried carrots with lentils, mustard seeds, and freshly grated coconut.',
+        prepTime: '15 mins',
+        baseServings: 4,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Carrots (chopped/grated)', amount: 2, unit: 'large' },
+          { name: 'Onion (finely chopped)', amount: 0.5, unit: 'medium' },
+          { name: 'Mustard Seeds', amount: 1.5, unit: 'tsp' },
+          { name: 'Urad Dal', amount: 1, unit: 'tsp' },
+          { name: 'Green Chilies', amount: 2, unit: 'pieces' },
+          { name: 'Grated Coconut', amount: 2.5, unit: 'tbsp' },
+          { name: 'Curry Leaves', amount: 5, unit: 'leaves' },
+          { name: 'Salt', amount: 1, unit: 'tsp (to taste)' }
+        ],
+        steps: [
+          'Finely chop or grate 2 carrots, 1/2 onion, and slit green chilies.',
+          'Heat oil in pan, pop mustard seeds, sauté urad dal until golden.',
+          'Add green chilies, chopped onions, and curry leaves until translucent.',
+          'Add carrots and salt. Sprinkle a splash of water, cover and cook for 4-5 mins.',
+          'Remove lid, sauté on medium heat to evaporate moisture.',
+          'Fold in grated coconut, mix well, and remove from heat.'
+        ]
+      },
+      {
+        id: 'potato-poriyal',
+        title: 'Potato Poriyal',
+        category: 'Side Dishes',
+        description: 'Crispy golden-brown roasted potato cubes cooked with aromatic spices and asafoetida.',
+        prepTime: '25 mins',
+        baseServings: 4,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Potatoes (diced in small cubes)', amount: 3, unit: 'medium' },
+          { name: 'Cooking Oil', amount: 3, unit: 'tsp' },
+          { name: 'Mustard Seeds', amount: 0.5, unit: 'tsp' },
+          { name: 'Cumin Seeds', amount: 0.5, unit: 'tsp' },
+          { name: 'Urad Dal', amount: 1, unit: 'tsp' },
+          { name: 'Asafoetida (Hing)', amount: 1, unit: 'pinch' },
+          { name: 'Curry Leaves', amount: 6, unit: 'leaves' },
+          { name: 'Turmeric Powder', amount: 0.25, unit: 'tsp' },
+          { name: 'Sambar Powder', amount: 1, unit: 'tsp' },
+          { name: 'Salt', amount: 1, unit: 'tsp (to taste)' },
+          { name: 'Water', amount: 0.25, unit: 'cup' }
+        ],
+        steps: [
+          'Dice potatoes into small uniform cubes.',
+          'Heat 3 tsp oil in stir-fry pan. Crackle mustard seeds, cumin seeds, and urad dal till golden.',
+          'Add asafoetida and curry leaves.',
+          'Add diced potatoes and stir-fry 2-3 mins.',
+          'Sprinkle turmeric powder, sambar powder, and salt. Mix thoroughly.',
+          'Add 1/4 cup water, cover lid and steam cook 4-5 mins until soft.',
+          'Uncover and continue stir-frying uncovered for 5-6 minutes on low heat until golden and crispy.'
+        ]
+      },
+      {
+        id: 'peerkangai-kuzhambu',
+        title: 'Peerkangai Kuzhambu',
+        category: 'Main Course',
+        description: 'Comforting ridge gourd curry cooked in onion tomato base with coarse pulsed fresh coconut.',
+        prepTime: '25 mins',
+        baseServings: 4,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Ridge Gourd (Peerkangai)', amount: 1, unit: 'medium' },
+          { name: 'Onion (large)', amount: 1, unit: 'piece' },
+          { name: 'Tomato', amount: 1.5, unit: 'pieces' },
+          { name: 'Sambar Powder', amount: 1, unit: 'tbsp' },
+          { name: 'Garam/Curry Masala Powder', amount: 0.5, unit: 'tsp' },
+          { name: 'Turmeric Powder', amount: 0.25, unit: 'tsp' },
+          { name: 'Fresh Coconut Chunks', amount: 2.5, unit: 'tbsp' },
+          { name: 'Mustard Seeds', amount: 1, unit: 'tsp' },
+          { name: 'Urad Dal', amount: 1, unit: 'tsp' },
+          { name: 'Curry Leaves', amount: 6, unit: 'leaves' },
+          { name: 'Rock Salt', amount: 1, unit: 'tsp (to taste)' }
+        ],
+        steps: [
+          'Chop ridge gourd, 1 onion, and 1.5 tomatoes.',
+          'Heat oil in saucepot, temper mustard seeds, urad dal, and curry leaves.',
+          'Sauté onions until golden, then add tomatoes until soft and mushy.',
+          'Add ridge gourd, sambar powder, masala powder, and turmeric. Sauté 1 minute.',
+          'Pour water just to submerge vegetables, add rock salt, and simmer till cooked through.',
+          'Coarsely pulse fresh coconut chunks in blender without water.',
+          'Stir ground coconut into curry and simmer for final 1-2 minutes.'
+        ]
+      },
+      {
+        id: 'pasi-payir-kuzhambu',
+        title: 'Pasi Payir Kuzhambu',
+        category: 'Main Course',
+        description: 'Protein-rich green gram gravy pressure cooked with castor oil, garlic, and fried aromatics.',
+        prepTime: '35 mins',
+        baseServings: 4,
+        servingsUnit: 'people',
+        ingredients: [
+          { name: 'Green Gram (Pasi Payir)', amount: 1, unit: 'cup' },
+          { name: 'Garlic Cloves', amount: 4.5, unit: 'cloves' },
+          { name: 'Tomato', amount: 1, unit: 'medium' },
+          { name: 'Onion', amount: 1.5, unit: 'medium' },
+          { name: 'Dried Red Chilies', amount: 2, unit: 'pieces' },
+          { name: 'Castor Oil', amount: 0.5, unit: 'tsp' },
+          { name: 'Mustard Seeds', amount: 1, unit: 'tsp' },
+          { name: 'Cumin Seeds', amount: 1, unit: 'tsp' },
+          { name: 'Urad Dal', amount: 1.5, unit: 'tsp' },
+          { name: 'Curry Leaves', amount: 6, unit: 'leaves' },
+          { name: 'Coriander Leaves', amount: 2, unit: 'tbsp chopped' },
+          { name: 'Salt', amount: 1, unit: 'tsp (to taste)' }
+        ],
+        steps: [
+          'Soak green gram in water for 1-2 hours prior to cooking.',
+          'Transfer rinsed green gram into pressure cooker with chopped garlic, tomato, salt, castor oil, and water to submerge.',
+          'Close cooker lid and cook 1-2 whistles on low flame.',
+          'In a pan, heat 3 tsp oil, add mustard seeds, cumin seeds, urad dal until golden brown.',
+          'Sauté remaining chopped onions, red chilies, and curry leaves until golden brown.',
+          'Open cooker and lightly mash green gram using a wooden ladle.',
+          'Stir in tempered roasted ingredients, adjust water consistency and salt, then top with coriander leaves.'
+        ]
+      }
+    ];
+
+    // APPLICATION STATE
+    let activeCategory = 'All';
+    let searchQuery = '';
+    let favorites = JSON.parse(localStorage.getItem('preetha_pdf_favs') || '[]');
+    let currentRecipe = null;
+    let currentServings = 1;
+    let showingFavsOnly = false;
+
+    // INITIALIZATION
+    window.onload = function() {
+      renderCategoryTabs();
+      renderRecipes();
+    };
+
+    // CATEGORIES RENDERING
+    function renderCategoryTabs() {
+      const categories = ['All', 'Beverages', 'Breakfast', 'Side Dishes', 'Main Course'];
+      const container = document.getElementById('category-tabs');
+
+      container.innerHTML = categories.map(cat => {
+        const isActive = activeCategory === cat && !showingFavsOnly;
+        return `
+          <button 
+            onclick="selectCategory('${cat}')"
+            class="px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
+              isActive 
+                ? 'bg-pdfAccent text-white shadow-2xs' 
+                : 'bg-white text-pdfTextDark border border-pdfBorder hover:bg-pdfAccentLight'
+            }"
+          >
+            ${cat}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectCategory(category) {
+      activeCategory = category;
+      showingFavsOnly = false;
+      updateFavButtonState();
+      renderCategoryTabs();
+      renderRecipes();
+      updateFilterBar();
+    }
+
+    // SEARCH HANDLER
+    function handleSearch() {
+      const input = document.getElementById('search-input');
+      searchQuery = input.value.trim().toLowerCase();
+
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (searchQuery.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      renderRecipes();
+      updateFilterBar();
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      searchQuery = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      renderRecipes();
+      updateFilterBar();
+    }
+
+    function toggleFavoritesOnly() {
+      showingFavsOnly = !showingFavsOnly;
+      updateFavButtonState();
+      renderCategoryTabs();
+      renderRecipes();
+      updateFilterBar();
+    }
+
+    function updateFavButtonState() {
+      const btn = document.getElementById('fav-filter-btn');
+      const icon = document.getElementById('fav-btn-icon');
+      if (showingFavsOnly) {
+        btn.classList.add('bg-pdfAccentLight', 'border-pdfAccent');
+        icon.className = 'fa-solid fa-bookmark text-pdfAccent';
+      } else {
+        btn.classList.remove('bg-pdfAccentLight', 'border-pdfAccent');
+        icon.className = 'fa-regular fa-bookmark text-pdfAccent';
+      }
+    }
+
+    function updateFilterBar() {
+      const bar = document.getElementById('active-filter-bar');
+      const text = document.getElementById('filter-tag-text');
+
+      let tags = [];
+      if (showingFavsOnly) tags.push('Saved Recipes');
+      if (activeCategory !== 'All') tags.push(activeCategory);
+      if (searchQuery) tags.push(`Search: "${searchQuery}"`);
+
+      if (tags.length > 0) {
+        bar.classList.remove('hidden');
+        text.innerText = tags.join(' • ');
+      } else {
+        bar.classList.add('hidden');
+      }
+    }
+
+    function resetFilters() {
+      activeCategory = 'All';
+      searchQuery = '';
+      showingFavsOnly = false;
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      updateFavButtonState();
+      renderCategoryTabs();
+      renderRecipes();
+      updateFilterBar();
+    }
+
+    // RENDER RECIPE CARDS (MATCHING PDF LAYOUT)
+    function renderRecipes() {
+      const grid = document.getElementById('recipes-grid');
+      const emptyState = document.getElementById('empty-state');
+
+      const filtered = recipesData.filter(r => {
+        const matchesCat = (activeCategory === 'All') || (r.category === activeCategory);
+        const matchesSearch = !searchQuery || 
+          r.title.toLowerCase().includes(searchQuery) ||
+          r.category.toLowerCase().includes(searchQuery) ||
+          r.ingredients.some(i => i.name.toLowerCase().includes(searchQuery));
+        const matchesFav = !showingFavsOnly || favorites.includes(r.id);
+
+        return matchesCat && matchesSearch && matchesFav;
+      });
+
+      document.getElementById('visible-count').innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(recipe => {
+        const isFav = favorites.includes(recipe.id);
+        const illustration = svgIllustrations[recipe.id] || '';
+
+        return `
+          <div class="recipe-doc-page rounded-2xl p-6 flex flex-col justify-between cursor-pointer group" onclick="openModal('${recipe.id}')">
+            
+            <div>
+              <!-- PDF Card Top Section: Title & Illustration -->
+              <div class="flex items-start justify-between border-b border-pdfBorder pb-4 mb-5">
+                <div class="space-y-1 pr-4">
+                  <span class="text-[11px] font-bold tracking-widest uppercase text-pdfAccent bg-pdfAccentLight px-2.5 py-0.5 rounded-md border border-pdfBorder inline-block">
+                    ${recipe.category}
+                  </span>
+                  <h3 class="text-2xl font-serif font-bold text-pdfTextDark group-hover:text-pdfAccent transition-colors">
+                    ${recipe.title}
+                  </h3>
+                  <p class="text-xs text-pdfTextBody/80 flex items-center gap-2 pt-0.5">
+                    <span><i class="fa-regular fa-clock text-pdfAccent mr-1"></i>${recipe.prepTime}</span>
+                    <span>•</span>
+                    <span>${recipe.baseServings} ${recipe.servingsUnit}</span>
+                  </p>
+                </div>
+
+                <!-- SVG Artwork Frame -->
+                <div class="w-20 h-20 bg-pdfBg rounded-xl border border-pdfBorder p-1.5 flex-shrink-0 flex items-center justify-center shadow-2xs group-hover:border-pdfAccent transition-colors">
+                  ${illustration}
+                </div>
+              </div>
+
+              <!-- PDF Card Description -->
+              <p class="text-pdfTextBody text-xs leading-relaxed mb-6 line-clamp-2">
+                ${recipe.description}
+              </p>
+
+              <!-- Mini Ingredients Snapshot -->
+              <div class="bg-pdfBg/50 border border-pdfBorder/80 rounded-xl p-3 mb-5">
+                <p class="text-[11px] font-bold text-pdfAccent uppercase tracking-wider mb-1.5">Ingredients Preview:</p>
+                <p class="text-xs text-pdfTextDark/90 font-medium truncate">
+                  ${recipe.ingredients.map(i => i.name).join(', ')}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card Bottom Bar -->
+            <div class="flex items-center justify-between border-t border-pdfBorder pt-4">
+              <button 
+                onclick="event.stopPropagation(); toggleFavorite('${recipe.id}')" 
+                class="text-xs font-semibold text-pdfTextBody hover:text-pdfAccent flex items-center gap-1.5 transition"
+              >
+                <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-bookmark text-pdfAccent"></i>
+                <span>${isFav ? 'Saved' : 'Save'}</span>
+              </button>
+
+              <span class="text-xs font-bold text-pdfAccent group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                Open Recipe Document <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </span>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // FAVORITES TOGGLE
+    function toggleFavorite(id) {
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(fId => fId !== id);
+      } else {
+        favorites.push(id);
+      }
+      localStorage.setItem('preetha_pdf_favs', JSON.stringify(favorites));
+      renderRecipes();
+
+      if (currentRecipe && currentRecipe.id === id) {
+        updateModalFavState();
+      }
+    }
+
+    function toggleCurrentFavorite() {
+      if (currentRecipe) {
+        toggleFavorite(currentRecipe.id);
+      }
+    }
+
+    function updateModalFavState() {
+      if (!currentRecipe) return;
+      const isFav = favorites.includes(currentRecipe.id);
+      const icon = document.getElementById('modal-fav-icon');
+      const text = document.getElementById('modal-fav-text');
+
+      if (isFav) {
+        icon.className = 'fa-solid fa-bookmark text-pdfAccent';
+        text.innerText = 'Saved';
+      } else {
+        icon.className = 'fa-regular fa-bookmark text-pdfAccent';
+        text.innerText = 'Save Recipe';
+      }
+    }
+
+    // MODAL HANDLERS
+    function openModal(id) {
+      currentRecipe = recipesData.find(r => r.id === id);
+      if (!currentRecipe) return;
+
+      currentServings = currentRecipe.baseServings;
+
+      document.getElementById('modal-title').innerText = currentRecipe.title;
+      document.getElementById('modal-category').innerText = currentRecipe.category;
+      document.getElementById('modal-description').innerText = currentRecipe.description;
+      document.getElementById('modal-prep-time').innerText = currentRecipe.prepTime;
+
+      // Render illustration
+      const illustrationContainer = document.getElementById('modal-illustration-container');
+      illustrationContainer.innerHTML = svgIllustrations[currentRecipe.id] || '';
+
+      updateModalFavState();
+      updateModalServingsUI();
+
+      document.getElementById('recipe-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('recipe-modal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function updateServings(delta) {
+      const minServings = 1;
+      const newServings = currentServings + delta;
+      if (newServings >= minServings) {
+        currentServings = newServings;
+        updateModalServingsUI();
+      }
+    }
+
+    function updateModalServingsUI() {
+      document.getElementById('modal-servings-count').innerText = `${currentServings} ${currentRecipe.servingsUnit}`;
+      renderModalIngredients();
+      renderModalSteps();
+    }
+
+    // FRACTION FORMATTER FOR PRECISE QUANTITIES
+    function formatAmount(amount) {
+      if (!amount) return '';
+      
+      const rounded = Math.round(amount * 100) / 100;
+      const whole = Math.floor(rounded);
+      const remainder = Math.round((rounded - whole) * 100) / 100;
+
+      let fractionStr = '';
+      if (Math.abs(remainder - 0.25) < 0.05) fractionStr = '1/4';
+      else if (Math.abs(remainder - 0.33) < 0.05) fractionStr = '1/3';
+      else if (Math.abs(remainder - 0.5) < 0.05) fractionStr = '1/2';
+      else if (Math.abs(remainder - 0.66) < 0.05) fractionStr = '2/3';
+      else if (Math.abs(remainder - 0.75) < 0.05) fractionStr = '3/4';
+
+      if (whole > 0) {
+        return fractionStr ? `${whole} ${fractionStr}` : `${whole}`;
+      }
+      return fractionStr ? fractionStr : `${rounded}`;
+    }
+
+    function renderModalIngredients() {
+      const container = document.getElementById('modal-ingredients-list');
+      const countLabel = document.getElementById('ingredient-count');
+      const scaleFactor = currentServings / currentRecipe.baseServings;
+
+      countLabel.innerText = `${currentRecipe.ingredients.length} items`;
+
+      container.innerHTML = currentRecipe.ingredients.map(ing => {
+        const scaledAmount = ing.amount ? ing.amount * scaleFactor : null;
+        const formattedAmt = scaledAmount ? formatAmount(scaledAmount) : '';
+
+        return `
+          <li class="flex items-center justify-between p-2.5 rounded-xl bg-pdfBg border border-pdfBorder text-xs">
+            <span class="font-medium text-pdfTextDark">${ing.name}</span>
+            <span class="font-bold text-pdfAccent bg-white px-2 py-0.5 rounded-md border border-pdfBorder text-[11px]">
+              ${formattedAmt} ${ing.unit}
+            </span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function renderModalSteps() {
+      const container = document.getElementById('modal-steps-list');
+
+      container.innerHTML = currentRecipe.steps.map((step, idx) => {
+        const checkboxId = `step-${currentRecipe.id}-${idx}`;
+        return `
+          <label for="${checkboxId}" class="flex items-start gap-3 p-3 rounded-xl bg-pdfBg/40 border border-pdfBorder hover:border-pdfAccent/50 cursor-pointer transition text-xs group">
+            <input 
+              type="checkbox" 
+              id="${checkboxId}" 
+              class="step-checkbox mt-0.5 w-4 h-4 text-pdfAccent rounded border-pdfBorder focus:ring-pdfAccent/20 cursor-pointer"
+            />
+            <span class="text-pdfTextDark leading-relaxed group-hover:text-pdfAccent">
+              <strong class="text-pdfAccent font-serif mr-1">${idx + 1}.</strong> ${step}
+            </span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function resetModalSteps() {
+      if (!currentRecipe) return;
+      currentRecipe.steps.forEach((_, idx) => {
+        const checkbox = document.getElementById(`step-${currentRecipe.id}-${idx}`);
+        if (checkbox) checkbox.checked = false;
+      });
+    }
+
+    // ESC AND OUTSIDE CLICK CLOSE
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    document.getElementById('recipe-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'recipe-modal') closeModal();
+    });
+  </script>
+</body>
+</html>
