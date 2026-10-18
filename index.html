@@ -102,8 +102,8 @@
 
         <!-- Saved / Actions -->
         <div class="flex items-center space-x-3">
-          <!-- Add Recipe Button -->
-          <button onclick="openAddRecipeModal()" class="bg-pdfAccent hover:bg-pdfTextDark text-white px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition shadow-2xs font-medium">
+          <!-- Add Recipe Button (Protected) -->
+          <button onclick="verifyAdminBeforeAction('add')" class="bg-pdfAccent hover:bg-pdfTextDark text-white px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition shadow-2xs font-medium">
             <i class="fa-solid fa-plus text-xs"></i>
             <span class="hidden sm:inline">Add Recipe</span>
           </button>
@@ -310,14 +310,48 @@
 
       <!-- Modal Footer -->
       <div class="bg-pdfBg px-6 py-4 border-t border-pdfBorder flex items-center justify-between">
-        <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-medium px-4 py-2 rounded-xl border border-pdfBorder bg-white hover:bg-pdfAccentLight flex items-center gap-2 text-pdfTextDark transition shadow-2xs">
-          <i class="fa-regular fa-bookmark text-pdfAccent" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
-        </button>
+        <div class="flex items-center gap-3">
+          <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-medium px-4 py-2 rounded-xl border border-pdfBorder bg-white hover:bg-pdfAccentLight flex items-center gap-2 text-pdfTextDark transition shadow-2xs">
+            <i class="fa-regular fa-bookmark text-pdfAccent" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
+          </button>
+          <!-- Delete Recipe Button (Protected) -->
+          <button onclick="verifyAdminBeforeAction('delete')" class="text-sm font-medium px-4 py-2 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 flex items-center gap-2 text-red-700 transition shadow-2xs">
+            <i class="fa-solid fa-trash-can text-xs"></i> <span>Delete Recipe</span>
+          </button>
+        </div>
+
         <button onclick="closeModal()" class="bg-white hover:bg-pdfAccentLight text-pdfTextDark font-medium px-6 py-2 rounded-xl border border-pdfBorder text-sm transition">
           Close
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ADMIN PASSCODE VERIFICATION MODAL -->
+  <div id="admin-auth-modal" class="fixed inset-0 z-60 bg-pdfTextDark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 border border-pdfBorder space-y-4 text-center">
+      <div class="w-12 h-12 bg-pdfAccentLight text-pdfAccent rounded-full flex items-center justify-center mx-auto text-lg border border-pdfBorder">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h3 class="text-xl font-serif font-bold text-pdfTextDark">Admin Authorization Required</h3>
+      <p class="text-xs text-pdfTextBody">Please enter your secret admin passcode to add or delete recipes.</p>
+      
+      <form onsubmit="handleAdminAuth(event)" class="space-y-3 pt-2">
+        <input 
+          type="password" 
+          id="admin-passcode-input" 
+          required 
+          placeholder="Enter Passcode..." 
+          class="w-full p-3 rounded-xl border border-pdfBorder bg-pdfBg/40 text-center text-sm focus:outline-none focus:border-pdfAccent"
+        />
+        <div id="auth-error-msg" class="text-xs text-red-600 font-medium hidden">Incorrect passcode. Try again.</div>
+        
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeAdminAuthModal()" class="w-1/2 py-2.5 rounded-xl border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark text-xs font-medium transition">Cancel</button>
+          <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-pdfAccent text-white text-xs font-bold hover:bg-pdfTextDark transition">Authorize</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -394,7 +428,7 @@
                 <button type="button" onclick="insertInstructionFormat('bold')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Bold Selected Text">
                   <i class="fa-solid fa-bold mr-1"></i> Bold Ingredient
                 </button>
-                <button type="button" onclick="insertInstructionFormat('header')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Convert Selection to Red Header">
+                <button type="button" onclick="insertInstructionFormat('header')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Convert Selection to Header">
                   <i class="fa-solid fa-heading mr-1"></i> Header
                 </button>
               </div>
@@ -416,6 +450,67 @@
 
   <!-- JAVASCRIPT APP LOGIC & ILLUSTRATIONS -->
   <script>
+    // ==========================================
+    // CONFIGURABLE ADMIN PASSCODE (CHANGE HERE)
+    // ==========================================
+    const ADMIN_PASSCODE = "preetha123"; 
+
+    let pendingAdminAction = null; // 'add' or 'delete'
+
+    function verifyAdminBeforeAction(actionType) {
+      pendingAdminAction = actionType;
+      // Check if session is already authenticated recently
+      if (sessionStorage.getItem('preetha_admin_auth') === 'true') {
+        executeAdminAction(pendingAdminAction);
+      } else {
+        document.getElementById('admin-passcode-input').value = '';
+        document.getElementById('auth-error-msg').classList.add('hidden');
+        document.getElementById('admin-auth-modal').classList.remove('hidden');
+      }
+    }
+
+    function handleAdminAuth(event) {
+      event.preventDefault();
+      const enteredPass = document.getElementById('admin-passcode-input').value;
+      if (enteredPass === ADMIN_PASSCODE) {
+        sessionStorage.setItem('preetha_admin_auth', 'true');
+        closeAdminAuthModal();
+        executeAdminAction(pendingAdminAction);
+      } else {
+        document.getElementById('auth-error-msg').classList.remove('hidden');
+      }
+    }
+
+    function closeAdminAuthModal() {
+      document.getElementById('admin-auth-modal').classList.add('hidden');
+      pendingAdminAction = null;
+    }
+
+    function executeAdminAction(actionType) {
+      if (actionType === 'add') {
+        openAddRecipeModal();
+      } else if (actionType === 'delete') {
+        if (currentRecipe) {
+          if (confirm(`Are you sure you want to delete "${currentRecipe.title}" from your recipe book?`)) {
+            deleteRecipe(currentRecipe.id);
+          }
+        }
+      }
+    }
+
+    function deleteRecipe(id) {
+      recipesData = recipesData.filter(r => r.id !== id);
+      localStorage.setItem('preetha_custom_recipes', JSON.stringify(recipesData));
+      
+      // Also remove from favorites if saved
+      favorites = favorites.filter(fId => fId !== id);
+      localStorage.setItem('preetha_pdf_favs', JSON.stringify(favorites));
+
+      closeModal();
+      renderRecipes();
+      renderDrawerMenu();
+    }
+
     const svgIllustrations = {
       coffee: `<svg viewBox="0 0 100 100" class="w-full h-full text-pdfAccent fill-current"><path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><path d="M22 38 h51 v6 h-51 z" fill="#8C522A"/><path d="M70 45 h8 a8 8 0 0 1 8 8 v4 a8 8 0 0 1 -8 8 h-8" fill="none" stroke="#8C522A" stroke-width="3.5"/><path d="M20 83 h56 v4 h-56 z" fill="#8C522A"/><path d="M38 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/><path d="M50 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/></svg>`,
       tea: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M30 35 L35 75 A10 10 0 0 0 45 83 L55 83 A10 10 0 0 0 65 75 L70 35 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/><path d="M28 32 h44 v5 h-44 z" fill="#8C522A"/><path d="M40 22 Q45 15 42 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/><path d="M52 22 Q57 15 54 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="55" r="8" fill="#D97724" opacity="0.4"/></svg>`,
@@ -1257,7 +1352,6 @@
       });
     }
 
-    // CLEAN TOOLBAR FORMATTER: INSERTS SYMBOLS ONLY & CONVERTS HEADERS TO UPPERCASE
     function insertInstructionFormat(type) {
       const textarea = document.getElementById('new-steps');
       const start = textarea.selectionStart;
@@ -1268,7 +1362,6 @@
       let cursorOffset = 0;
 
       if (type === 'number') {
-        // Calculate previous numbers in textarea to find next sequence
         const textBefore = textarea.value.substring(0, start);
         const matches = textBefore.match(/^\s*(\d+)\./gm);
         let nextNum = 1;
@@ -1276,7 +1369,6 @@
           const lastNum = parseInt(matches[matches.length - 1]);
           if (!isNaN(lastNum)) nextNum = lastNum + 1;
         }
-        
         const prefix = (start > 0 && textarea.value[start - 1] !== '\n') ? '\n' : '';
         insertion = `${prefix}${nextNum}. ${selectedText}`;
         cursorOffset = insertion.length;
@@ -1286,7 +1378,7 @@
         cursorOffset = insertion.length;
       } else if (type === 'bold') {
         insertion = `**${selectedText}**`;
-        cursorOffset = selectedText ? insertion.length : 2; // Place cursor inside ** ** if nothing selected
+        cursorOffset = selectedText ? insertion.length : 2;
       } else if (type === 'header') {
         const prefix = (start > 0 && textarea.value[start - 1] !== '\n') ? '\n\n' : '';
         const headerText = (selectedText || 'SECTION TITLE').toUpperCase();
@@ -1299,7 +1391,6 @@
       textarea.setSelectionRange(start + cursorOffset, start + cursorOffset);
     }
 
-    // AUTOMATIC NUMBERING & BULLET CONTINUATION ON ENTER KEY
     function handleStepsKeyDown(event) {
       if (event.key === 'Enter') {
         const textarea = event.target;
@@ -1307,7 +1398,6 @@
         const lines = textarea.value.substring(0, start).split('\n');
         const currentLine = lines[lines.length - 1];
 
-        // Match numbered lines like "1. ", "2. "
         const numMatch = currentLine.match(/^\s*(\d+)\.\s*(.*)/);
         if (numMatch) {
           event.preventDefault();
@@ -1318,7 +1408,6 @@
           return;
         }
 
-        // Match bullet lines like "• "
         const bulletMatch = currentLine.match(/^\s*•\s*(.*)/);
         if (bulletMatch) {
           event.preventDefault();
@@ -1330,7 +1419,6 @@
       }
     }
 
-    // HANDLE NEW RECIPE FORM SUBMISSION
     function handleNewRecipeSubmit(event) {
       event.preventDefault();
 
@@ -1380,6 +1468,7 @@
       if (e.key === 'Escape') {
         closeModal();
         closeAddRecipeModal();
+        closeAdminAuthModal();
       }
     });
 
@@ -1389,6 +1478,10 @@
 
     document.getElementById('add-recipe-modal').addEventListener('click', (e) => {
       if (e.target.id === 'add-recipe-modal') closeAddRecipeModal();
+    });
+
+    document.getElementById('admin-auth-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'admin-auth-modal') closeAdminAuthModal();
     });
   </script>
 </body>
