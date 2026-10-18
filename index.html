@@ -66,13 +66,13 @@
       transform: translateY(-2px);
     }
 
-    /* Custom Checkbox and Click-through Strikethrough Styling */
+    /* Custom Checkbox Styling for Steps */
     .step-checkbox:checked + span {
       text-decoration: line-through;
       color: #9CA3AF;
     }
 
-    /* Interactive Ingredient Pill Box Toggle (No Checkbox Icon) */
+    /* Interactive Ingredient Pill Box Toggle (No Checkbox) */
     .ing-pill {
       cursor: pointer;
       user-select: none;
@@ -310,7 +310,7 @@
         <!-- PDF Side-by-Side Document Columns (Aligned Headers Across Horizontal Line) -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
           
-          <!-- Column 1: Ingredients & Measurements (Slightly Reduced Width: md:col-span-4) -->
+          <!-- Column 1: Ingredients & Measurements (Sleeker Width: md:col-span-4) -->
           <div class="md:col-span-4 pdf-ingredients-card space-y-4">
             <div class="pb-2 border-b border-pdfIngHeader/20 flex items-center justify-between">
               <h3 class="font-script font-bold text-3xl text-pdfIngHeader flex items-center gap-2">
@@ -479,7 +479,7 @@
               </div>
             </div>
 
-            <textarea id="new-steps" required rows="6" onkeydown="handleStepsKeyDown(event)" placeholder="PREPARE TEMPERING&#10;1. In a pan,&#10;• Heat **oil** over medium flame.&#10;• Add **mustard seeds** and let them crackle." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
+            <textarea id="new-steps" required rows="6" onkeydown="handleStepsKeyDown(event)" placeholder="Prepare Tempering&#10;1. In a pan,&#10;• Heat **oil** over medium flame.&#10;• Add **mustard seeds** and let them crackle." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
             <p class="text-[10px] text-pdfTextBody/70 mt-1">Tip: Pressing Enter on a numbered line or bullet automatically continues the list!</p>
           </div>
 
@@ -1342,12 +1342,12 @@
       return fractionStr ? fractionStr : `${rounded}`;
     }
 
-    /* Toggle Ingredient Strikethrough by Clicking the Box directly */
+    /* Toggle Ingredient Strikethrough by Clicking the Box */
     function toggleIngredientBox(element) {
       element.classList.toggle('struck');
     }
 
-    /* RENDER INGREDIENTS in green pill boxes without visible checkboxes */
+    /* RENDER INGREDIENTS in green pill boxes without checkboxes */
     function renderModalIngredients() {
       const container = document.getElementById('modal-ingredients-list');
       const countLabel = document.getElementById('ingredient-count');
@@ -1375,7 +1375,7 @@
       }).join('');
     }
 
-    /* RENDER STEPS with Caveat font subheaders (natural casing, red text, underlined) */
+    /* RENDER STEPS with Caveat font subheaders (natural casing, red text, no underline) */
     function renderModalSteps() {
       const container = document.getElementById('modal-steps-list');
 
