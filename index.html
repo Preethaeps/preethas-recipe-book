@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
       theme: {
         extend: {
           colors: {
-            pdfBg: '#FFFDEB',        /* Plain solid pastel cream background */
+            pdfBg: '#FFFDEB',        /* Solid pastel cream background */
             pdfCard: '#FFFFFF',      /* Crisp clean recipe card background */
             pdfBorder: '#EFE2C2',    /* Soft warm border tint */
             pdfTextDark: '#3A2E2B',  /* Deep brownish charcoal for titles */
@@ -125,7 +125,7 @@
       </div>
 
       <div class="space-y-6 flex-grow" id="drawer-menu-content">
-        <!-- Dynamically populated menu hierarchy grouped by headings -->
+        <!-- Dynamically populated menu hierarchy -->
       </div>
     </div>
     <!-- Click outside to close -->
@@ -206,7 +206,7 @@
     </div>
   </footer>
 
-  <!-- RECIPE DETAIL MODAL (FULL PDF PAGE VIEW) -->
+  <!-- RECIPE DETAIL MODAL -->
   <div id="recipe-modal" class="fixed inset-0 z-50 overflow-y-auto bg-pdfTextDark/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 hidden">
     <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-pdfBorder relative transform transition-all">
       
@@ -244,11 +244,9 @@
 
           <!-- Serving Scaler Tool -->
           <div class="md:col-span-8 flex flex-col justify-center space-y-3">
-            <div class="flex items-center justify-between">
-              <div>
-                <h4 class="font-serif font-bold text-pdfTextDark text-base">Portion & Servings Scaler</h4>
-                <p class="text-xs text-pdfTextBody">Adjust servings below to automatically recalculate ingredient quantities.</p>
-              </div>
+            <div>
+              <h4 class="font-serif font-bold text-pdfTextDark text-base">Portion & Servings Scaler</h4>
+              <p class="text-xs text-pdfTextBody">Adjust servings below to automatically recalculate ingredient quantities.</p>
             </div>
 
             <div class="flex items-center gap-3 pt-1">
@@ -310,7 +308,6 @@
         <button id="modal-fav-toggle" onclick="toggleCurrentFavorite()" class="text-sm font-medium px-4 py-2 rounded-xl border border-pdfBorder bg-white hover:bg-pdfAccentLight flex items-center gap-2 text-pdfTextDark transition shadow-2xs">
           <i class="fa-regular fa-bookmark text-pdfAccent" id="modal-fav-icon"></i> <span id="modal-fav-text">Save Recipe</span>
         </button>
-        <!-- Shadeless Close button -->
         <button onclick="closeModal()" class="bg-white hover:bg-pdfAccentLight text-pdfTextDark font-medium px-6 py-2 rounded-xl border border-pdfBorder text-sm transition">
           Close
         </button>
@@ -323,96 +320,21 @@
   <script>
     // STYLIZED SVG ILLUSTRATIONS FOR DISHES
     const svgIllustrations = {
-      coffee: `
-        <svg viewBox="0 0 100 100" class="w-full h-full text-pdfAccent fill-current">
-          <path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
-          <path d="M22 38 h51 v6 h-51 z" fill="#8C522A"/>
-          <path d="M70 45 h8 a8 8 0 0 1 8 8 v4 a8 8 0 0 1 -8 8 h-8" fill="none" stroke="#8C522A" stroke-width="3.5"/>
-          <path d="M20 83 h56 v4 h-56 z" fill="#8C522A"/>
-          <path d="M38 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M50 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>`,
-      tea: `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M30 35 L35 75 A10 10 0 0 0 45 83 L55 83 A10 10 0 0 0 65 75 L70 35 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/>
-          <path d="M28 32 h44 v5 h-44 z" fill="#8C522A"/>
-          <path d="M40 22 Q45 15 42 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M52 22 Q57 15 54 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="50" cy="55" r="8" fill="#D97724" opacity="0.4"/>
-        </svg>`,
-      'dates-almond-milk': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <rect x="36" y="25" width="28" height="55" rx="6" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
-          <path d="M32 25 h36 v5 h-36 z" fill="#8C522A"/>
-          <ellipse cx="50" cy="65" rx="6" ry="9" fill="#8C522A"/>
-          <ellipse cx="30" cy="75" rx="5" ry="8" fill="#D97724" transform="rotate(-30 30 75)"/>
-        </svg>`,
-      'coconut-chutney': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#FFFDEB" stroke="#8C522A" stroke-width="3"/>
-          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#EFE2C2" stroke="#8C522A" stroke-width="2"/>
-          <circle cx="45" cy="48" r="2" fill="#3A2E2B"/>
-          <circle cx="55" cy="52" r="2" fill="#3A2E2B"/>
-          <path d="M48 46 Q52 44 56 48" fill="none" stroke="#8C522A" stroke-width="2"/>
-        </svg>`,
-      'thakkali-chutney': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#D97724" opacity="0.25" stroke="#8C522A" stroke-width="3"/>
-          <ellipse cx="50" cy="50" rx="30" ry="10" fill="#D97724" opacity="0.4" stroke="#8C522A" stroke-width="2"/>
-          <circle cx="42" cy="49" r="2" fill="#8C522A"/>
-          <circle cx="58" cy="51" r="2" fill="#8C522A"/>
-        </svg>`,
-      'scrambled-egg-bread-omelette': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <rect x="25" y="30" width="50" height="40" rx="6" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/>
-          <path d="M20 65 L80 65 L75 75 L25 75 Z" fill="#8C522A" opacity="0.3"/>
-          <circle cx="50" cy="50" r="10" fill="#D97724"/>
-        </svg>`,
-      'ragi-semiya': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/>
-          <path d="M30 45 Q50 65 70 45" fill="none" stroke="#8C522A" stroke-width="2"/>
-          <path d="M35 40 Q50 60 65 40" fill="none" stroke="#8C522A" stroke-width="2"/>
-        </svg>`,
-      'kesari': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M30 65 L35 40 L65 40 L70 65 Z" fill="#D97724" opacity="0.5" stroke="#8C522A" stroke-width="3"/>
-          <ellipse cx="50" cy="40" rx="15" ry="5" fill="#D97724" stroke="#8C522A" stroke-width="2"/>
-          <circle cx="48" cy="39" r="2" fill="#FFFDEB"/>
-          <circle cx="53" cy="41" r="2" fill="#FFFDEB"/>
-        </svg>`,
-      'carrot-poriyal': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/>
-          <rect x="35" y="45" width="6" height="6" fill="#D97724" rx="1"/>
-          <rect x="45" y="42" width="6" height="6" fill="#D97724" rx="1"/>
-          <rect x="55" y="46" width="6" height="6" fill="#D97724" rx="1"/>
-        </svg>`,
-      'potato-poriyal': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/>
-          <rect x="34" y="44" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/>
-          <rect x="46" y="41" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/>
-          <rect x="57" y="45" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/>
-        </svg>`,
-      'peerkangai-kuzhambu': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="52" r="28" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
-          <circle cx="50" cy="52" r="22" fill="#F7EED3"/>
-          <circle cx="44" cy="48" r="4" fill="#8C522A" opacity="0.3"/>
-          <circle cx="56" cy="54" r="5" fill="#8C522A" opacity="0.3"/>
-        </svg>`,
-      'pasi-payir-kuzhambu': `
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="52" r="28" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/>
-          <circle cx="50" cy="52" r="22" fill="#EFE2C2"/>
-          <circle cx="42" cy="50" r="3" fill="#8C522A"/>
-          <circle cx="50" cy="46" r="3" fill="#8C522A"/>
-          <circle cx="55" cy="55" r="3" fill="#8C522A"/>
-        </svg>`
+      coffee: `<svg viewBox="0 0 100 100" class="w-full h-full text-pdfAccent fill-current"><path d="M25 40 h45 v25 a15 15 0 0 1 -15 15 h-15 a15 15 0 0 1 -15 -15 z" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><path d="M22 38 h51 v6 h-51 z" fill="#8C522A"/><path d="M70 45 h8 a8 8 0 0 1 8 8 v4 a8 8 0 0 1 -8 8 h-8" fill="none" stroke="#8C522A" stroke-width="3.5"/><path d="M20 83 h56 v4 h-56 z" fill="#8C522A"/><path d="M38 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/><path d="M50 28 c0 -5 5 -5 5 -10" fill="none" stroke="#D97724" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+      tea: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M30 35 L35 75 A10 10 0 0 0 45 83 L55 83 A10 10 0 0 0 65 75 L70 35 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/><path d="M28 32 h44 v5 h-44 z" fill="#8C522A"/><path d="M40 22 Q45 15 42 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/><path d="M52 22 Q57 15 54 10" fill="none" stroke="#8C522A" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="55" r="8" fill="#D97724" opacity="0.4"/></svg>`,
+      'dates-almond-milk': `<svg viewBox="0 0 100 100" class="w-full h-full"><rect x="36" y="25" width="28" height="55" rx="6" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><path d="M32 25 h36 v5 h-36 z" fill="#8C522A"/><ellipse cx="50" cy="65" rx="6" ry="9" fill="#8C522A"/><ellipse cx="30" cy="75" rx="5" ry="8" fill="#D97724" transform="rotate(-30 30 75)"/></svg>`,
+      'coconut-chutney': `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#FFFDEB" stroke="#8C522A" stroke-width="3"/><ellipse cx="50" cy="50" rx="30" ry="10" fill="#EFE2C2" stroke="#8C522A" stroke-width="2"/><circle cx="45" cy="48" r="2" fill="#3A2E2B"/><circle cx="55" cy="52" r="2" fill="#3A2E2B"/><path d="M48 46 Q52 44 56 48" fill="none" stroke="#8C522A" stroke-width="2"/></svg>`,
+      'thakkali-chutney': `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M20 50 A30 25 0 0 0 80 50 Z" fill="#D97724" opacity="0.25" stroke="#8C522A" stroke-width="3"/><ellipse cx="50" cy="50" rx="30" ry="10" fill="#D97724" opacity="0.4" stroke="#8C522A" stroke-width="2"/><circle cx="42" cy="49" r="2" fill="#8C522A"/><circle cx="58" cy="51" r="2" fill="#8C522A"/></svg>`,
+      'scrambled-egg-bread-omelette': `<svg viewBox="0 0 100 100" class="w-full h-full"><rect x="25" y="30" width="50" height="40" rx="6" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/><path d="M20 65 L80 65 L75 75 L25 75 Z" fill="#8C522A" opacity="0.3"/><circle cx="50" cy="50" r="10" fill="#D97724"/></svg>`,
+      'ragi-semiya': `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#8C522A" opacity="0.2" stroke="#8C522A" stroke-width="3"/><path d="M30 45 Q50 65 70 45" fill="none" stroke="#8C522A" stroke-width="2"/><path d="M35 40 Q50 60 65 40" fill="none" stroke="#8C522A" stroke-width="2"/></svg>`,
+      'kesari': `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M30 65 L35 40 L65 40 L70 65 Z" fill="#D97724" opacity="0.5" stroke="#8C522A" stroke-width="3"/><ellipse cx="50" cy="40" rx="15" ry="5" fill="#D97724" stroke="#8C522A" stroke-width="2"/><circle cx="48" cy="39" r="2" fill="#FFFDEB"/><circle cx="53" cy="41" r="2" fill="#FFFDEB"/></svg>`,
+      'carrot-poriyal': `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/><rect x="35" y="45" width="6" height="6" fill="#D97724" rx="1"/><rect x="45" y="42" width="6" height="6" fill="#D97724" rx="1"/><rect x="55" y="46" width="6" height="6" fill="#D97724" rx="1"/></svg>`,
+      'potato-poriyal': `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M20 55 A30 20 0 0 0 80 55 Z" fill="#F7EED3" stroke="#8C522A" stroke-width="3"/><rect x="34" y="44" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/><rect x="46" y="41" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/><rect x="57" y="45" width="9" height="9" fill="#8C522A" opacity="0.4" rx="2"/></svg>`,
+      'peerkangai-kuzhambu': `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="52" r="28" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><circle cx="50" cy="52" r="22" fill="#F7EED3"/><circle cx="44" cy="48" r="4" fill="#8C522A" opacity="0.3"/><circle cx="56" cy="54" r="5" fill="#8C522A" opacity="0.3"/></svg>`,
+      'pasi-payir-kuzhambu': `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="52" r="28" fill="#8C522A" opacity="0.15" stroke="#8C522A" stroke-width="3"/><circle cx="50" cy="52" r="22" fill="#EFE2C2"/><circle cx="42" cy="50" r="3" fill="#8C522A"/><circle cx="50" cy="46" r="3" fill="#8C522A"/><circle cx="55" cy="55" r="3" fill="#8C522A"/></svg>`
     };
 
-    // COMPLETE RECIPES DATASET (Exact PDF Instructions formatted cleanly into individual steps)
+    // COMPLETE RECIPES DATASET with Nested Main Numbers & Indented Sub-bullets
     const recipesData = [
       {
         id: 'coffee',
@@ -429,15 +351,16 @@
           { name: 'Coffee powder', amount: 1, unit: 'spoon' }
         ],
         steps: [
-          'Preparing Milk',
-          '1. In a small saucepan or bowl, add ¾ cup of milk.',
-          '2. Add ¼ cup of water to the milk.',
-          '3. Add 1½ teaspoons of sugar to the mixture.',
-          '4. Heat the mixture over medium flame and bring it to a gentle boil, allowing it to rise to the brim of the bowl. Monitor carefully.',
-          'Preparing Coffee Powder',
-          '5. While the milk is heating, place 1½ teaspoons of coffee powder into a serving cup.',
-          '6. Once the milk mixture is boiled, pour it directly into the cup containing the coffee powder.',
-          '7. Stir thoroughly until the coffee powder is fully dissolved and the mixture is smooth.'
+          'PREPARING MILK',
+          '1. In a small saucepan or bowl,',
+          '• add ¾ cup of **milk**.',
+          '• Add ¼ cup of **water** to the milk.',
+          '• Add 1½ teaspoons of **sugar** to the mixture.',
+          '• Heat the mixture over medium flame and bring it to a gentle boil.',
+          'PREPARING COFFEE POWDER',
+          '2. While the milk is heating, place 1½ teaspoons of **coffee powder** into a serving cup.',
+          '3. Once the milk mixture is boiled, pour it directly into the cup containing the coffee powder.',
+          '4. Stir thoroughly until the coffee powder is fully dissolved and the mixture is smooth.'
         ]
       },
       {
@@ -455,16 +378,17 @@
           { name: 'Tea Powder', amount: 1, unit: 'spoon' }
         ],
         steps: [
-          'Brew the Tea Base',
-          '1. In a small saucepan, add ½ cup of water.',
-          '2. Stir in 1½ teaspoons of sugar.',
-          '3. Add 1 teaspoon of tea powder to the water.',
-          '4. Bring the mixture to a rolling boil, allowing it to rise to the brim.',
-          'Add Milk and Finish',
-          '5. While the tea is boiling, measure ½ cup of milk.',
-          '6. Once the water-tea mixture has boiled, add the milk to the saucepan.',
-          '7. Stir gently and continue heating until the tea is well combined and reaches a uniform colour.',
-          '8. Using a strainer, pour the tea into a cup to filter out the tea powder residue.'
+          'BREW THE TEA BASE',
+          '1. In a small saucepan,',
+          '• add ½ cup of **water**.',
+          '• Stir in 1½ teaspoons of **sugar**.',
+          '• Add 1 teaspoon of **tea powder** to the water.',
+          '• Bring the mixture to a rolling boil, allowing it to rise to the brim.',
+          'ADD MILK AND FINISH',
+          '2. While the tea is boiling, measure ½ cup of **milk**.',
+          '3. Once the water-tea mixture has boiled, add the milk to the saucepan.',
+          '4. Stir gently and continue heating until uniform in colour.',
+          '5. Strain and pour into a cup.'
         ]
       },
       {
@@ -482,15 +406,16 @@
           { name: 'Cocoa Powder (Unsweetened)', amount: 1, unit: 'teaspoon' }
         ],
         steps: [
-          'Prepare the Ingredients',
-          '1. Boil 10 almonds in hot water and peel the skin off.',
-          '2. In a blender, add 2 cups of milk.',
-          '3. Add 2 pitted dates.',
-          '4. Add 10 peeled almonds.',
-          '5. Optional: Add 1 tablespoon of cocoa powder for a chocolatey twist.',
-          'Blend the Milkshake',
-          '6. Blend until smooth and creamy.',
-          '7. Pour into glasses and serve immediately, chilled if desired.'
+          'PREPARE THE INGREDIENTS',
+          '1. Boil 10 **almonds** in hot water and peel the skin off.',
+          '2. In a blender,',
+          '• add 2 cups of **milk**.',
+          '• Add 2 pitted **dates**.',
+          '• Add 10 peeled **almonds**.',
+          '• Optional: Add 1 tablespoon of **cocoa powder**.',
+          'BLEND THE MILKSHAKE',
+          '3. Blend until smooth and creamy.',
+          '4. Pour into glasses and serve immediately.'
         ]
       },
       {
@@ -511,16 +436,23 @@
           { name: 'Curry Leaves', amount: 1, unit: 'few' }
         ],
         steps: [
-          'Grind the Chutney',
-          '1. In a blender, add grated coconut, roasted gram, green chilies, ginger, salt, and a little water.',
+          'GRIND THE CHUTNEY',
+          '1. In a blender, add:',
+          '• grated **coconut**',
+          '• **roasted gram**',
+          '• **green chilies**',
+          '• **ginger**',
+          '• **salt**',
+          '• add a little **water**',
           '2. Grind to a smooth or slightly coarse paste.',
-          '3. Transfer the ground chutney into a serving bowl and adjust the consistency with a splash of water if needed.',
-          'Prepare the Tempering',
-          '4. In a pan, heat oil over medium flame.',
-          '5. Add mustard seeds and let them crackle.',
-          '6. Add urad dal and curry leaves; sauté until the dal turns golden brown.',
-          '7. Turn off the heat and pour the warm tempering over the chutney.',
-          '8. Stir well before serving.'
+          '3. Transfer into a bowl and adjust consistency.',
+          'PREPARE THE TEMPERING',
+          '4. In a pan,',
+          '• Heat **oil** over medium heat.',
+          '• Add **mustard seeds** and allow them to crackle.',
+          '• Add **urad dal** and sauté until it turns golden brown.',
+          '• Add **curry leaves** and sauté briefly.',
+          '5. Pour the warm tempering over the chutney and stir well.'
         ]
       },
       {
@@ -541,24 +473,23 @@
           { name: 'Curry Leaves', amount: 1, unit: 'few' }
         ],
         steps: [
-          'Preparation',
-          '1. Chop 2 tomatoes roughly.',
-          '2. Chop 1 onion roughly.',
-          '3. Chop the red chillies roughly.',
-          'Sauté the Base',
-          '4. In a pan, heat 1 teaspoon of oil over medium heat.',
-          '5. Add dry red chilies and garlic cloves, then sauté for 30 seconds.',
-          '6. Add chopped onions and sauté until translucent.',
-          '7. Add chopped tomatoes and salt. Cook until tomatoes turn soft and mushy.',
-          '8. Turn off the heat and allow the mixture to cool completely.',
-          'Grind the Chutney',
-          '9. Transfer the cooled mixture to a blender.',
-          '10. Blend into a smooth paste without adding excess water, then transfer to a bowl.',
-          'Prepare the Tempering',
-          '11. In the same pan, heat 1 teaspoon of oil.',
-          '12. Add mustard seeds and let them crackle.',
-          '13. Add urad dal and curry leaves; sauté until the dal turns golden brown.',
-          '14. Pour the warm tempering over the chutney and mix well before serving.'
+          'PREPARATION',
+          '1. Chop 2 **tomatoes** (roughly chopped)',
+          '2. Chop 1 **onion** (roughly chopped)',
+          '3. Chop the **red chillies** (roughly chopped)',
+          'SAUTÉ THE BASE',
+          '4. In a pan,',
+          '• Heat 1 teaspoon of **oil** over medium heat.',
+          '• Add **dry red chilies** and **garlic cloves**; sauté for 30 seconds.',
+          '• Add chopped **onions** and sauté until translucent.',
+          '• Add chopped **tomatoes** and **salt**; cook until soft.',
+          '5. Allow the mixture to cool completely and grind to a smooth paste.',
+          'PREPARE THE TEMPERING',
+          '6. In the same pan,',
+          '• Heat 1 teaspoon of **oil**.',
+          '• Add **mustard seeds** and let them crackle.',
+          '• Add **urad dal** and **curry leaves**.',
+          '7. Pour the tempering over chutney and mix well.'
         ]
       },
       {
@@ -581,22 +512,22 @@
           { name: 'Red Chilli Powder', amount: 0.5, unit: 'teaspoon' }
         ],
         steps: [
-          'Prepare the Egg Filling',
-          '1. Boil 2 eggs in water for 20 minutes until hard-boiled.',
-          '2. Once boiled, peel the eggs and separate the yolks from the whites.',
-          '3. Place only the yolks in a mixing bowl.',
-          '4. To the yolks, add 1 tbsp cream cheese, 1 tbsp mayonnaise, 2 tbsp cooking cream, ½ tsp garlic paste, ¼ cup finely chopped capsicum, ½ tsp salt, 1 tsp black pepper, and ½ tsp red chili powder.',
-          '5. Mix the yolk mixture thoroughly until smooth and well combined.',
-          '6. Chop the egg whites into small cubes.',
-          '7. Add the egg white cubes into the yolk mixture. Mix well and adjust salt if needed.',
-          'Toast and Assemble the Bread',
-          '8. Take 2 slices of bread and spread ghee or butter on the outer sides of each slice.',
-          '9. Heat a pan on medium flame and toast both sides of the bread until golden yellow.',
-          '10. Once toasted, spread the egg mixture evenly over one slice of the bread.',
-          '11. Sprinkle chili flakes over the egg mixture.',
-          '12. Place the second slice on top to form a sandwich.',
-          'Final Toast',
-          '13. Toast on both sides, pressing lightly with a spatula, until the bread is crispy and golden brown, and the filling is warmed through.'
+          'PREPARE THE EGG FILLING',
+          '1. Boil 2 **eggs** in water for 20 minutes until hard-boiled.',
+          '2. Peel the eggs and separate the yolks into a bowl.',
+          '3. To the yolks, add:',
+          '• 1 tablespoon **cream cheese**',
+          '• 1 tablespoon **mayonnaise**',
+          '• 2 tablespoons **cooking cream**',
+          '• ½ teaspoon **garlic paste**',
+          '• ¼ cup finely chopped **capsicum**',
+          '• ½ teaspoon **salt**',
+          '• 1 teaspoon **black pepper**',
+          '• ½ teaspoon **red chili powder**',
+          '4. Mix until smooth, then fold in chopped **egg whites**.',
+          'TOAST AND ASSEMBLE',
+          '5. Take 2 slices of **bread**, spread **ghee** or **butter**, and toast in a pan.',
+          '6. Spread filling onto one slice, sprinkle **chili flakes**, cover, and toast until crispy.'
         ]
       },
       {
@@ -614,23 +545,15 @@
           { name: 'Sugar', amount: 3, unit: 'tablespoons' }
         ],
         steps: [
-          'Soak the Semiya',
-          '1. In a bowl, add water and stir in ½ teaspoon of salt until dissolved.',
-          '2. Add the Ragi Semiya into the bowl, ensuring it is fully submerged.',
-          '3. Allow it to soak for 2-5 minutes (do not over-soak, or it will become soggy).',
-          'Prepare the Steamer',
-          '4. Pour water into the base of an Idli Pot and set it on medium heat.',
-          '5. Line the idli plates with a damp idli cloth and place the plates inside the steamer to preheat.',
-          'Steam the Semiya',
-          '6. Thoroughly drain the water from the semiya.',
-          '7. Evenly spread the soaked semiya over the idli plates.',
-          '8. Cover the idli pot with its lid and steam on medium flame for 10 minutes.',
-          'Prepare the Fresh Coconut',
-          '9. Blend the coconut chunks (avoid blending into a smooth paste; keep it textured).',
-          'Assemble and Serve',
-          '10. Transfer the steamed Ragi Semiya into a mixing bowl.',
-          '11. Add 3 tablespoons of sugar and the ground coconut.',
-          '12. Mix everything together until well combined.'
+          'SOAK THE SEMIYA',
+          '1. In a bowl, add water and ½ teaspoon **salt**.',
+          '2. Submerge **Ragi Semiya** and soak for 2–5 minutes.',
+          'STEAM THE SEMIYA',
+          '3. Drain completely and spread over idli plates.',
+          '4. Steam on medium flame for 10 minutes.',
+          'ASSEMBLE AND SERVE',
+          '5. Transfer to a bowl, add **sugar** and coarse ground **coconut**.',
+          '6. Mix well and serve warm.'
         ]
       },
       {
@@ -648,26 +571,14 @@
           { name: 'Ghee', amount: 3, unit: 'tablespoons' }
         ],
         steps: [
-          'Roast the Nuts',
-          '1. Heat a generous amount of ghee in a pan over low flame.',
-          '2. Add a few cashew nuts and roast them until they turn golden brown.',
-          '3. Add a handful of dry grapes (raisins) and sauté until they puff up.',
-          '4. Stir well, taking care not to let the nuts or raisins burn.',
-          '5. Once done, transfer the roasted nuts and raisins to a separate bowl and set aside.',
-          'Roast the Semolina (Rava)',
-          '6. In the same pan, roast the semolina on a low flame, stirring continuously, until it becomes aromatic and the grains separate.',
-          '7. Transfer the roasted semolina to a separate bowl and set aside.',
-          'Prepare the Kesari Mixture',
-          '8. In the same pan, pour in 3 cups of water (3 times the quantity of semolina).',
-          '9. Heat on low flame until the water comes to a boil.',
-          '10. Once the water begins to boil, gradually add food colouring of your choice.',
-          '11. Immediately add the roasted semolina while stirring continuously to avoid lumps.',
-          '12. Stir well until the mixture thickens evenly.',
-          'Add Sweetness and Nuts',
-          '13. Add 1 cup of sugar to the thickened mixture.',
-          '14. Stir thoroughly, breaking up any lumps that may form.',
-          '15. Finally, add the roasted cashews and raisins, mix well, and cook for another minute.',
-          '16. Optional: Add a pinch of saffron and a hint of cardamom powder for enhanced flavour and traditional appeal.'
+          'ROAST THE NUTS',
+          '1. Heat **ghee** in a pan over low flame.',
+          '2. Roast **cashews** and **raisins** until golden and puffed; set aside.',
+          'ROAST THE SEMOLINA',
+          '3. In the same pan, roast **semolina (rava)** on low flame until aromatic.',
+          'PREPARE KESARI',
+          '4. Boil 3 cups of **water**, add food colour, then slowly stir in roasted **semolina**.',
+          '5. Add 1 cup **sugar**, mix well, and finish with roasted nuts and **cardamom powder**.'
         ]
       },
       {
@@ -687,21 +598,18 @@
           { name: 'Grated Coconut', amount: 2.5, unit: 'tablespoons' }
         ],
         steps: [
-          'Preparation',
-          '1. Chop 2 carrots into small cubes or grate them.',
-          '2. Chop ½ onion.',
-          '3. Finely chop or slit 2 green chilies.',
-          'Prepare the Tempering',
-          '4. Heat oil in a pan over medium heat.',
-          '5. Add mustard seeds and allow them to crackle.',
-          '6. Add urad dal and sauté until it turns golden brown.',
-          '7. Add green chilies, chopped onions, and curry leaves. Sauté until the onions turn translucent.',
-          'Cook the Carrots',
-          '8. Add the chopped carrots and salt to taste. Mix well.',
-          '9. Sprinkle a splash of water, cover the pan with a lid, and cook on low heat for 4-5 minutes until tender.',
-          'Finish and Serve',
-          '10. Remove the lid and stir on medium heat for 1 minute to evaporate remaining moisture.',
-          '11. Add the grated coconut, mix thoroughly, and turn off the heat.'
+          'PREPARATION',
+          '1. Chop or grate 2 **carrots**.',
+          '2. Chop ½ **onion** and 2 **green chilies**.',
+          'PREPARE THE TEMPERING',
+          '3. In a pan,',
+          '• Heat **oil** over medium heat.',
+          '• Add **mustard seeds** and allow them to crackle.',
+          '• Add **urad dal** and sauté until golden brown.',
+          '• Add **green chilies**, chopped **onions**, and **curry leaves**.',
+          'COOK AND FINISH',
+          '4. Add **carrots** and **salt**; sprinkle water and steam covered for 4-5 mins.',
+          '5. Stir in grated **coconut** and remove from heat.'
         ]
       },
       {
@@ -722,27 +630,16 @@
           { name: 'Sambar Powder', amount: 1, unit: 'teaspoon' }
         ],
         steps: [
-          'Temper the Spices',
-          '1. Dice 3 medium-sized potatoes into small cubes.',
-          '2. In a stir-fry pan, heat 3 teaspoons of oil over low flame.',
-          '3. Add ½ teaspoon mustard seeds and let them crackle.',
-          '4. Add ½ teaspoon cumin seeds and 1 teaspoon urad dal.',
-          '5. Once urad dal turns golden brown, add a generous pinch of Asafoetida and a few curry leaves. Sauté briefly.',
-          'Cook the Potatoes',
-          '6. Add the diced potatoes.',
-          '7. Stir-fry for 2-3 minutes on low flame.',
-          'Add Spices',
-          '8. Sprinkle ¼ teaspoon turmeric powder.',
-          '9. Add in 1 teaspoon sambar powder.',
-          '10. Add salt to taste.',
-          '11. Mix well and stir-fry for another 2 minutes, ensuring spices don\'t burn.',
-          'Steam Cook',
-          '12. Add ¼ cup of water and mix thoroughly.',
-          '13. Cover the pan with a lid and cook on low flame for 4-5 minutes until soft.',
-          'Roast Until Crispy',
-          '14. Remove the lid once water has fully evaporated.',
-          '15. Continue cooking uncovered for 5-6 minutes, stirring occasionally.',
-          '16. Continue stir-frying on low flame until evenly golden-brown and crisp.'
+          'TEMPER THE SPICES',
+          '1. Dice 3 medium **potatoes** into small cubes.',
+          '2. In a stir fry pan,',
+          '• Heat 3 teaspoons of **oil** over low flame.',
+          '• Add ½ tsp **mustard seeds** and let them crackle.',
+          '• Add ½ tsp **cumin seeds** and 1 tsp **urad dal**.',
+          '• Add **asafoetida** and **curry leaves**.',
+          'COOK AND ROAST',
+          '3. Add **potatoes**, **turmeric powder**, **sambar powder**, and **salt**.',
+          '4. Steam cook with ¼ cup water, then roast uncovered until golden brown and crisp.'
         ]
       },
       {
@@ -763,24 +660,18 @@
           { name: 'Fresh Coconut', amount: 2.5, unit: 'tablespoons' }
         ],
         steps: [
-          'Prepare the Veggies',
-          '1. Chop 1 ridge gourd into small pieces.',
-          '2. Chop 1 big onion.',
-          '3. Chop 2 tomatoes.',
-          '4. In a saucepot, heat oil.',
-          '5. Add mustard seeds and allow them to crackle.',
-          '6. Add urad dal and curry leaves, sautéing briefly.',
-          '7. Add chopped onions and sauté until golden brown.',
-          '8. Add chopped tomatoes and cook until soft and mushy.',
-          '9. Add chopped ridge gourd and sauté until slightly softened.',
-          '10. Add sambar powder, masala powder, and turmeric powder. Sauté for a minute.',
-          '11. Pour in enough water to just submerge the vegetables.',
-          '12. Add rock salt to taste, mix well, and bring to a simmer until cooked through.',
-          'Prepare the Coconut',
-          '13. Coarsely pulse the coconut chunks in a blender without adding water.',
-          'Final Assembly',
-          '14. Add the ground coconut to the cooked curry mixture.',
-          '15. Stir well and simmer for a final 1-2 minutes before removing from heat.'
+          'PREPARE THE VEGGIES',
+          '1. Chop 1 **ridge gourd**, 1 **onion**, and 2 **tomatoes**.',
+          '2. In a saucepot,',
+          '• Heat **oil** over medium heat.',
+          '• Add **mustard seeds** and allow them to crackle.',
+          '• Add **urad dal** and **curry leaves**.',
+          '• Add chopped **onions** and sauté until golden brown.',
+          '• Add chopped **tomatoes** and cook until soft and mushy.',
+          '• Add chopped **ridge gourd** and sauté until slightly softened.',
+          '3. Add **sambar powder**, **masala powder**, **turmeric powder**, water, and salt. Simmer until cooked.',
+          'PREPARE COCONUT AND FINISH',
+          '4. Coarsely pulse **coconut** chunks and stir into the curry. Simmer for 2 minutes.'
         ]
       },
       {
@@ -799,32 +690,16 @@
           { name: 'Red Chilli', amount: 2, unit: 'pieces' }
         ],
         steps: [
-          'Prepare the Green Gram Base',
-          '1. Soak 1 cup of green gram (pasi payir) in water for 1-2 hours prior to cooking.',
-          '2. Just before cooking, rinse the soaked green gram thoroughly.',
-          '3. Transfer the green gram to a pressure cooker.',
-          'Add Core Ingredients',
-          '4. Roughly chop 4-5 garlic cloves (each clove into about 3 pieces).',
-          '5. Chop 1 medium tomato.',
-          '6. Chop ½ medium onion into fine pieces.',
-          '7. Chop 2 red chilies each roughly into 4 pieces.',
-          '8. In the cooker, add the chopped garlic and tomato.',
-          '9. Add a small amount of salt (adjust later to taste).',
-          '10. Pour enough water to just submerge all ingredients.',
-          '11. Add ½ teaspoon of castor oil.',
-          '12. Close the pressure cooker lid and cook for 1-2 whistles on low flame.',
-          'Prepare the Roasted Ingredients',
-          '13. In a pan, heat 3 teaspoons of oil.',
-          '14. Add 1 tsp mustard seeds, 1 tsp cumin seeds, and 1.5 tsp urad dal; wait until it turns golden brown.',
-          '15. Add the chopped onions, dried red chilies, and fresh curry leaves.',
-          '16. Sauté until the onions turn golden brown, then set aside.',
-          'Final Assembly',
-          '17. Once pressure subsides, open the cooker.',
-          '18. Lightly mash the green gram mixture using a wooden ladle (do not over-mash).',
-          '19. Add the roasted ingredients to the cooker.',
-          '20. Pour in enough water to adjust consistency to your liking.',
-          '21. Add salt to taste and mix well.',
-          '22. Garnish with fresh coriander leaves on top.'
+          'PREPARE GREEN GRAM BASE',
+          '1. Soak 1 cup **green gram (pasi payir)** for 1-2 hours.',
+          '2. In a pressure cooker, add soaked gram, chopped **garlic**, **tomatoes**, salt, water, and ½ tsp **castor oil**.',
+          '3. Cook for 1-2 whistles on low flame.',
+          'ROAST AROMATICS',
+          '4. In a pan,',
+          '• Heat 3 teaspoons of **oil**.',
+          '• Add **mustard seeds**, **cumin seeds**, and **urad dal**.',
+          '• Add chopped **onions**, **dried red chilies**, and **curry leaves**.',
+          '5. Mash cooked gram lightly, mix in roasted aromatics, and garnish with **coriander leaves**.'
         ]
       }
     ];
@@ -844,7 +719,6 @@
       renderDrawerMenu();
     };
 
-    // CATEGORIES RENDERING
     function renderCategoryTabs() {
       const categories = ['All', 'Beverages', 'Breakfast', 'Side Dishes', 'Main Course'];
       const container = document.getElementById('category-tabs');
@@ -875,10 +749,8 @@
       updateFilterBar();
     }
 
-    // MENU DRAWER TOGGLE & RENDERING
     function toggleMenuDrawer() {
-      const drawer = document.getElementById('menu-drawer');
-      drawer.classList.toggle('hidden');
+      document.getElementById('menu-drawer').classList.toggle('hidden');
     }
 
     function renderDrawerMenu() {
@@ -905,18 +777,12 @@
       }).join('');
     }
 
-    // SEARCH HANDLER
     function handleSearch() {
       const input = document.getElementById('search-input');
       searchQuery = input.value.trim().toLowerCase();
-
       const clearBtn = document.getElementById('clear-search-btn');
-      if (searchQuery.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
-        clearBtn.classList.add('hidden');
-      }
-
+      if (searchQuery.length > 0) clearBtn.classList.remove('hidden');
+      else clearBtn.classList.add('hidden');
       renderRecipes();
       updateFilterBar();
     }
@@ -952,7 +818,6 @@
     function updateFilterBar() {
       const bar = document.getElementById('active-filter-bar');
       const text = document.getElementById('filter-tag-text');
-
       let tags = [];
       if (showingFavsOnly) tags.push('Saved Recipes');
       if (activeCategory !== 'All') tags.push(activeCategory);
@@ -978,7 +843,6 @@
       updateFilterBar();
     }
 
-    // RENDER RECIPE CARDS
     function renderRecipes() {
       const grid = document.getElementById('recipes-grid');
       const emptyState = document.getElementById('empty-state');
@@ -1012,7 +876,6 @@
           <div class="recipe-doc-page rounded-2xl p-6 flex flex-col justify-between cursor-pointer group" onclick="openModal('${recipe.id}')">
             
             <div>
-              <!-- PDF Card Top Section: Title & Illustration -->
               <div class="flex items-start justify-between border-b border-pdfBorder pb-4 mb-5">
                 <div class="space-y-1 pr-4">
                   <span class="text-[11px] font-bold tracking-widest uppercase text-pdfAccent bg-pdfAccentLight px-2.5 py-0.5 rounded-md border border-pdfBorder inline-block">
@@ -1028,18 +891,15 @@
                   </p>
                 </div>
 
-                <!-- SVG Artwork Frame -->
                 <div class="w-20 h-20 bg-pdfBg rounded-xl border border-pdfBorder p-1.5 flex-shrink-0 flex items-center justify-center shadow-2xs group-hover:border-pdfAccent transition-colors">
                   ${illustration}
                 </div>
               </div>
 
-              <!-- PDF Card Description -->
               <p class="text-pdfTextBody text-xs leading-relaxed mb-6 line-clamp-2">
                 ${recipe.description}
               </p>
 
-              <!-- Mini Ingredients Snapshot -->
               <div class="bg-pdfBg/50 border border-pdfBorder/80 rounded-xl p-3 mb-5">
                 <p class="text-[11px] font-bold text-pdfAccent uppercase tracking-wider mb-1.5">Ingredients Preview:</p>
                 <p class="text-xs text-pdfTextDark/90 font-medium truncate">
@@ -1048,7 +908,6 @@
               </div>
             </div>
 
-            <!-- Card Bottom Bar -->
             <div class="flex items-center justify-between border-t border-pdfBorder pt-4">
               <button 
                 onclick="event.stopPropagation(); toggleFavorite('${recipe.id}')" 
@@ -1068,7 +927,6 @@
       }).join('');
     }
 
-    // FAVORITES TOGGLE
     function toggleFavorite(id) {
       if (favorites.includes(id)) {
         favorites = favorites.filter(fId => fId !== id);
@@ -1104,7 +962,6 @@
       }
     }
 
-    // MODAL HANDLERS
     function openModal(id) {
       currentRecipe = recipesData.find(r => r.id === id);
       if (!currentRecipe) return;
@@ -1116,7 +973,6 @@
       document.getElementById('modal-description').innerText = currentRecipe.description;
       document.getElementById('modal-prep-time').innerText = currentRecipe.prepTime;
 
-      // Render illustration
       const illustrationContainer = document.getElementById('modal-illustration-container');
       illustrationContainer.innerHTML = svgIllustrations[currentRecipe.id] || '';
 
@@ -1147,10 +1003,8 @@
       renderModalSteps();
     }
 
-    // FRACTION FORMATTER FOR PRECISE QUANTITIES
     function formatAmount(amount) {
       if (!amount) return '';
-      
       const rounded = Math.round(amount * 100) / 100;
       const whole = Math.floor(rounded);
       const remainder = Math.round((rounded - whole) * 100) / 100;
@@ -1190,12 +1044,18 @@
       }).join('');
     }
 
+    // ADVANCED RENDERER FOR NESTED NUMBERED STEPS & INDENTED SUB-BULLETS WITH BOLD INGREDIENTS
     function renderModalSteps() {
       const container = document.getElementById('modal-steps-list');
 
       container.innerHTML = currentRecipe.steps.map((step, idx) => {
-        // Strict header detector: Only text without step numbers is treated as Section Header
-        const isHeader = !step.trim().match(/^[0-9]/);
+        const isHeader = !step.trim().match(/^[0-9•]/);
+        const isSubBullet = step.trim().startsWith('•');
+
+        // Helper function to format **bold** ingredient markers inside step text
+        const formatText = (txt) => {
+          return txt.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-pdfTextDark">$1</strong>');
+        };
 
         if (isHeader) {
           return `
@@ -1207,16 +1067,29 @@
           `;
         }
 
+        if (isSubBullet) {
+          // Indented bullet point under main numbered step
+          return `
+            <div class="flex items-start gap-2.5 pl-10 pr-3 py-1.5 text-xs text-pdfTextBody">
+              <span class="text-pdfAccent font-bold text-sm leading-none mt-0.5">•</span>
+              <span class="leading-relaxed">
+                ${formatText(step.replace(/^•\s*/, ''))}
+              </span>
+            </div>
+          `;
+        }
+
+        // Main numbered step with checkable box
         const checkboxId = `step-${currentRecipe.id}-${idx}`;
         return `
-          <label for="${checkboxId}" class="flex items-start gap-3 p-3 ml-4 sm:ml-6 rounded-xl bg-pdfBg/40 border border-pdfBorder hover:border-pdfAccent/50 cursor-pointer transition text-xs group">
+          <label for="${checkboxId}" class="flex items-start gap-3 p-3 rounded-xl bg-pdfBg/40 border border-pdfBorder hover:border-pdfAccent/50 cursor-pointer transition text-xs font-semibold text-pdfTextDark group mt-2">
             <input 
               type="checkbox" 
               id="${checkboxId}" 
               class="step-checkbox mt-0.5 w-4 h-4 text-pdfAccent rounded border-pdfBorder focus:ring-pdfAccent/20 cursor-pointer"
             />
-            <span class="text-pdfTextDark leading-relaxed group-hover:text-pdfAccent">
-              ${step}
+            <span class="leading-relaxed group-hover:text-pdfAccent">
+              ${formatText(step)}
             </span>
           </label>
         `;
@@ -1231,7 +1104,6 @@
       });
     }
 
-    // ESC AND OUTSIDE CLICK CLOSE
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
     });
