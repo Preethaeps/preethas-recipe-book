@@ -18,7 +18,7 @@
       theme: {
         extend: {
           colors: {
-            pdfBg: '#FFFDEB',        /* Plain solid pastel cream background matching initial code */
+            pdfBg: '#FFFDEB',        /* Plain solid pastel cream background */
             pdfCard: '#FFFFFF',      /* Crisp clean recipe card background */
             pdfBorder: '#EFE2C2',    /* Soft warm border tint */
             pdfTextDark: '#3A2E2B',  /* Deep brownish charcoal for titles */
@@ -412,7 +412,7 @@
         </svg>`
     };
 
-    // COMPLETE RECIPES DATASET (Exact Word-to-Word PDF Instructions and Correct Index Measurements)
+    // COMPLETE RECIPES DATASET (Exact PDF Instructions formatted cleanly into individual steps)
     const recipesData = [
       {
         id: 'coffee',
@@ -430,10 +430,10 @@
         ],
         steps: [
           'Preparing Milk',
-          '1. In a small saucepan or bowl, add  cup of milk',
-          '2. Add  cup of water to the milk.',
+          '1. In a small saucepan or bowl, add ¾ cup of milk.',
+          '2. Add ¼ cup of water to the milk.',
           '3. Add 1½ teaspoons of sugar to the mixture.',
-          '4. Heat the mixture over medium flame and bring it to a gentle boil, allowing it to rise to the brim of the bowl. Monitor',
+          '4. Heat the mixture over medium flame and bring it to a gentle boil, allowing it to rise to the brim of the bowl. Monitor carefully.',
           'Preparing Coffee Powder',
           '5. While the milk is heating, place 1½ teaspoons of coffee powder into a serving cup.',
           '6. Once the milk mixture is boiled, pour it directly into the cup containing the coffee powder.',
@@ -512,13 +512,15 @@
         ],
         steps: [
           'Grind the Chutney',
-          '1. In a blender, add: • grated coconut • roasted gram green chilies • ginger • salt • add a little water',
+          '1. In a blender, add grated coconut, roasted gram, green chilies, ginger, salt, and a little water.',
           '2. Grind to a smooth or slightly coarse paste.',
           '3. Transfer the ground chutney into a serving bowl and adjust the consistency with a splash of water if needed.',
           'Prepare the Tempering',
-          '4. In a pan, Heat oil over medium flame. Add mustard seeds and let them crackle. • Add urad dal • curry leaves Sauté until the dal turns golden brown.',
-          '5. Turn off the heat and pour the warm tempering over the chutney.',
-          '6. Stir well before serving.'
+          '4. In a pan, heat oil over medium flame.',
+          '5. Add mustard seeds and let them crackle.',
+          '6. Add urad dal and curry leaves; sauté until the dal turns golden brown.',
+          '7. Turn off the heat and pour the warm tempering over the chutney.',
+          '8. Stir well before serving.'
         ]
       },
       {
@@ -540,26 +542,28 @@
         ],
         steps: [
           'Preparation',
-          '1. Chop 2 tomatoes (roughly chopped)',
-          '2. Chop 1 Onion (roughly chopped)',
-          '3. Chop the red chillies (roughly chopped)',
+          '1. Chop 2 tomatoes roughly.',
+          '2. Chop 1 onion roughly.',
+          '3. Chop the red chillies roughly.',
           'Sauté the Base',
-          '1. In a pan, Heat 1 teaspoon of oil over medium heat. Add dry red chilies • garlic cloves and sauté for 30 seconds. • Add chopped onions and sauté until translucent. Add chopped tomatoes and salt. Cook until tomatoes turn soft and mushy.',
-          '2. Turn off the heat and allow the mixture to cool completely.',
+          '4. In a pan, heat 1 teaspoon of oil over medium heat.',
+          '5. Add dry red chilies and garlic cloves, then sauté for 30 seconds.',
+          '6. Add chopped onions and sauté until translucent.',
+          '7. Add chopped tomatoes and salt. Cook until tomatoes turn soft and mushy.',
+          '8. Turn off the heat and allow the mixture to cool completely.',
           'Grind the Chutney',
-          '3. Transfer the cooled mixture to a blender.',
-          '4. Blend into a smooth paste without adding excess water. Transfer to a bowl.',
+          '9. Transfer the cooled mixture to a blender.',
+          '10. Blend into a smooth paste without adding excess water, then transfer to a bowl.',
           'Prepare the Tempering',
-          '5. In the same pan,',
-          'Heat 1 teaspoon of oil.',
-          '• Add mustard seeds and let them crackle.',
-          '• Add urad dal • curry leaves; sauté until the dal turns golden brown.',
-          '6. Pour the warm tempering over the chutney and mix well before serving.'
+          '11. In the same pan, heat 1 teaspoon of oil.',
+          '12. Add mustard seeds and let them crackle.',
+          '13. Add urad dal and curry leaves; sauté until the dal turns golden brown.',
+          '14. Pour the warm tempering over the chutney and mix well before serving.'
         ]
       },
       {
         id: 'scrambled-egg-bread-omelette',
-        title: 'Scrambbled Egg Bread Omlette',
+        title: 'Scrambled Egg Bread Omelette',
         category: 'Breakfast',
         description: 'Creamy scrambled egg yolk filling mixed with capsicum, layered between golden toasted bread.',
         prepTime: '25 mins',
@@ -581,23 +585,23 @@
           '1. Boil 2 eggs in water for 20 minutes until hard-boiled.',
           '2. Once boiled, peel the eggs and separate the yolks from the whites.',
           '3. Place only the yolks in a mixing bowl.',
-          '4. To the yolks, add: 1 tablespoon cream cheese • 1 tablespoon mayonnaise • 2 tablespoons cooking cream • $\\frac{1}{2}$ teaspoon garlic paste • $\\frac{1}{4}$ cup finely chopped capsicum • $\\frac{1}{2}$ teaspoon salt (adjust later to taste) • 1 teaspoon black pepper • $\\frac{1}{2}$ teaspoon red chili powder',
+          '4. To the yolks, add 1 tbsp cream cheese, 1 tbsp mayonnaise, 2 tbsp cooking cream, ½ tsp garlic paste, ¼ cup finely chopped capsicum, ½ tsp salt, 1 tsp black pepper, and ½ tsp red chili powder.',
           '5. Mix the yolk mixture thoroughly until smooth and well combined.',
           '6. Chop the egg whites into small cubes.',
-          '7. Add the white into the yolk mixture. Mix well. Taste and adjust salt if needed.',
+          '7. Add the egg white cubes into the yolk mixture. Mix well and adjust salt if needed.',
           'Toast and Assemble the Bread',
-          '14. Take 2 slices of bread and spread ghee or butter on the outer sides of each slice.',
-          '15. Heat a pan on medium flame and toast both sides of the bread until golden yellow.',
-          '16. Once toasted, spread the egg mixture evenly over one slice of the bread.',
-          '17. Sprinkle chili flakes over the egg mixture.',
-          '18. Place the second slice on top to form a sandwich.',
+          '8. Take 2 slices of bread and spread ghee or butter on the outer sides of each slice.',
+          '9. Heat a pan on medium flame and toast both sides of the bread until golden yellow.',
+          '10. Once toasted, spread the egg mixture evenly over one slice of the bread.',
+          '11. Sprinkle chili flakes over the egg mixture.',
+          '12. Place the second slice on top to form a sandwich.',
           'Final Toast',
-          '19. Toast on both sides, pressing lightly with a spatula, until the bread is crispy and golden brown, and the filling is warmed through.'
+          '13. Toast on both sides, pressing lightly with a spatula, until the bread is crispy and golden brown, and the filling is warmed through.'
         ]
       },
       {
         id: 'ragi-semiya',
-        title: 'Raagi Semiya',
+        title: 'Ragi Semiya',
         category: 'Breakfast',
         description: 'Wholesome steamed finger millet vermicelli blended with freshly grated coconut and sugar.',
         prepTime: '20 mins',
@@ -618,13 +622,13 @@
           '4. Pour water into the base of an Idli Pot and set it on medium heat.',
           '5. Line the idli plates with a damp idli cloth and place the plates inside the steamer to preheat.',
           'Steam the Semiya',
-          '6. Thoroughly drain the water.',
+          '6. Thoroughly drain the water from the semiya.',
           '7. Evenly spread the soaked semiya over the idli plates.',
           '8. Cover the idli pot with its lid and steam on medium flame for 10 minutes.',
           'Prepare the Fresh Coconut',
-          '9. Blend the coconut chunks (Avoid blending into a smooth paste, keep it textured)',
+          '9. Blend the coconut chunks (avoid blending into a smooth paste; keep it textured).',
           'Assemble and Serve',
-          '10. Transfer the Ragi Semiya into a mixing bowl.',
+          '10. Transfer the steamed Ragi Semiya into a mixing bowl.',
           '11. Add 3 tablespoons of sugar and the ground coconut.',
           '12. Mix everything together until well combined.'
         ]
@@ -651,19 +655,19 @@
           '4. Stir well, taking care not to let the nuts or raisins burn.',
           '5. Once done, transfer the roasted nuts and raisins to a separate bowl and set aside.',
           'Roast the Semolina (Rava)',
-          '6. In the same pan, roast the semolina on a low flame, stirring continuously, until it becomes aromatic and the grains separate (non-sticky).',
+          '6. In the same pan, roast the semolina on a low flame, stirring continuously, until it becomes aromatic and the grains separate.',
           '7. Transfer the roasted semolina to a separate bowl and set aside.',
           'Prepare the Kesari Mixture',
-          '8. In the same pan, pour in 3 cups of water (3 times of Semolina).',
+          '8. In the same pan, pour in 3 cups of water (3 times the quantity of semolina).',
           '9. Heat on low flame until the water comes to a boil.',
-          '10. Once the water begins to boil, gradually add food colouring of your liking.',
-          '11. Immediately, add the roasted semolina while stirring continuously to avoid lumps.',
+          '10. Once the water begins to boil, gradually add food colouring of your choice.',
+          '11. Immediately add the roasted semolina while stirring continuously to avoid lumps.',
           '12. Stir well until the mixture thickens evenly.',
           'Add Sweetness and Nuts',
-          '13. Add 1 cup of sugar (equal to the quantity of semolina) to the thickened mixture.',
+          '13. Add 1 cup of sugar to the thickened mixture.',
           '14. Stir thoroughly, breaking up any lumps that may form.',
           '15. Finally, add the roasted cashews and raisins, mix well, and cook for another minute.',
-          'Optional. Add a pinch of saffron and a hint of cardamom powder for enhanced flavour and traditional appeal.'
+          '16. Optional: Add a pinch of saffron and a hint of cardamom powder for enhanced flavour and traditional appeal.'
         ]
       },
       {
@@ -684,17 +688,20 @@
         ],
         steps: [
           'Preparation',
-          '1. Chop 2 carrots either in small cubes or grate them.',
-          '2. Chop ½ onion',
-          '3. Finely chop or slit 2 green chilies',
+          '1. Chop 2 carrots into small cubes or grate them.',
+          '2. Chop ½ onion.',
+          '3. Finely chop or slit 2 green chilies.',
           'Prepare the Tempering',
-          '4. In a pan, • Heat oil over medium heat. • Add mustard seeds and allow them to crackle. • Add urad dal and sauté until it turns golden brown. • Add green chilies • chopped onions, and curry leaves. Sauté until the onions turn translucent.',
+          '4. Heat oil in a pan over medium heat.',
+          '5. Add mustard seeds and allow them to crackle.',
+          '6. Add urad dal and sauté until it turns golden brown.',
+          '7. Add green chilies, chopped onions, and curry leaves. Sauté until the onions turn translucent.',
           'Cook the Carrots',
-          '5. Add the finely carrots and salt to taste. Mix well.',
-          '6. Sprinkle a splash of water, cover the pan with a lid, and cook on low heat for 4-5 minutes until the carrots are tender yet retain a slight bite.',
+          '8. Add the chopped carrots and salt to taste. Mix well.',
+          '9. Sprinkle a splash of water, cover the pan with a lid, and cook on low heat for 4-5 minutes until tender.',
           'Finish and Serve',
-          '7. Remove the lid and stir on medium heat for 1 minute to evaporate any remaining moisture.',
-          '8. Add the grated coconut, mix thoroughly, and turn off the heat.'
+          '10. Remove the lid and stir on medium heat for 1 minute to evaporate remaining moisture.',
+          '11. Add the grated coconut, mix thoroughly, and turn off the heat.'
         ]
       },
       {
@@ -717,24 +724,25 @@
         steps: [
           'Temper the Spices',
           '1. Dice 3 medium-sized potatoes into small cubes.',
-          '2. In a stir fry pan, Heat 3 teaspoons of oil over low flame. • Add ½ teaspoon mustard seeds and let them crackle. • Add ½ teaspoon cumin seeds. • Add 1 teaspoon urad dal. Once the urad dal turns golden brown, add a generous pinch of Asafoetida • Add a few curry leaves. Sauté briefly.',
+          '2. In a stir-fry pan, heat 3 teaspoons of oil over low flame.',
+          '3. Add ½ teaspoon mustard seeds and let them crackle.',
+          '4. Add ½ teaspoon cumin seeds and 1 teaspoon urad dal.',
+          '5. Once urad dal turns golden brown, add a generous pinch of Asafoetida and a few curry leaves. Sauté briefly.',
           'Cook the Potatoes',
-          '3. Add the diced potatoes.',
-          '4. Stir-fry for 2-3 minutes on low flame.',
+          '6. Add the diced potatoes.',
+          '7. Stir-fry for 2-3 minutes on low flame.',
           'Add Spices',
-          '5. Sprinkle  teaspoon turmeric powder.',
-          '6. Add in 1 teaspoon sambar powder.',
-          '7. Add salt to taste.',
-          '8. Mix well and stir-fry for another 2 minutes, ensuring the spices don\'t burn.',
+          '8. Sprinkle ¼ teaspoon turmeric powder.',
+          '9. Add in 1 teaspoon sambar powder.',
+          '10. Add salt to taste.',
+          '11. Mix well and stir-fry for another 2 minutes, ensuring spices don\'t burn.',
           'Steam Cook',
-          '6. Add  cup of water and mix thoroughly.',
-          '7. Cover the pan with a lid and cook on low flame for 4-5 minutes, until the potatoes soften and the water evaporates.',
+          '12. Add ¼ cup of water and mix thoroughly.',
+          '13. Cover the pan with a lid and cook on low flame for 4-5 minutes until soft.',
           'Roast Until Crispy',
-          '6. Remove the lid once the water has fully evaporated.',
-          '7. Continue cooking uncovered for another 5-6 minutes, stirring occasionally.',
-          '8. As the moisture disappears, the potatoes will begin to turn golden and crisp.',
-          '9. Continue stir-frying on low flame until the potatoes are evenly golden-brown and crisp without sticking to the pan.',
-          '10. Remove from heat and serve'
+          '14. Remove the lid once water has fully evaporated.',
+          '15. Continue cooking uncovered for 5-6 minutes, stirring occasionally.',
+          '16. Continue stir-frying on low flame until evenly golden-brown and crisp.'
         ]
       },
       {
@@ -756,18 +764,23 @@
         ],
         steps: [
           'Prepare the Veggies',
-          '1. Chop 1 ridge gourd (into small pieces)',
-          '2. Chop 1 big onion',
-          '3. Chop 2 tomatoes',
-          '4. In a saucepot, • Heat oil • Add mustard seeds and allow them to crackle. • Add urad dal and curry leaves, sautéing briefly. • Add chopped onions and sauté until golden brown. • Add chopped tomatoes and cook until soft and mushy. • Add chopped ridge gourd and sauté until slightly softened.',
-          'Add sambar powder, masala powder, and turmeric powder. Sauté for a minute to combine well.',
-          'Pour in enough water to just submerge the vegetable.',
-          'Add rock salt to taste, mix well, and bring to a simmer until cooked through.',
+          '1. Chop 1 ridge gourd into small pieces.',
+          '2. Chop 1 big onion.',
+          '3. Chop 2 tomatoes.',
+          '4. In a saucepot, heat oil.',
+          '5. Add mustard seeds and allow them to crackle.',
+          '6. Add urad dal and curry leaves, sautéing briefly.',
+          '7. Add chopped onions and sauté until golden brown.',
+          '8. Add chopped tomatoes and cook until soft and mushy.',
+          '9. Add chopped ridge gourd and sauté until slightly softened.',
+          '10. Add sambar powder, masala powder, and turmeric powder. Sauté for a minute.',
+          '11. Pour in enough water to just submerge the vegetables.',
+          '12. Add rock salt to taste, mix well, and bring to a simmer until cooked through.',
           'Prepare the Coconut',
-          '5. Coarsely pulse the coconut chunks in a blender without adding water.',
+          '13. Coarsely pulse the coconut chunks in a blender without adding water.',
           'Final Assembly',
-          '6. Add the ground coconut to the cooked curry mixture.',
-          '7. Stir well and simmer for a final 1-2 minutes before removing from heat.'
+          '14. Add the ground coconut to the cooked curry mixture.',
+          '15. Stir well and simmer for a final 1-2 minutes before removing from heat.'
         ]
       },
       {
@@ -792,23 +805,26 @@
           '3. Transfer the green gram to a pressure cooker.',
           'Add Core Ingredients',
           '4. Roughly chop 4-5 garlic cloves (each clove into about 3 pieces).',
-          '5. Chop 1 medium tomato (fine chopping is not necessary).',
+          '5. Chop 1 medium tomato.',
           '6. Chop ½ medium onion into fine pieces.',
           '7. Chop 2 red chilies each roughly into 4 pieces.',
-          '8. In the cooker, add: Add the chopped garlic and tomato alone. • Add a small amount of salt (you can adjust later to taste). • Pour enough water to just submerge all the ingredients. Do not add excess water. • Add ½ teaspoon of castor oil.',
-          '9. Close the pressure cooker lid and cook 1-2 whistles on low flame.',
-          'Prepare the roasted ingredients',
-          'Start this step 5-10 minutes before the last whistle.',
-          '10. In a pan, • heat 3 teaspoons of oil • 1 teaspoon mustard seeds • 1 teaspoon cumin seeds • 1.5 teaspoons urad dal and wait till it starts to turn into golden brown • the chopped onions • the dried red chilies • a few fresh curry leaves',
-          '11. Sauté the mixture until the onions turn golden brown. Set aside.',
+          '8. In the cooker, add the chopped garlic and tomato.',
+          '9. Add a small amount of salt (adjust later to taste).',
+          '10. Pour enough water to just submerge all ingredients.',
+          '11. Add ½ teaspoon of castor oil.',
+          '12. Close the pressure cooker lid and cook for 1-2 whistles on low flame.',
+          'Prepare the Roasted Ingredients',
+          '13. In a pan, heat 3 teaspoons of oil.',
+          '14. Add 1 tsp mustard seeds, 1 tsp cumin seeds, and 1.5 tsp urad dal; wait until it turns golden brown.',
+          '15. Add the chopped onions, dried red chilies, and fresh curry leaves.',
+          '16. Sauté until the onions turn golden brown, then set aside.',
           'Final Assembly',
-          '12. Once the pressure subsides, open the cooker.',
-          '13. Lightly mash the green gram mixture using a wooden ladle.',
-          'Note: Do not over-mash, it should be thick, not runny.',
-          '14. Add the roasted ingredients to the cooker.',
-          '15. Pour in enough water to adjust consistency to your liking.',
-          '16. Add salt to taste and mix well.',
-          '17. Add coriander leaves on top.'
+          '17. Once pressure subsides, open the cooker.',
+          '18. Lightly mash the green gram mixture using a wooden ladle (do not over-mash).',
+          '19. Add the roasted ingredients to the cooker.',
+          '20. Pour in enough water to adjust consistency to your liking.',
+          '21. Add salt to taste and mix well.',
+          '22. Garnish with fresh coriander leaves on top.'
         ]
       }
     ];
@@ -1178,12 +1194,15 @@
       const container = document.getElementById('modal-steps-list');
 
       container.innerHTML = currentRecipe.steps.map((step, idx) => {
-        const isHeader = !step.trim().match(/^[0-9•]/);
+        // Strict header detector: Only text without step numbers is treated as Section Header
+        const isHeader = !step.trim().match(/^[0-9]/);
 
         if (isHeader) {
           return `
-            <div class="pt-3 pb-1">
-              <h4 class="font-serif font-bold text-sm text-pdfAccent">${step}</h4>
+            <div class="pt-4 pb-1 border-b border-pdfBorder/60 mb-2">
+              <h4 class="font-serif font-bold text-sm text-pdfAccent uppercase tracking-wide flex items-center gap-2">
+                <i class="fa-solid fa-utensils text-xs"></i> ${step}
+              </h4>
             </div>
           `;
         }
