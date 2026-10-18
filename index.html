@@ -331,7 +331,7 @@
           <i class="fa-solid fa-xmark text-sm"></i>
         </button>
         <h2 class="text-2xl font-serif font-bold text-pdfTextDark">Add New Recipe</h2>
-        <p class="text-xs text-pdfTextBody">Use the instruction formatting buttons below to quickly structure your recipe steps.</p>
+        <p class="text-xs text-pdfTextBody">Use the instruction formatting toolbar buttons below to structure your steps easily.</p>
       </div>
 
       <!-- Form Body -->
@@ -379,7 +379,7 @@
             <textarea id="new-ingredients" required rows="3" placeholder="Cooked Rice | 2 | cups&#10;Lemon Juice | 2 | tablespoons" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
           </div>
 
-          <!-- Instructions Field with Formatting Toolbar -->
+          <!-- Instructions Field with Improved Formatting Toolbar -->
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block font-bold text-pdfTextDark">Instructions *</label>
@@ -391,17 +391,17 @@
                 <button type="button" onclick="insertInstructionFormat('bullet')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Insert Sub-Bullet">
                   <i class="fa-solid fa-list mr-1"></i> Sub-Bullet
                 </button>
-                <button type="button" onclick="insertInstructionFormat('bold')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Bold Selected Ingredient">
+                <button type="button" onclick="insertInstructionFormat('bold')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Bold Selected Text">
                   <i class="fa-solid fa-bold mr-1"></i> Bold Ingredient
                 </button>
-                <button type="button" onclick="insertInstructionFormat('header')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Insert Section Header">
+                <button type="button" onclick="insertInstructionFormat('header')" class="px-2 py-1 bg-pdfAccentLight border border-pdfBorder hover:bg-pdfAccent hover:text-white text-pdfTextDark rounded-md font-bold text-[11px] transition" title="Convert Selection to Red Header">
                   <i class="fa-solid fa-heading mr-1"></i> Header
                 </button>
               </div>
             </div>
 
-            <textarea id="new-steps" required rows="6" placeholder="PREPARE TEMPERING&#10;1. In a pan,&#10;• Heat **oil** over medium flame.&#10;• Add **mustard seeds** and let them crackle." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
-            <p class="text-[10px] text-pdfTextBody/70 mt-1">Select text and click toolbar buttons to instantly apply formatting tags!</p>
+            <textarea id="new-steps" required rows="6" onkeydown="handleStepsKeyDown(event)" placeholder="PREPARE TEMPERING&#10;1. In a pan,&#10;• Heat **oil** over medium flame.&#10;• Add **mustard seeds** and let them crackle." class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent font-mono"></textarea>
+            <p class="text-[10px] text-pdfTextBody/70 mt-1">Tip: Pressing Enter on a numbered line or bullet automatically continues the list!</p>
           </div>
 
           <div class="pt-4 flex justify-end gap-3 border-t border-pdfBorder">
@@ -1257,7 +1257,7 @@
       });
     }
 
-    // HELPER FUNCTION FOR INSTRUCTION FORMATTING TOOLBAR BUTTONS
+    // CLEAN TOOLBAR FORMATTER: INSERTS SYMBOLS ONLY & CONVERTS HEADERS TO UPPERCASE
     function insertInstructionFormat(type) {
       const textarea = document.getElementById('new-steps');
       const start = textarea.selectionStart;
@@ -1265,19 +1265,69 @@
       const selectedText = textarea.value.substring(start, end);
       
       let insertion = '';
+      let cursorOffset = 0;
+
       if (type === 'number') {
-        insertion = `\n1. ${selectedText || 'Write main step here...'}`;
+        // Calculate previous numbers in textarea to find next sequence
+        const textBefore = textarea.value.substring(0, start);
+        const matches = textBefore.match(/^\s*(\d+)\./gm);
+        let nextNum = 1;
+        if (matches && matches.length > 0) {
+          const lastNum = parseInt(matches[matches.length - 1]);
+          if (!isNaN(lastNum)) nextNum = lastNum + 1;
+        }
+        
+        const prefix = (start > 0 && textarea.value[start - 1] !== '\n') ? '\n' : '';
+        insertion = `${prefix}${nextNum}. ${selectedText}`;
+        cursorOffset = insertion.length;
       } else if (type === 'bullet') {
-        insertion = `\n• ${selectedText || 'Write sub-step here...'}`;
+        const prefix = (start > 0 && textarea.value[start - 1] !== '\n') ? '\n' : '';
+        insertion = `${prefix}• ${selectedText}`;
+        cursorOffset = insertion.length;
       } else if (type === 'bold') {
-        insertion = `**${selectedText || 'ingredient'}**`;
+        insertion = `**${selectedText}**`;
+        cursorOffset = selectedText ? insertion.length : 2; // Place cursor inside ** ** if nothing selected
       } else if (type === 'header') {
-        insertion = `\nSECTION TITLE\n`;
+        const prefix = (start > 0 && textarea.value[start - 1] !== '\n') ? '\n\n' : '';
+        const headerText = (selectedText || 'SECTION TITLE').toUpperCase();
+        insertion = `${prefix}${headerText}\n`;
+        cursorOffset = insertion.length;
       }
 
       textarea.value = textarea.value.substring(0, start) + insertion + textarea.value.substring(end);
       textarea.focus();
-      textarea.setSelectionRange(start + insertion.length, start + insertion.length);
+      textarea.setSelectionRange(start + cursorOffset, start + cursorOffset);
+    }
+
+    // AUTOMATIC NUMBERING & BULLET CONTINUATION ON ENTER KEY
+    function handleStepsKeyDown(event) {
+      if (event.key === 'Enter') {
+        const textarea = event.target;
+        const start = textarea.selectionStart;
+        const lines = textarea.value.substring(0, start).split('\n');
+        const currentLine = lines[lines.length - 1];
+
+        // Match numbered lines like "1. ", "2. "
+        const numMatch = currentLine.match(/^\s*(\d+)\.\s*(.*)/);
+        if (numMatch) {
+          event.preventDefault();
+          const nextNum = parseInt(numMatch[1]) + 1;
+          const continuation = `\n${nextNum}. `;
+          textarea.value = textarea.value.substring(0, start) + continuation + textarea.value.substring(start);
+          textarea.setSelectionRange(start + continuation.length, start + continuation.length);
+          return;
+        }
+
+        // Match bullet lines like "• "
+        const bulletMatch = currentLine.match(/^\s*•\s*(.*)/);
+        if (bulletMatch) {
+          event.preventDefault();
+          const continuation = `\n• `;
+          textarea.value = textarea.value.substring(0, start) + continuation + textarea.value.substring(start);
+          textarea.setSelectionRange(start + continuation.length, start + continuation.length);
+          return;
+        }
+      }
     }
 
     // HANDLE NEW RECIPE FORM SUBMISSION
