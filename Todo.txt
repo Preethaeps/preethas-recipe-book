@@ -1,5 +1,2 @@
 Updates Required:
     1. Print option in phone taking too much time to open
-    2. Change auth description
-    3. Checklist should stay even when you close the modal
-    4. In the ingredients measurement, if it is 1 and half, it looks like 11/2 (eleven by 2). separate the 1 whole number and the fraction. Or make the fraction number look smaller
