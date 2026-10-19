@@ -330,7 +330,7 @@
           <!-- Illustration Box -->
           <div class="md:col-span-4 flex items-center justify-center">
             <div id="modal-illustration-container" class="w-32 h-32 flex items-center justify-center bg-white rounded-2xl border border-pdfBorder p-2 shadow-2xs overflow-hidden">
-              <!-- Dynamic SVG Art Inserted Here -->
+              <!-- Dynamic Art / Photo Inserted Here -->
             </div>
           </div>
 
@@ -484,6 +484,11 @@
                 <option value="Main Course">Main Course</option>
               </select>
             </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-pdfTextDark mb-1">Dish Image URL (Optional)</label>
+            <input type="url" id="new-image" placeholder="https://example.com/dish-photo.jpg" class="w-full p-2.5 rounded-xl border border-pdfBorder bg-pdfBg/40 focus:outline-none focus:border-pdfAccent" />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -817,7 +822,9 @@
 
       grid.innerHTML = filtered.map(recipe => {
         const isFav = favorites.includes(recipe.id);
-        const illustration = svgIllustrations[recipe.id] || svgIllustrations['coffee'];
+        const illustrationHtml = recipe.imageUrl 
+          ? `<img src="${recipe.imageUrl}" alt="${recipe.title}" class="w-full h-full object-cover rounded-xl" />`
+          : (svgIllustrations[recipe.id] || svgIllustrations['coffee']);
 
         return `
           <div class="recipe-doc-page rounded-2xl p-6 flex flex-col justify-between cursor-pointer group" onclick="openModal('${recipe.id}')">
@@ -837,8 +844,8 @@
                   </p>
                 </div>
 
-                <div class="w-20 h-20 bg-pdfBg rounded-xl border border-pdfBorder p-1.5 flex-shrink-0 flex items-center justify-center shadow-2xs group-hover:border-pdfAccent transition-colors">
-                  ${illustration}
+                <div class="w-20 h-20 bg-pdfBg rounded-xl border border-pdfBorder p-1.5 flex-shrink-0 flex items-center justify-center shadow-2xs group-hover:border-pdfAccent transition-colors overflow-hidden">
+                  ${illustrationHtml}
                 </div>
               </div>
 
@@ -919,7 +926,11 @@
       document.getElementById('modal-prep-time').innerText = currentRecipe.prepTime;
 
       const illustrationContainer = document.getElementById('modal-illustration-container');
-      illustrationContainer.innerHTML = svgIllustrations[currentRecipe.id] || svgIllustrations['coffee'];
+      if (currentRecipe.imageUrl) {
+        illustrationContainer.innerHTML = `<img src="${currentRecipe.imageUrl}" alt="${currentRecipe.title}" class="w-full h-full object-cover rounded-xl" />`;
+      } else {
+        illustrationContainer.innerHTML = svgIllustrations[currentRecipe.id] || svgIllustrations['coffee'];
+      }
 
       updateModalFavState();
       updateModalServingsUI();
@@ -947,6 +958,7 @@
       
       document.getElementById('new-title').value = recipe.title;
       document.getElementById('new-category').value = recipe.category;
+      document.getElementById('new-image').value = recipe.imageUrl || '';
       document.getElementById('new-preptime').value = recipe.prepTime;
       document.getElementById('new-servings').value = recipe.baseServings;
       document.getElementById('new-unit').value = recipe.servingsUnit;
@@ -1126,16 +1138,6 @@
       ingPills.forEach(pill => pill.classList.remove('struck'));
     }
 
-    function resetModalSteps() {
-      if (!currentRecipe) return;
-      currentRecipe.steps.forEach((_, idx) => {
-        const checkbox = document.getElementById(`step-${currentRecipe.id}-${idx}`);
-        if (checkbox) checkbox.checked = false;
-      });
-      const ingPills = document.querySelectorAll('.ing-pill');
-      ingPills.forEach(pill => pill.classList.remove('struck'));
-    }
-
     function insertInstructionFormat(type) {
       const textarea = document.getElementById('new-steps');
       const start = textarea.selectionStart;
@@ -1215,6 +1217,7 @@
       const editId = document.getElementById('edit-recipe-id').value;
       const title = document.getElementById('new-title').value.trim();
       const category = document.getElementById('new-category').value;
+      const imageUrl = document.getElementById('new-image').value.trim();
       const prepTime = document.getElementById('new-preptime').value.trim();
       const baseServings = parseFloat(document.getElementById('new-servings').value) || 2;
       const servingsUnit = document.getElementById('new-unit').value.trim();
@@ -1241,6 +1244,7 @@
           id: recipeId,
           title,
           category,
+          imageUrl,
           description,
           prepTime,
           baseServings,

@@ -1,2 +1,4 @@
 Updates Required:
     1. Print option in phone taking too much time to open
+    2. Only keep icons for save, edit, delete, print. When mouse is hovered, it should tell what that icon represents
+    3. There are to close buttons, just keep the one in the top.
