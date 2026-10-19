@@ -173,10 +173,11 @@
 
   <!-- TOP NAVIGATION HEADER -->
   <header class="bg-pdfBg border-b border-pdfBorder sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Reduced horizontal margins/padding for wider layout wrapper -->
+    <div class="px-2 sm:px-4 lg:px-6">
       <div class="flex items-center justify-between h-20">
         
-        <!-- Book Title / Header & Menu Toggle Button -->
+        <!-- Left Side: Menu Toggle Button directly at the leftmost edge, followed by Book Title -->
         <div class="flex items-center space-x-3">
           <button onclick="toggleMenuDrawer()" class="w-10 h-10 rounded-xl bg-white border border-pdfBorder hover:bg-pdfAccentLight text-pdfTextDark flex items-center justify-center transition shadow-2xs" aria-label="Open menu navigation">
             <i class="fa-solid fa-bars text-sm"></i>
@@ -259,7 +260,8 @@
   </section>
 
   <!-- MAIN RECIPES DISPLAY AREA -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow">
+  <!-- Expanded width by cutting side padding in half (px-2 sm:px-4 lg:px-6 instead of max-w-7xl with large gutters) -->
+  <main class="px-2 sm:px-4 lg:px-6 py-10 flex-grow">
     
     <!-- Active Filter Badge Indicator -->
     <div id="active-filter-bar" class="hidden flex items-center justify-between bg-pdfAccentLight border border-pdfBorder rounded-xl px-4 py-2.5 mb-8 text-sm text-pdfTextDark">
@@ -293,7 +295,7 @@
 
   <!-- FOOTER -->
   <footer class="bg-pdfBg border-t border-pdfBorder py-8 text-center text-xs text-pdfTextBody">
-    <div class="max-w-7xl mx-auto px-4 space-y-2">
+    <div class="px-4 space-y-2">
       <p class="font-title text-base text-pdfTextDark font-bold">Preetha's Recipe Book</p>
     </div>
   </footer>
@@ -1247,7 +1249,7 @@
           prepTime,
           baseServings,
           servingsUnit,
-          ingredients,
+            ingredients,
           steps: rawSteps,
           adminKey: passcode 
         };
