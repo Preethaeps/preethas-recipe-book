@@ -1039,7 +1039,7 @@
         const isSubBullet = step.trim().startsWith('•');
 
         const formatText = (txt) => {
-          return txt.replace(/\*\*(.*?)\*\*/g, '<span class="text-pdfBlueHighlight font-medium">$1</span>');
+          return txt.replace(/\*\*(.*?)\*\*/g, '<span class="text-pdfBlueHighlight font-bold">$1</span>');
         };
 
         if (isHeader) {
