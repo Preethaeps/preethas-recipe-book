@@ -1,0 +1,3 @@
+Updates Required:
+    1. Print option in phone taking too much time to open
+    2. Bold ingredients is only changing to blue colour but not actually bolding.
