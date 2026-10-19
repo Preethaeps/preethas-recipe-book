@@ -133,37 +133,51 @@
     }
 
     @media print {
-      body * {
-        visibility: hidden;
+      /* Hide main page layout elements */
+      body {
+        background: white !important;
+        color: black !important;
+        overflow: visible !important;
       }
-      
-      #recipe-modal, #recipe-modal * {
-        visibility: visible;
+
+      header, main, footer, section, #menu-drawer, #admin-auth-modal, #add-recipe-modal {
+        display: none !important;
       }
-      
+
+      /* Make modal take full visible page without positioning offset */
       #recipe-modal {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: auto;
+        position: static !important;
+        display: block !important;
         background: white !important;
         backdrop-filter: none !important;
         overflow: visible !important;
         padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
       }
-      
+
       #recipe-modal > div {
+        position: static !important;
         box-shadow: none !important;
         border: none !important;
         max-height: none !important;
+        height: auto !important;
         width: 100% !important;
         padding: 0 !important;
+        overflow: visible !important;
+        border-radius: 0 !important;
       }
 
-      #recipe-modal button, 
-      #recipe-modal input[type="checkbox"],
-      .fa-solid, .fa-regular {
+      /* Ensure modal scrollable body container is fully expanded */
+      #recipe-modal .overflow-y-auto {
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+      }
+
+      /* Hide print buttons, modal action buttons, checkboxes, reset links */
+      #recipe-modal button,
+      #recipe-modal input[type="checkbox"] {
         display: none !important;
       }
     }
